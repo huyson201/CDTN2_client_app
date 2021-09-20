@@ -1,0 +1,11 @@
+export const GOOGLE_MAP_KEY = 'AIzaSyAJjiFdzPAfX_mQoxEt0n1Xt3EVJ2bA0nk';
+export const SEARCH_TITLE = "Đăng nhập để xem thứ hạng trong trang Lorem Ipsum is simply dummy text of the printing and typesetting";
+export const LOCAL_SEARCH_TEXT = "Khách sạn gần bạn";
+export const CALENDAR_TEXT = "T7, 18 thg 9 2021";
+export const NIGHT_NUMBER = "2 đêm";
+export const HOTEL_CHECK_OUT = "Trả phòng: ";
+export const MAX_DAY = "Tối đa: ";
+export const PERSON_NUMBER = "2 phòng, 2 Người lớn, 1 Trẻ em";
+export const FILLTER_STRING = "Bộ lọc";
+export const SEARCH_MAP_STRING = "Bản đồ";
+export const SEARCH_BTN_STRING = "Tìm kiếm"
