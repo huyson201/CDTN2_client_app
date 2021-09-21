@@ -25,6 +25,7 @@ import { BLUE1, DARK_GRAY, MAP_MARKER } from '../src/values/color';
 import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
 import { Button } from 'react-native-elements';
 import History from '../src/components/home/History';
+import About from '../src/components/home/About';
 
 const HomeScreen = function () {
     return (
@@ -164,6 +165,9 @@ const HomeScreen = function () {
             </Container>
             {/* History */}
             <History />
+            <Container>
+                <About />
+            </Container>
         </ScrollView>
     );
 };

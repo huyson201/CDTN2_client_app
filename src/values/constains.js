@@ -16,3 +16,5 @@ export const HISTORY_REMOVE_BTN = "Xóa";
 export const HISTORY_CITY_NAME = "Thành phố Vũng Tàu";
 export const HISTORY_DATE = "18 thg 9 2021 - 20 thg 9 2021";
 export const HISTORY_NUMBER_PERSON = "2 Phòng, 2 Người lớn, 1 Trẻ em"
+
+export const ABOUT_WHY = "Tại sao chọn BookingHotel?";
