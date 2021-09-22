@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Text,
+  ToastAndroid,
 } from 'react-native';
 import styled from 'styled-components';
 import {
@@ -25,10 +26,15 @@ import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
 import { Button } from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
-import LocalModal from '../src/components/home/LocalModal';
-import ClientAndRoomModal from '../src/components/home/ClientAndRoomModal';
+import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
 
 const HomeScreen = function () {
+  const roomModalRef = React.createRef()
+
+  const handlePressRoomPicker = function () {
+    roomModalRef.current.show()
+  }
+
   return (
     <ScrollView>
       <View style={homeStyles.header}>
@@ -114,7 +120,7 @@ const HomeScreen = function () {
 
           {/* select person numbers */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity activeOpacity={0.5} onPress={handlePressRoomPicker}>
               <Field>
                 <Icon
                   name={'user-friends'}
@@ -170,6 +176,7 @@ const HomeScreen = function () {
       <Container>
         <About />
       </Container>
+      <ClientAndRoomModal ref={roomModalRef} />
     </ScrollView>
   );
 };

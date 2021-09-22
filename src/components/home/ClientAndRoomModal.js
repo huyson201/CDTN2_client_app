@@ -1,71 +1,108 @@
-import React, { useState } from "react";
-import { Modal, StyleSheet, Text, Touchable, TouchableWithoutFeedback, View } from "react-native";
+import React from "react";
+import { Modal, StyleSheet, Text, ToastAndroid, Touchable, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components";
 import { BLUE1, DARK_GRAY, ORANGE } from "../../values/color";
 import { ADULT_PERON_STRING, SELECT_BTN_NAME, CHILD_MAX_AGE_STRING, CHILD_STRING, CLI_ROOM_TITLE, ROOM_QUANTITY_STRING } from "../../values/constains";
 import Icon from "react-native-vector-icons/FontAwesome5"
 import QuantityControl from "./QuantityControl";
 import { Button } from "react-native-elements"
-const ClientAndRoomModal = () => {
-    const [close, setClose] = useState(false)
-    return (
-        <Modal
-            style={styles.modal}
-            visible={close}>
-            <View style={styles.bar}>
+
+export default class ClientAndRoomModal extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            data: {
+                rooms: 1,
+                adults: 1,
+                children: 1
+            },
+            show: false
+        }
+    }
+
+    show = () => {
+        this.setState({ ...this.state, show: true })
+    }
+
+    close = () => {
+        this.setState({ ...this.state, show: false })
+    }
+
+    selected = () => {
+        // process data here when press select btn 
+        this.close()
+    }
+
+    getQuantity = (quantity, type) => {
+        let data = this.state.data
+        data[type] = quantity
+        this.setState({ ...this.state, data })
+
+        ToastAndroid.show(JSON.stringify(this.state), ToastAndroid.SHORT)
+    }
+    render() {
+        return (
+            <Modal Modal
+                onRequestClose={this.close}
+                animationType={"slide"}
+                style={styles.modal}
+                visible={this.state.show} >
+                <View style={styles.bar}>
+                    <Container>
+                        <View style={styles.row}>
+                            <Text style={styles.barTitle}>{CLI_ROOM_TITLE}</Text>
+                            <TouchableWithoutFeedback onPress={this.close}>
+                                <Icon name="times" size={20} color="#fff" />
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </Container>
+                </View>
                 <Container>
-                    <View style={styles.row}>
-                        <Text style={styles.barTitle}>{CLI_ROOM_TITLE}</Text>
-                        <TouchableWithoutFeedback>
-                            <Icon name="times" size={20} color="#fff" />
-                        </TouchableWithoutFeedback>
+                    <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                        <ViewRow>
+                            <Icon name="door-open" size={20} color={BLUE1} />
+                            <Text style={styles.title}>{ROOM_QUANTITY_STRING}</Text>
+                        </ViewRow>
+                        <ViewRow>
+                            <QuantityControl data={this.state.data.rooms} type="rooms" onPress={this.getQuantity} />
+                        </ViewRow>
+                    </View>
+                    <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                        <ViewRow>
+                            <Icon name="user-alt" size={20} color={BLUE1} />
+                            <Text style={styles.title}>{ADULT_PERON_STRING}</Text>
+                        </ViewRow>
+                        <ViewRow>
+                            <QuantityControl data={this.state.data.adults} type="adults" onPress={this.getQuantity} />
+                        </ViewRow>
+                    </View>
+                    <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                        <View>
+                            <ViewRow>
+                                <Icon name="child" size={20} color={BLUE1} />
+                                <Text style={styles.title}>{CHILD_STRING}</Text>
+                            </ViewRow>
+                            <Text style={styles.smallText}>{CHILD_MAX_AGE_STRING}</Text>
+                        </View>
+
+                        <ViewRow>
+                            <QuantityControl data={this.state.data.children} type="children" onPress={this.getQuantity} />
+                        </ViewRow>
                     </View>
                 </Container>
-            </View>
-            <Container>
-                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
-                    <ViewRow>
-                        <Icon name="door-open" size={20} color={BLUE1} />
-                        <Text style={styles.title}>{ROOM_QUANTITY_STRING}</Text>
-                    </ViewRow>
-                    <ViewRow>
-                        <QuantityControl />
-                    </ViewRow>
+
+                <View style={styles.btnBox}>
+                    <Button
+                        title={SELECT_BTN_NAME}
+                        buttonStyle={styles.btn}
+                        onPress={this.selected}
+                    />
                 </View>
-                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
-                    <ViewRow>
-                        <Icon name="user-alt" size={20} color={BLUE1} />
-                        <Text style={styles.title}>{ADULT_PERON_STRING}</Text>
-                    </ViewRow>
-                    <ViewRow>
-                        <QuantityControl />
-                    </ViewRow>
-                </View>
-                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
-                    <View>
-                        <ViewRow>
-                            <Icon name="child" size={20} color={BLUE1} />
-                            <Text style={styles.title}>{CHILD_STRING}</Text>
-                        </ViewRow>
-                        <Text style={styles.smallText}>{CHILD_MAX_AGE_STRING}</Text>
-                    </View>
-
-                    <ViewRow>
-                        <QuantityControl />
-                    </ViewRow>
-                </View>
-            </Container>
-
-            <View style={styles.btnBox}>
-                <Button
-                    title={SELECT_BTN_NAME}
-                    buttonStyle={styles.btn}
-                />
-            </View>
 
 
-        </Modal>
-    )
+            </Modal>
+        )
+    }
 }
 
 const Container = styled.View`
@@ -123,4 +160,4 @@ const styles = StyleSheet.create({
         backgroundColor: ORANGE
     }
 })
-export default ClientAndRoomModal;
+
