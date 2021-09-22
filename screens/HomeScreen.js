@@ -27,14 +27,19 @@ import { Button } from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
 import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
+import CalendarModal from '../src/components/home/CalendarModal';
 
 const HomeScreen = function () {
   const roomModalRef = React.createRef()
+  const calendarRef = useRef()
 
   const handlePressRoomPicker = function () {
     roomModalRef.current.show()
   }
 
+  const handlePressDate = () => {
+    calendarRef.current.show()
+  }
   return (
     <ScrollView>
       <View style={homeStyles.header}>
@@ -80,6 +85,7 @@ const HomeScreen = function () {
           <Container style={homeStyles.filedSpace}>
             <ViewRow>
               <TouchableOpacity
+                onPress={handlePressDate}
                 activeOpacity={0.5}
                 style={homeStyles.searchCol1}>
                 <Field>
@@ -177,6 +183,7 @@ const HomeScreen = function () {
         <About />
       </Container>
       <ClientAndRoomModal ref={roomModalRef} />
+      <CalendarModal ref={calendarRef} />
     </ScrollView>
   );
 };

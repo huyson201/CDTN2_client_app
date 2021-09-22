@@ -24,3 +24,6 @@ export const ADULT_PERON_STRING = "Người lớn";
 export const CHILD_STRING = "Trẻ em";
 export const CHILD_MAX_AGE_STRING = "Tối đa 17 tuổi"
 export const SELECT_BTN_NAME = "Chọn"
+
+export const GET_ROOM_DATE = "Ngày nhận phòng";
+export const CLOSE_CALENDAR_BTN = "Đóng";

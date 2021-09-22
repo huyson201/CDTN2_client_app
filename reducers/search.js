@@ -10,7 +10,7 @@ let initialState = {
 }
 const searchReducer = function (state = initialState, action) {
     if (!action) return state
-    switch (action) {
+    switch (action.type) {
         case "SET_PERSON_ROOM":
             let newState = { ...state }
             newState.personAndRoom = action.payload

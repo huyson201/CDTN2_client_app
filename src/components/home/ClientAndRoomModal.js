@@ -6,7 +6,7 @@ import { ADULT_PERON_STRING, SELECT_BTN_NAME, CHILD_MAX_AGE_STRING, CHILD_STRING
 import Icon from "react-native-vector-icons/FontAwesome5"
 import QuantityControl from "./QuantityControl";
 import { Button } from "react-native-elements"
-
+import { BAR_TITLE_SIZE } from "../../values/size"
 export default class ClientAndRoomModal extends React.Component {
     constructor(props) {
         super(props)
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         backgroundColor: BLUE1,
     },
     barTitle: {
-        fontSize: 20,
+        fontSize: BAR_TITLE_SIZE,
         color: "#fff"
     },
     row: {
