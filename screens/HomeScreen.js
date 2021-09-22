@@ -28,6 +28,7 @@ import History from '../src/components/home/History';
 import About from '../src/components/home/About';
 import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
 import CalendarModal from '../src/components/home/CalendarModal';
+import NightPicker from '../src/components/home/NightPicker';
 
 const HomeScreen = function () {
   const roomModalRef = React.createRef()
@@ -184,6 +185,7 @@ const HomeScreen = function () {
       </Container>
       <ClientAndRoomModal ref={roomModalRef} />
       <CalendarModal ref={calendarRef} />
+      <NightPicker />
     </ScrollView>
   );
 };

@@ -24,6 +24,7 @@ const CalendarModal = forwardRef((props, ref) => {
 
     return (
         <Modal
+            onRequestClose={close}
             style={styles.container}
             animationType="slide"
             visible={showState}>
