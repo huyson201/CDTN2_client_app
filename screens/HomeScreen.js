@@ -19,9 +19,9 @@ import {
   FILTER_STRING,
   SEARCH_MAP_STRING,
   SEARCH_BTN_STRING,
-} from '../src/values/constains';
+} from '../src/values/constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
+import { BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
 import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
 import { Button } from 'react-native-elements';
 import History from '../src/components/home/History';
@@ -29,10 +29,14 @@ import About from '../src/components/home/About';
 import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
 import CalendarModal from '../src/components/home/CalendarModal';
 import NightPicker from '../src/components/home/NightPicker';
+import SearFilterModal from '../src/components/home/SearchFilterModal';
 
 const HomeScreen = function () {
   const roomModalRef = React.createRef()
   const calendarRef = useRef()
+  const nightPickerRef = useRef()
+  const filterRef = useRef()
+
 
   const handlePressRoomPicker = function () {
     roomModalRef.current.show()
@@ -40,6 +44,14 @@ const HomeScreen = function () {
 
   const handlePressDate = () => {
     calendarRef.current.show()
+  }
+
+  const handlePressNightPicker = () => {
+    nightPickerRef.current.show()
+  }
+
+  const handlePressFilterRef = () => {
+    filterRef.current.show()
   }
   return (
     <ScrollView>
@@ -99,6 +111,7 @@ const HomeScreen = function () {
                 </Field>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={handlePressNightPicker}
                 activeOpacity={0.5}
                 style={homeStyles.searchCol2}>
                 <Field>
@@ -143,9 +156,9 @@ const HomeScreen = function () {
 
           {/* Fillter */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity activeOpacity={0.5} onPress={handlePressFilterRef}>
               <Field>
-                <Icon name={'filter'} size={SEARCH_ICON_SIZE} color={BLUE1} />
+                <Icon name={'sliders-h'} size={SEARCH_ICON_SIZE} color={BLUE1} />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
                   {FILTER_STRING}
                 </LabelSearch>
@@ -183,9 +196,12 @@ const HomeScreen = function () {
       <Container>
         <About />
       </Container>
+
+      {/* modal */}
       <ClientAndRoomModal ref={roomModalRef} />
       <CalendarModal ref={calendarRef} />
-      <NightPicker />
+      <NightPicker ref={nightPickerRef} />
+      <SearFilterModal ref={filterRef} />
     </ScrollView>
   );
 };
@@ -242,7 +258,7 @@ const homeStyles = StyleSheet.create({
     padding: 15,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    backgroundColor: '#1E4F89',
+    backgroundColor: BLUE2,
     width: '100%',
   },
   elevation: {

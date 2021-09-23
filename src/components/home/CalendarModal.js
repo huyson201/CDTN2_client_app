@@ -3,7 +3,7 @@ import { Modal, StyleSheet, Text, ToastAndroid, TouchableWithoutFeedback, View }
 import CalendarPicker from 'react-native-calendar-picker';
 import styled from "styled-components";
 import { BLUE1 } from "../../values/color";
-import { CLOSE_CALENDAR_BTN, GET_ROOM_DATE } from "../../values/constains";
+import { CLOSE_CALENDAR_BTN, GET_ROOM_DATE } from "../../values/constants";
 import { BAR_TITLE_SIZE } from "../../values/size";
 
 const CalendarModal = forwardRef((props, ref) => {

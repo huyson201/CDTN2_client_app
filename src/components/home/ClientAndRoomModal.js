@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, StyleSheet, Text, ToastAndroid, Touchable, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components";
 import { BLUE1, DARK_GRAY, ORANGE } from "../../values/color";
-import { ADULT_PERON_STRING, SELECT_BTN_NAME, CHILD_MAX_AGE_STRING, CHILD_STRING, CLI_ROOM_TITLE, ROOM_QUANTITY_STRING } from "../../values/constains";
+import { ADULT_PERON_STRING, SELECT_BTN_NAME, CHILD_MAX_AGE_STRING, CHILD_STRING, CLI_ROOM_TITLE, ROOM_QUANTITY_STRING } from "../../values/constants";
 import Icon from "react-native-vector-icons/FontAwesome5"
 import QuantityControl from "./QuantityControl";
 import { Button } from "react-native-elements"
