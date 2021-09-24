@@ -29,14 +29,15 @@ import About from '../src/components/home/About';
 import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
 import CalendarModal from '../src/components/home/CalendarModal';
 import NightPicker from '../src/components/home/NightPicker';
-import SearFilterModal from '../src/components/home/SearchFilterModal';
+import SearchFilterModal from '../src/components/home/SearchFilterModal';
+import SearchLocalModal from '../src/components/home/SearchLocalModal';
 
 const HomeScreen = function () {
   const roomModalRef = React.createRef()
   const calendarRef = useRef()
   const nightPickerRef = useRef()
   const filterRef = useRef()
-
+  const addressRef = useRef()
 
   const handlePressRoomPicker = function () {
     roomModalRef.current.show()
@@ -52,6 +53,9 @@ const HomeScreen = function () {
 
   const handlePressFilterRef = () => {
     filterRef.current.show()
+  }
+  const handlePressAddress = () => {
+    addressRef.current.show()
   }
   return (
     <ScrollView>
@@ -70,7 +74,6 @@ const HomeScreen = function () {
             <TouchableOpacity activeOpacity={0.7}>
               <ViewRow>
                 <Title ellipsizeMode="tail" numberOfLines={1}>
-                  {' '}
                   {SEARCH_TITLE}
                 </Title>
                 <Icon name="angle-right" size={20} color="#fff" />
@@ -80,7 +83,7 @@ const HomeScreen = function () {
 
           {/* select location field */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity activeOpacity={0.5} onPress={handlePressAddress}>
               <Field>
                 <Icon
                   name={'map-marker-alt'}
@@ -201,7 +204,8 @@ const HomeScreen = function () {
       <ClientAndRoomModal ref={roomModalRef} />
       <CalendarModal ref={calendarRef} />
       <NightPicker ref={nightPickerRef} />
-      <SearFilterModal ref={filterRef} />
+      <SearchFilterModal ref={filterRef} />
+      <SearchLocalModal ref={addressRef} />
     </ScrollView>
   );
 };
