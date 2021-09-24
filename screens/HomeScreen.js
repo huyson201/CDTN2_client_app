@@ -185,7 +185,7 @@ const HomeScreen = function () {
       </Container>
       <ClientAndRoomModal ref={roomModalRef} />
       <CalendarModal ref={calendarRef} />
-      <NightPicker />
+      {/* <NightPicker /> */}
     </ScrollView>
   );
 };
