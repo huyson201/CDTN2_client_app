@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.swmansion.rnscreens.RNScreensPackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.wheelpicker.WheelPickerPackage;
 import com.wheelpicker.WheelPickerPackage;
 import com.reactnativecommunity.picker.RNCPickerPackage;

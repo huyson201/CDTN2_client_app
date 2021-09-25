@@ -3,6 +3,7 @@ import { AUTO_COMPLETE_API, AUTO_COMPLETE_API2, AUTO_COMPLETE_API3 } from "../va
 
 const API_URL = "https://rsapi.goong.io/Place/AutoComplete"
 let apiKey = AUTO_COMPLETE_API;
+
 export const searchPlace = (input) => {
     if (!input) return
 

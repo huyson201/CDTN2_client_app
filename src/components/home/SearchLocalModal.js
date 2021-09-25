@@ -3,8 +3,11 @@ import { FlatList, Modal, View, Text, StyleSheet, TouchableWithoutFeedback, Toas
 import { Button, SearchBar } from "react-native-elements";
 import { BLUE1, DARK_GRAY, LIGHT_GRAY } from "../../values/color";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { searchPlace } from "../../api-until/AutoComplete";
+import { searchPlace } from "../../api-util/AutoComplete";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { setAddress } from "../../../action_creators/search";
+
 
 let promiseSearch;
 let places = []
@@ -34,6 +37,9 @@ const SearchLocalModal = forwardRef((props, ref) => {
     const [loading, setLoading] = useState(false)
     const [show, setShow] = useState(false)
 
+    const address = useSelector(state => state.search.address)
+    const dispatch = useDispatch()
+
     // update key search when pressing keyboard
     const updateSearch = (key) => {
         setLoading(true)
@@ -61,7 +67,10 @@ const SearchLocalModal = forwardRef((props, ref) => {
 
     // get data when pressed list item
     const handleSelectAddress = (item) => {
-        ToastAndroid.show(JSON.stringify(item), ToastAndroid.SHORT)
+        let newAddress = item.description
+        let action = setAddress(newAddress)
+        dispatch(action)
+
         setShow(false);
     }
 
@@ -69,11 +78,13 @@ const SearchLocalModal = forwardRef((props, ref) => {
     const close = () => {
         setShow(false)
     }
+
     useImperativeHandle(ref, () => ({
         show() {
             setShow(true)
         }
     }))
+
     return (
 
         <Modal
@@ -110,6 +121,7 @@ const SearchLocalModal = forwardRef((props, ref) => {
     )
 })
 
+export default SearchLocalModal;
 const Circle = styled.View`
     width: 40px;
     height: 40px;
@@ -156,4 +168,3 @@ const styles = StyleSheet.create({
         paddingBottom: 12
     }
 })
-export default SearchLocalModal;

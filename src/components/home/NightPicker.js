@@ -2,7 +2,9 @@ import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { Modal, View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { Button } from "react-native-elements";
 import { WheelPicker } from "react-native-wheel-picker-android";
+import { useDispatch } from "react-redux";
 import styled from "styled-components"
+import { setNightNumber } from "../../../action_creators/search";
 import { BLUE1, BLUE2, LIGHT_GRAY } from "../../values/color";
 import { CANCEL_BTN_NAME, PICKER_CHOOSE_NIGHT, SELECT_BTN_NAME } from "../../values/constants";
 
@@ -15,15 +17,16 @@ for (let i = 1; i <= 31; i++) {
 }
 const NightPicker = forwardRef((props, ref) => {
     const [show, setShow] = useState(false)
-    const [selectedValue, setSelectedValue] = useState(1)
     const [currentValue, setCurrentValue] = useState(1)
-
+    const dispatch = useDispatch()
     const onChangeValue = (selectedValue) => {
         setCurrentValue(selectedValue)
     }
 
     const handlePressChoose = () => {
-        setSelectedValue(currentValue)
+        let action = setNightNumber(currentValue + 1)
+        dispatch(action)
+        setShow(false)
     }
 
     const close = () => {

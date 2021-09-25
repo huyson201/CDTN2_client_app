@@ -7,15 +7,22 @@ import { CANCEL_BTN_NAME, FILTER_STRING, ROOM_PRICE_STRING, SELECT_BTN_NAME, STA
 import { BLUE1, DARK_GRAY, GOLD_COLOR } from "../../values/color";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Button } from "react-native-elements";
-
-const maxPrice = 400000;
+import { useDispatch, useSelector } from "react-redux"
+import NumberFormat from "react-number-format";
+import { formatCurrency } from "../../utilFunction";
+import { setFilter } from "../../../action_creators/search";
+const maxPrice = 10000000;
 const minPrice = 0;
+
+const calPercent = (price) => {
+    if (!price || price === 0) return minPrice
+    return (Math.ceil(price / maxPrice * 100));
+}
 
 const calPrice = (percent) => {
     if (!percent || percent === 0) return minPrice
-    return (Math.floor(percent / 100 * maxPrice));
+    return (Math.ceil(percent / 100 * maxPrice));
 }
-
 
 const StarChecks = ({ data, onPress }) => {
     let stars = data.map((el, index) => {
@@ -43,28 +50,40 @@ const StarChecks = ({ data, onPress }) => {
     return stars;
 }
 
-const arrStar = [
-    { name: 1, active: false },
-    { name: 2, active: false },
-    { name: 3, active: false },
-    { name: 4, active: false },
-    { name: 5, active: false },
-];
+const generateArrStar = (arrSelected) => {
+    let stars = []
+    for (let i = 0; i < 5; i++) {
+        let name = i + 1;
+        let active = arrSelected.includes(i) ? true : false
+        stars.push({ name: name, active: active })
+    }
+
+    return stars;
+}
+
+
 
 const SearchFilterModal = forwardRef((props, ref) => {
     const [show, setShow] = useState(false)
-    // low, hight value
-    const [low, setLow] = useState(0)
-    const [high, setHigh] = useState(100)
 
+    // default price
+    const filter = useSelector(state => state.search.filter)
+    const dispatch = useDispatch()
+
+    // low, hight value
+    const [low, setLow] = useState(calPercent(+filter.minPrice))
+    const [high, setHigh] = useState(calPercent(+filter.maxPrice))
+
+    let highPrice = formatCurrency(calPrice(high), "VND")
+    let lowPrice = formatCurrency(calPrice(low), "VND")
+
+
+    // stars
+    let arrStar = generateArrStar(filter.rankStars)
     const [starBtns, setStarBtns] = useState([...arrStar])
 
 
-    let highPrice = calPrice(high)
-    let lowPrice = calPrice(low)
-
-
-    // rander widgets
+    // render widgets
     const renderThumb = () => {
         return (
             <View style={styles.thumb}></View>
@@ -97,13 +116,28 @@ const SearchFilterModal = forwardRef((props, ref) => {
     // process modal
     const close = () => {
         setStarBtns([...arrStar])
-        setLow(0)
-        setHigh(100)
+        setLow(calPercent(+filter.minPrice))
+        setHigh(calPercent(+filter.maxPrice))
         setShow(false)
     }
 
     const handleSelected = () => {
-        close()
+        let nLowPrice = calPrice(low)
+        let nHighPrice = calPrice(high)
+        let selectedStar = []
+        for (let i = 0; i < starBtns.length; i++) {
+            if (starBtns[i].active) selectedStar.push(i)
+        }
+
+        let nFilter = {
+            minPrice: nLowPrice,
+            maxPrice: nHighPrice,
+            rankStars: selectedStar
+        }
+
+        let action = setFilter(nFilter)
+        dispatch(action)
+        setShow(false)
     }
 
     useImperativeHandle(ref, () => ({
@@ -130,9 +164,13 @@ const SearchFilterModal = forwardRef((props, ref) => {
                 <View>
                     <FilterHead >{ROOM_PRICE_STRING}</FilterHead>
                     <RowView>
-                        <PriceField ellipsizeMode="tail" numberOfLine={1}>{lowPrice} VND</PriceField>
+                        <PriceField ellipsizeMode="tail" numberOfLine={1}>
+                            {lowPrice}
+                        </PriceField>
                         <Line />
-                        <PriceField ellipsizeMode="tail" numberOfLine={1}>{highPrice} VND</PriceField>
+                        <PriceField ellipsizeMode="tail" numberOfLine={1}>
+                            {highPrice}
+                        </PriceField>
                     </RowView>
                     <View style={styles.slice}>
                         <RangeSlider
@@ -140,7 +178,7 @@ const SearchFilterModal = forwardRef((props, ref) => {
                             high={high}
                             min={0}
                             max={100}
-                            step={5}
+                            step={1}
                             floatingLabel
                             renderThumb={renderThumb}
                             renderRail={renderRail}

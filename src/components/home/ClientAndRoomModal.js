@@ -1,109 +1,113 @@
-import React from "react";
+import React, { forwardRef, useState, useImperativeHandle } from "react";
 import { Modal, StyleSheet, Text, ToastAndroid, Touchable, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components";
-import { BLUE1, DARK_GRAY, ORANGE } from "../../values/color";
+import { BLUE1, DARK_GRAY } from "../../values/color";
 import { ADULT_PERON_STRING, SELECT_BTN_NAME, CHILD_MAX_AGE_STRING, CHILD_STRING, CLI_ROOM_TITLE, ROOM_QUANTITY_STRING } from "../../values/constants";
 import Icon from "react-native-vector-icons/FontAwesome5"
 import QuantityControl from "./QuantityControl";
 import { Button } from "react-native-elements"
 import { BAR_TITLE_SIZE } from "../../values/size"
-export default class ClientAndRoomModal extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            data: {
-                rooms: 1,
-                adults: 1,
-                children: 1
-            },
-            show: false
-        }
+import { setPersonsAndRooms } from "../../../action_creators/search";
+import { useDispatch, useSelector } from "react-redux";
+
+
+
+const ClientAndRoomModal = forwardRef((props, ref) => {
+    const [show, setShow] = useState(false)
+    const currentData = useSelector(state => state.search.personsAndRooms)
+    const [data, setData] = useState({ ...currentData })
+
+    const dispatch = useDispatch()
+
+    const close = () => {
+        setData({ ...currentData })
+        setShow(false)
     }
 
-    show = () => {
-        this.setState({ ...this.state, show: true })
-    }
-
-    close = () => {
-        this.setState({ ...this.state, show: false })
-    }
-
-    selected = () => {
+    const selected = () => {
         // process data here when press select btn 
-        this.close()
+        let nData = { ...data }
+        let action = setPersonsAndRooms(nData)
+        dispatch(action)
+        setShow(false)
+
     }
 
-    getQuantity = (quantity, type) => {
-        let data = this.state.data
-        data[type] = quantity
-        this.setState({ ...this.state, data })
+    const getQuantity = (quantity, type) => {
+        let newData = { ...data }
+        newData[type] = quantity
+        setData(newData)
 
-        ToastAndroid.show(JSON.stringify(this.state), ToastAndroid.SHORT)
+
     }
-    render() {
-        return (
-            <Modal Modal
-                onRequestClose={this.close}
-                animationType={"slide"}
-                style={styles.modal}
-                visible={this.state.show} >
-                <View style={styles.bar}>
-                    <Container>
-                        <View style={styles.row}>
-                            <Text style={styles.barTitle}>{CLI_ROOM_TITLE}</Text>
-                            <TouchableWithoutFeedback onPress={this.close}>
-                                <Icon name="times" size={20} color="#fff" />
-                            </TouchableWithoutFeedback>
-                        </View>
-                    </Container>
-                </View>
+
+    useImperativeHandle(ref, () => ({
+        show() {
+            setShow(true)
+        }
+    }))
+    return (
+        <Modal Modal
+            onRequestClose={close}
+            animationType={"slide"}
+            style={styles.modal}
+            visible={show} >
+            <View style={styles.bar}>
                 <Container>
-                    <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
-                        <ViewRow>
-                            <Icon name="door-open" size={20} color={BLUE1} />
-                            <Text style={styles.title}>{ROOM_QUANTITY_STRING}</Text>
-                        </ViewRow>
-                        <ViewRow>
-                            <QuantityControl data={this.state.data.rooms} type="rooms" onPress={this.getQuantity} />
-                        </ViewRow>
-                    </View>
-                    <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
-                        <ViewRow>
-                            <Icon name="user-alt" size={20} color={BLUE1} />
-                            <Text style={styles.title}>{ADULT_PERON_STRING}</Text>
-                        </ViewRow>
-                        <ViewRow>
-                            <QuantityControl data={this.state.data.adults} type="adults" onPress={this.getQuantity} />
-                        </ViewRow>
-                    </View>
-                    <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
-                        <View>
-                            <ViewRow>
-                                <Icon name="child" size={20} color={BLUE1} />
-                                <Text style={styles.title}>{CHILD_STRING}</Text>
-                            </ViewRow>
-                            <Text style={styles.smallText}>{CHILD_MAX_AGE_STRING}</Text>
-                        </View>
-
-                        <ViewRow>
-                            <QuantityControl data={this.state.data.children} type="children" onPress={this.getQuantity} />
-                        </ViewRow>
+                    <View style={styles.row}>
+                        <Text style={styles.barTitle}>{CLI_ROOM_TITLE}</Text>
+                        <TouchableWithoutFeedback onPress={close}>
+                            <Icon name="times" size={20} color="#fff" />
+                        </TouchableWithoutFeedback>
                     </View>
                 </Container>
-
-                <View style={styles.btnBox}>
-                    <Button
-                        title={SELECT_BTN_NAME}
-                        buttonStyle={styles.btn}
-                        onPress={this.selected}
-                    />
+            </View>
+            <Container>
+                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                    <ViewRow>
+                        <Icon name="door-open" size={20} color={BLUE1} />
+                        <Text style={styles.title}>{ROOM_QUANTITY_STRING}</Text>
+                    </ViewRow>
+                    <ViewRow>
+                        <QuantityControl data={data.rooms} type="rooms" onPress={getQuantity} />
+                    </ViewRow>
                 </View>
+                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                    <ViewRow>
+                        <Icon name="user-alt" size={20} color={BLUE1} />
+                        <Text style={styles.title}>{ADULT_PERON_STRING}</Text>
+                    </ViewRow>
+                    <ViewRow>
+                        <QuantityControl data={data.adults} type="adults" onPress={getQuantity} />
+                    </ViewRow>
+                </View>
+                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                    <View>
+                        <ViewRow>
+                            <Icon name="child" size={20} color={BLUE1} />
+                            <Text style={styles.title}>{CHILD_STRING}</Text>
+                        </ViewRow>
+                        <Text style={styles.smallText}>{CHILD_MAX_AGE_STRING}</Text>
+                    </View>
+
+                    <ViewRow>
+                        <QuantityControl data={data.children} type="children" onPress={getQuantity} />
+                    </ViewRow>
+                </View>
+            </Container>
+
+            <View style={styles.btnBox}>
+                <Button
+                    title={SELECT_BTN_NAME}
+                    buttonStyle={styles.btn}
+                    onPress={selected}
+                />
+            </View>
 
 
-            </Modal>
-        )
-    }
-}
+        </Modal>
+    )
+})
 
 const Container = styled.View`
     padding:15px 20px;
@@ -157,7 +161,8 @@ const styles = StyleSheet.create({
     },
     btn: {
         borderRadius: 8,
-        backgroundColor: ORANGE
+        backgroundColor: BLUE1
     }
 })
 
+export default ClientAndRoomModal;
