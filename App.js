@@ -11,9 +11,9 @@ const App = () => {
   return (
     <SafeAreaView style={{flex:1}}>
       <NavigationContainer >
-        <RootStackScreens ></RootStackScreens>
+        <RootStackScreens></RootStackScreens>
+        {/* <HomeScreen></HomeScreen> */}
       </NavigationContainer>
-     
     </SafeAreaView>
   );
 };
