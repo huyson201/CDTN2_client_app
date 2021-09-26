@@ -19,9 +19,9 @@ import {
   FILTER_STRING,
   SEARCH_MAP_STRING,
   SEARCH_BTN_STRING,
-} from '../src/values/constains';
+} from '../src/values/constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
+import { BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
 import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
 import { Button } from 'react-native-elements';
 import History from '../src/components/home/History';
@@ -29,10 +29,33 @@ import About from '../src/components/home/About';
 import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
 import CalendarModal from '../src/components/home/CalendarModal';
 import NightPicker from '../src/components/home/NightPicker';
+import SearchFilterModal from '../src/components/home/SearchFilterModal';
+import SearchLocalModal from '../src/components/home/SearchLocalModal';
+import { useDispatch, useSelector } from "react-redux";
+import { convertDateToVNDate, convertStrPersonRooms, getDateFormatString } from '../src/utilFunction';
 
-const HomeScreen = function () {
+const HomeScreen = function ({ navigation }) {
   const roomModalRef = React.createRef()
   const calendarRef = useRef()
+  const nightPickerRef = useRef()
+  const filterRef = useRef()
+  const addressRef = useRef()
+
+  // address state
+  const address = useSelector(state => state.search.address)
+  // date state
+  const date = useSelector(state => state.search.date)
+
+  // number night
+  let receivedDate = convertDateToVNDate(date.receivedDate)
+  let payDate = convertDateToVNDate(date.payDate)
+  let numberNight = date.numDate
+
+  // person, rooms
+  const personsAndRooms = useSelector(state => state.search.personsAndRooms)
+  let strPARooms = convertStrPersonRooms(personsAndRooms)
+
+  const dispatch = useDispatch()
 
   const handlePressRoomPicker = function () {
     roomModalRef.current.show()
@@ -40,6 +63,26 @@ const HomeScreen = function () {
 
   const handlePressDate = () => {
     calendarRef.current.show()
+  }
+
+  const handlePressNightPicker = () => {
+    nightPickerRef.current.show()
+  }
+
+  const handlePressFilterRef = () => {
+    filterRef.current.show()
+  }
+  const handlePressAddress = () => {
+    addressRef.current.show()
+
+  }
+
+  const HandlePressSearch = () => {
+
+  }
+
+  const handlePressMap = () => {
+    navigation.navigate("GoogleMap")
   }
   return (
     <ScrollView>
@@ -58,7 +101,6 @@ const HomeScreen = function () {
             <TouchableOpacity activeOpacity={0.7}>
               <ViewRow>
                 <Title ellipsizeMode="tail" numberOfLines={1}>
-                  {' '}
                   {SEARCH_TITLE}
                 </Title>
                 <Icon name="angle-right" size={20} color="#fff" />
@@ -68,7 +110,7 @@ const HomeScreen = function () {
 
           {/* select location field */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity activeOpacity={0.5} onPress={handlePressAddress}>
               <Field>
                 <Icon
                   name={'map-marker-alt'}
@@ -76,7 +118,7 @@ const HomeScreen = function () {
                   color={MAP_MARKER}
                 />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
-                  {LOCAL_SEARCH_TEXT}
+                  {address !== "" ? address : LOCAL_SEARCH_TEXT}
                 </LabelSearch>
               </Field>
             </TouchableOpacity>
@@ -93,18 +135,19 @@ const HomeScreen = function () {
                   <View style={{ flexDirection: 'row' }}>
                     <Icon name={'calendar-alt'} size={SEARCH_ICON_SIZE} />
                     <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
-                      {CALENDAR_TEXT}
+                      {receivedDate}
                     </LabelSearch>
                   </View>
                 </Field>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={handlePressNightPicker}
                 activeOpacity={0.5}
                 style={homeStyles.searchCol2}>
                 <Field>
                   <View>
                     <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
-                      {NIGHT_NUMBER}
+                      {numberNight} Đêm
                     </LabelSearch>
                   </View>
                 </Field>
@@ -114,7 +157,7 @@ const HomeScreen = function () {
             <ViewRow style={{ marginTop: 5 }}>
               <View style={homeStyles.searchCol1}>
                 <Text style={homeStyles.smallText}>
-                  {HOTEL_CHECK_OUT} {CALENDAR_TEXT}
+                  {HOTEL_CHECK_OUT} {payDate}
                 </Text>
               </View>
               <View style={homeStyles.searchCol2}>
@@ -135,17 +178,17 @@ const HomeScreen = function () {
                   color={BLUE1}
                 />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
-                  {PERSON_NUMBER}
+                  {strPARooms}
                 </LabelSearch>
               </Field>
             </TouchableOpacity>
           </Container>
 
-          {/* Fillter */}
+          {/* Filter */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity activeOpacity={0.5} onPress={handlePressFilterRef}>
               <Field>
-                <Icon name={'filter'} size={SEARCH_ICON_SIZE} color={BLUE1} />
+                <Icon name={'sliders-h'} size={SEARCH_ICON_SIZE} color={BLUE1} />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
                   {FILTER_STRING}
                 </LabelSearch>
@@ -153,9 +196,10 @@ const HomeScreen = function () {
             </TouchableOpacity>
           </Container>
 
+          {/* btn control */}
           <Container>
             <ViewRow style={{ marginTop: 12 }}>
-              <TouchableOpacity activeOpacity={0.5}>
+              <TouchableOpacity activeOpacity={0.5} onPress={handlePressMap}>
                 <View style={{ flexDirection: 'row', marginLeft: 12 }}>
                   <Icon
                     name={'map-marked-alt'}
@@ -173,6 +217,7 @@ const HomeScreen = function () {
               <Button
                 title={SEARCH_BTN_STRING}
                 buttonStyle={homeStyles.searchBtn}
+                onPress={HandlePressSearch}
               />
             </ViewRow>
           </Container>
@@ -183,9 +228,13 @@ const HomeScreen = function () {
       <Container>
         <About />
       </Container>
+
+      {/* modal */}
       <ClientAndRoomModal ref={roomModalRef} />
       <CalendarModal ref={calendarRef} />
-      {/* <NightPicker /> */}
+      <NightPicker ref={nightPickerRef} />
+      <SearchFilterModal ref={filterRef} />
+      <SearchLocalModal ref={addressRef} />
     </ScrollView>
   );
 };
@@ -242,7 +291,7 @@ const homeStyles = StyleSheet.create({
     padding: 15,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    backgroundColor: '#1E4F89',
+    backgroundColor: BLUE2,
     width: '100%',
   },
   elevation: {

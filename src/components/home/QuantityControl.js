@@ -3,18 +3,16 @@ import { TouchableOpacity, View, Text, StyleSheet, ToastAndroid } from "react-na
 import styled from "styled-components";
 import Icon from "react-native-vector-icons/FontAwesome5"
 import { BLUE1, LIGHT_GRAY } from "../../values/color";
-const QuantityControl = function ({ onPress, type }) {
-    const [quantity, setQuantity] = useState(1)
+
+const QuantityControl = function ({ onPress, type, data }) {
+    const [quantity, setQuantity] = useState(data)
 
     // handle press plus btn
     const handlePlus = () => {
         if (quantity > 100) return
+        onPress(quantity + 1, type)
         setQuantity(quantity + 1)
 
-        if (!onPress || typeof onPress === "function") {
-            ToastAndroid.show("error", ToastAndroid.SHORT)
-        }
-        onPress(quantity, type)
 
     }
 
@@ -22,10 +20,11 @@ const QuantityControl = function ({ onPress, type }) {
 
     const handleMinus = () => {
         if (quantity < 1) return
+        if (["adults", "rooms"].includes(type) && quantity < 2) return
+        onPress(quantity - 1, type)
         setQuantity(quantity - 1)
 
         if (!onPress || typeof onPress === "function") return
-        onPress(quantity, type)
     }
     return (
         <Container>

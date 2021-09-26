@@ -15,6 +15,9 @@ import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
 import CustomButton from '../src/components/CustomButton';
 
 const LoginScreen = ({navigation}) => {
+  const handlePressSignUp = () => {
+  navigation.navigate("SignUpScreen")
+}
   return (
     <SafeAreaView style={loginStyles.wrapper}>
       <View style={loginStyles.container}>
@@ -67,7 +70,7 @@ const LoginScreen = ({navigation}) => {
         </View>
         <View style={loginStyles.footer}>
           <Text>Don't have an Account ? </Text>
-          <TouchableOpacity onPress={()=>navigation.navigate('SignUpScreen')}>
+          <TouchableOpacity onPress={handlePressSignUp}>
             <Text style={{color: BLUE1}}>Sign Up</Text>
           </TouchableOpacity>
         </View>

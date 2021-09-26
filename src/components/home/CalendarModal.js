@@ -3,11 +3,15 @@ import { Modal, StyleSheet, Text, ToastAndroid, TouchableWithoutFeedback, View }
 import CalendarPicker from 'react-native-calendar-picker';
 import styled from "styled-components";
 import { BLUE1 } from "../../values/color";
-import { CLOSE_CALENDAR_BTN, GET_ROOM_DATE } from "../../values/constains";
+import { CLOSE_CALENDAR_BTN, GET_ROOM_DATE } from "../../values/constants";
 import { BAR_TITLE_SIZE } from "../../values/size";
+import { useDispatch } from "react-redux"
+import { setDate } from "../../../action_creators/search";
 
 const CalendarModal = forwardRef((props, ref) => {
     const [showState, setShowState] = useState(false)
+    const dispatch = useDispatch()
+
     useImperativeHandle(ref, () => ({
         show() {
             setShowState(true)
@@ -19,7 +23,10 @@ const CalendarModal = forwardRef((props, ref) => {
     }
 
     const onDateChange = (date, type) => {
-        ToastAndroid.show(JSON.stringify(date), ToastAndroid.SHORT)
+        let receivedDate = `${date._i.year}/${date._i.month + 1}/${date._i.day}`
+        let action = setDate(receivedDate)
+        dispatch(action)
+        setShowState(false)
     }
 
     return (

@@ -1,4 +1,7 @@
 export const GOOGLE_MAP_KEY = 'AIzaSyA5IMdhcOzepf2WVA3VTB5vm1zKuah0hK8';
+export const AUTO_COMPLETE_API = "eMRVbPp1uY1w9VSPnQgtOXVkVGSyhzhnEEvRQvhc";
+export const AUTO_COMPLETE_API2 = "jqp89VbSqzN0OiCDeliGO5fPyWZ5LOI86lVKhjaq";
+export const AUTO_COMPLETE_API3 = "X4FaPZaLKheykTc465XhtpObrtjB2BknzSm1ZIlH";
 export const SEARCH_TITLE = 'Đăng nhập để xem thứ hạng trong trang Lorem Ipsum is simply dummy text of the printing and typesetting';
 export const LOCAL_SEARCH_TEXT = 'Vị trí';
 export const CALENDAR_TEXT = 'T7, 18 thg 9 2021';
@@ -24,6 +27,12 @@ export const ADULT_PERON_STRING = "Người lớn";
 export const CHILD_STRING = "Trẻ em";
 export const CHILD_MAX_AGE_STRING = "Tối đa 17 tuổi"
 export const SELECT_BTN_NAME = "Chọn"
-
+export const CANCEL_BTN_NAME = "Hủy"
 export const GET_ROOM_DATE = "Ngày nhận phòng";
 export const CLOSE_CALENDAR_BTN = "Đóng";
+
+export const PICKER_CHOOSE_NIGHT = "Chọn số đêm nghỉ";
+
+
+export const ROOM_PRICE_STRING = "Khoảng giá phòng mỗi đêm"
+export const STAR_RANK_STRING = "Hạng Sao";

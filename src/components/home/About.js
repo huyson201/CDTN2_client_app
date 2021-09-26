@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, View, Text, FlatList} from 'react-native';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 import styled from 'styled-components';
-import {ABOUT_WHY} from '../../values/constains';
-import {BLUE1, DARK_GRAY} from '../../values/color';
+import { ABOUT_WHY } from '../../values/constants';
+import { BLUE1, DARK_GRAY } from '../../values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 let dataInfo = [

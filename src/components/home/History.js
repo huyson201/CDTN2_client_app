@@ -1,14 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import styled from 'styled-components';
-import {BLUE1, DARK_GRAY, LIGHT_GRAY} from '../../values/color';
+import { BLUE1, DARK_GRAY, LIGHT_GRAY } from '../../values/color';
 import {
   HISTORY_CITY_NAME,
   HISTORY_DATE,
   HISTORY_NUMBER_PERSON,
   HISTORY_REMOVE_BTN,
   HISTORY_STRING,
-} from '../../values/constains';
+} from '../../values/constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 const historyData = [];
 
@@ -21,7 +21,7 @@ for (let i = 0; i < 6; i++) {
   });
 }
 const History = function () {
-  const renderItem = function ({item}) {
+  const renderItem = function ({ item }) {
     return (
       <ItemContainer activeOpacity={0.5} underlayColor="#d3d3d3">
         <ViewRow>
@@ -29,7 +29,7 @@ const History = function () {
           <Text style={styles.hisTitle}>{item.city}</Text>
         </ViewRow>
         <ItemContent>
-          <ViewRow style={{justifyContent: 'space-between'}}>
+          <ViewRow style={{ justifyContent: 'space-between' }}>
             <Text style={styles.contentText}>{item.date}</Text>
             <Icon name="angle-right" size={20} color={BLUE1} />
           </ViewRow>
@@ -53,7 +53,7 @@ const History = function () {
       </View>
 
       <FlatList
-        style={{marginTop: 5}}
+        style={{ marginTop: 5 }}
         showsHorizontalScrollIndicator={false}
         horizontal
         data={historyData}
