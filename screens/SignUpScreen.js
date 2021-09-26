@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     paddingTop: 13,
-    tintColor:'black',
   },
   textInput: {
     flex: 1,
