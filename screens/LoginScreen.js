@@ -1,27 +1,28 @@
 import React from 'react';
 import {
   View,
-  Button,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
+  ImageBackground,
   Text,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
-import {Input} from 'react-native-elements';
 import styled from 'styled-components';
 import {BLUE1} from '../src/values/color';
-import {Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-var width = Dimensions.get('window').width;
-var height = Dimensions.get('window').height;
+import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
+import CustomButton from '../src/components/CustomButton';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   return (
     <SafeAreaView style={loginStyles.wrapper}>
       <View style={loginStyles.container}>
         <View style={loginStyles.header}>
-          <Text>Welcome</Text>
+          <ImageBackground
+            style={loginStyles.img}
+            source={require('../src/images/logo.png')}></ImageBackground>
+          <Text style={loginStyles.textLogo}>THE BOOKING</Text>
         </View>
         <View style={loginStyles.inner}>
           <Text style={loginStyles.text_footer}>Email</Text>
@@ -59,18 +60,25 @@ const LoginScreen = () => {
               size={18}
               color="#05375a"></Icon>
           </View>
-
-          <Button title="Login"></Button>
+          <CustomButton
+            text="login"
+            bgColor={BLUE1}
+            color={'#FFF'}></CustomButton>
         </View>
-        <View style={loginStyles.footer}></View>
+        <View style={loginStyles.footer}>
+          <Text>Don't have an Account ? </Text>
+          <TouchableOpacity onPress={()=>navigation.navigate('SignUpScreen')}>
+            <Text style={{color: BLUE1}}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 const loginStyles = StyleSheet.create({
   wrapper: {
-    width: width,
-    height: height,
+    width: DEVICE_WIDTH,
+    height: DEVICE_HEIGHT,
   },
   container: {
     flex: 1,
@@ -78,9 +86,20 @@ const loginStyles = StyleSheet.create({
   },
   header: {
     flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    alignContent: 'center',
     backgroundColor: BLUE1,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+  },
+  textLogo: {
+    marginTop: 10,
+    fontSize: 40,
+    color: '#000',
+    fontWeight: 'bold',
+    marginBottom: 30,
   },
   inner: {
     flex: 1,
@@ -92,7 +111,7 @@ const loginStyles = StyleSheet.create({
     paddingHorizontal: 20,
     marginHorizontal: 20,
     justifyContent: 'center',
-    marginTop: -30,
+    marginVertical: -30,
   },
   text_footer: {
     color: '#05375a',
@@ -102,9 +121,15 @@ const loginStyles = StyleSheet.create({
     paddingTop: 13,
   },
   footer: {
+    flex: 0.3,
+    flexDirection:'row',
     backgroundColor: '#FFF',
     paddingVertical: 50,
     paddingHorizontal: 50,
+    textAlign: 'center',
+    justifyContent:'center',
+    alignItems: 'flex-start',
+    color: '#05375a',
   },
   textInput: {
     flex: 1,
@@ -116,6 +141,10 @@ const loginStyles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
+  },
+  img: {
+    height: DEVICE_HEIGHT / 4,
+    width: DEVICE_HEIGHT / 4,
   },
 });
 export default LoginScreen;
