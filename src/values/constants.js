@@ -36,3 +36,10 @@ export const PICKER_CHOOSE_NIGHT = "Chọn số đêm nghỉ";
 
 export const ROOM_PRICE_STRING = "Khoảng giá phòng mỗi đêm"
 export const STAR_RANK_STRING = "Hạng Sao";
+
+// hoa don
+export const SMALL_TEXT_TITLE = "Thông tin tóm tắt đặt phòng"
+export const CONTACT_INFO = "Thông tin liên hệ"
+export const DETAIL_PRICE = "Chi tiết giá"
+export const SUM_PRICE_SRT = "Tổng giá tiền"
+export const CONFIRM_BTN = "Xác Nhận"
