@@ -18,3 +18,11 @@ export const HISTORY_DATE = "18 thg 9 2021 - 20 thg 9 2021";
 export const HISTORY_NUMBER_PERSON = "2 Phòng, 2 Người lớn, 1 Trẻ em"
 
 export const ABOUT_WHY = "Tại sao chọn BookingHotel?";
+
+export const HOTEL_NAME = "The Cap Hotel";
+export const HOTEL_ADDRESS = 'Phường 8, Thành phố Vũng Tàu'
+export const HOTEL_PRICE_SALE = '1.480.338';
+export const HOTEL_PRICE = '1.874.056';
+export const VND = 'VND';
+export const UNIT = '/phòng/đêm';
+export const HOTEL_TEXT ='Giá cuối cùng!'
