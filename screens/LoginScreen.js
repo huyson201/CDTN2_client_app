@@ -15,9 +15,42 @@ import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
 import CustomButton from '../src/components/CustomButton';
 
 const LoginScreen = ({navigation}) => {
+  const [data, setData] = React.useState({
+    email: '',
+    password: '',
+    checkTextInputChange: false,
+    secureTextEntry: true,
+  });
+  const textInputChange = val => {
+    if (val.length != 0) {
+      setData({
+        ...data,
+        email: val,
+        checkTextInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        email: val,
+        checkTextInputChange: false,
+      });
+    }
+  };
   const handlePressSignUp = () => {
-  navigation.navigate("SignUpScreen")
-}
+    navigation.navigate('SignUpScreen');
+  };
+  const handlePressPassword = (val) => {
+    setData({
+      ...data,
+      password: val,
+    });
+  };
+  const updateSecureTextEntry = () => {
+    setData({
+      ...data,
+      secureTextEntry: !data.secureTextEntry,
+    });
+  };
   return (
     <SafeAreaView style={loginStyles.wrapper}>
       <View style={loginStyles.container}>
@@ -39,12 +72,15 @@ const LoginScreen = ({navigation}) => {
             <TextInput
               placeholder="Your Email"
               autoCapitalize="none"
+              onChangeText={val => textInputChange(val)}
               style={loginStyles.textInput}></TextInput>
-            <Icon
-              style={loginStyles.icon}
-              name="check"
-              size={18}
-              color="#05375a"></Icon>
+            {data.checkTextInputChange ? (
+              <Icon
+                style={loginStyles.icon}
+                name="check"
+                size={18}
+                color="#05375a"></Icon>
+            ) : null}
           </View>
           <Text style={loginStyles.text_footer}>Password</Text>
           <View style={loginStyles.action}>
@@ -55,13 +91,25 @@ const LoginScreen = ({navigation}) => {
               color="#05375a"></Icon>
             <TextInput
               placeholder="Your Password"
+              secureTextEntry={data.secureTextEntry ? true : false}
               autoCapitalize="none"
-              style={loginStyles.textInput}></TextInput>
-            <Icon
-              style={loginStyles.icon}
-              name="eye"
-              size={18}
-              color="#05375a"></Icon>
+              style={loginStyles.textInput}
+              onChangeText={val => handlePressPassword(val)}></TextInput>
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <Icon
+                  style={loginStyles.icon}
+                  name="eye-slash"
+                  size={18}
+                  color="#05375a"></Icon>
+              ) : (
+                <Icon
+                  style={loginStyles.icon}
+                  name="eye"
+                  size={18}
+                  color="#05375a"></Icon>
+              )}
+            </TouchableOpacity>
           </View>
           <CustomButton
             text="login"
@@ -100,7 +148,7 @@ const loginStyles = StyleSheet.create({
   textLogo: {
     marginTop: 10,
     fontSize: 40,
-    color: '#000',
+    color: '#FFF',
     fontWeight: 'bold',
     marginBottom: 30,
   },
@@ -125,12 +173,12 @@ const loginStyles = StyleSheet.create({
   },
   footer: {
     flex: 0.3,
-    flexDirection:'row',
+    flexDirection: 'row',
     backgroundColor: '#FFF',
     paddingVertical: 50,
     paddingHorizontal: 50,
     textAlign: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
     alignItems: 'flex-start',
     color: '#05375a',
   },

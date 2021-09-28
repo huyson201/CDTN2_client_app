@@ -14,15 +14,64 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import {BLUE1} from '../src/values/color';
 import {DEVICE_HEIGHT, DEVICE_WIDTH} from '../src/values/size';
 import CustomButton from '../src/components/CustomButton';
-const SignUpScreen =  () => {
-    return(
-  <SafeAreaView style={styles.wrapper}>
-    <View style={styles.container}>
-      <View style={styles.header}>
-          <Text style={styles.textLogo}>SIGN UP</Text>
-      </View>
-      <View style={styles.form}>
-      <Text style={styles.text_footer}>Họ tên</Text>
+const SignUpScreen = () => {
+  const [data, setData] = React.useState({
+    email: '',
+    password: '',
+    confirm_password: '',
+    phone: '',
+    checkTextInputChange: false,
+    secureTextEntry: true,
+    confirm_secureTextEntry: true,
+  });
+  const textInputChange = val => {
+    if (val.length != 0) {
+      setData({
+        ...data,
+        email: val,
+        checkTextInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        email: val,
+        checkTextInputChange: false,
+      });
+    }
+  };
+
+  const handlePressPassword = (val) => {
+    setData({
+      ...data,
+      password: val,
+    });
+  };
+  const handlePressConfirmPassword = (val) => {
+    setData({
+      ...data,
+      confirm_password: val,
+    });
+  };
+  const updateSecureTextEntry = () => {
+    setData({
+      ...data,
+      secureTextEntry: !data.secureTextEntry,
+    });
+  };
+  const updateSecureConfirmTextEntry = () => {
+    setData({
+      ...data,
+      confirm_secureTextEntry: !data.confirm_secureTextEntry,
+    });
+  };
+  return (
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.textLogo}>Sign up</Text>
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.text_footer}>Họ tên</Text>
           <View style={styles.action}>
             <Icon
               style={styles.icon}
@@ -45,6 +94,7 @@ const SignUpScreen =  () => {
             <TextInput
               placeholder="Your Email"
               autoCapitalize="none"
+              onChangeText={val => textInputChange(val)}
               style={styles.textInput}></TextInput>
             <Icon
               style={styles.icon}
@@ -79,14 +129,26 @@ const SignUpScreen =  () => {
               backgroundColor="#05375a"
               color="#05375a"></Icon>
             <TextInput
+              secureTextEntry={data.secureTextEntry ? true : false}
               placeholder="Your Password"
               autoCapitalize="none"
+              onChangeText={val => handlePressPassword(val)}
               style={styles.textInput}></TextInput>
-            <Icon
-              style={styles.icon}
-              name="eye"
-              size={18}
-              color="#05375a"></Icon>
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <Icon
+                  style={styles.icon}
+                  name="eye-slash"
+                  size={18}
+                  color="#05375a"></Icon>
+              ) : (
+                <Icon
+                  style={styles.icon}
+                  name="eye"
+                  size={18}
+                  color="#05375a"></Icon>
+              )}
+            </TouchableOpacity>
           </View>
           <Text style={styles.text_footer}>Xác nhận mật khẩu</Text>
           <View style={styles.action}>
@@ -97,24 +159,36 @@ const SignUpScreen =  () => {
               backgroundColor="#05375a"
               color="#05375a"></Icon>
             <TextInput
+              secureTextEntry={data.confirm_secureTextEntry ? true : false}
               placeholder="Confirm password"
+              onChangeText={val => handlePressConfirmPassword(val)}
               autoCapitalize="none"
               style={styles.textInput}></TextInput>
-            <Icon
-              style={styles.icon}
-              name="eye"
-              size={18}
-              color="#05375a"></Icon>
+            <TouchableOpacity onPress={updateSecureConfirmTextEntry}>
+              {data.confirm_secureTextEntry ? (
+                <Icon
+                  style={styles.icon}
+                  name="eye-slash"
+                  size={18}
+                  color="#05375a"></Icon>
+              ) : (
+                <Icon
+                  style={styles.icon}
+                  name="eye"
+                  size={18}
+                  color="#05375a"></Icon>
+              )}
+            </TouchableOpacity>
           </View>
           <CustomButton
             text="Sign up"
             bgColor={BLUE1}
             color={'#FFF'}></CustomButton>
-      </View>
+        </View>
         <View style={styles.footer}></View>
-    </View>
-  </SafeAreaView>
-    )
+      </View>
+    </SafeAreaView>
+  );
 };
 const styles = StyleSheet.create({
   wrapper: {
@@ -148,22 +222,22 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     borderRadius: 20,
     backgroundColor: '#FFF',
-    paddingTop:20,
-    paddingBottom:20,
+    paddingTop: 20,
+    paddingBottom: 20,
     paddingHorizontal: 20,
     marginHorizontal: 20,
     justifyContent: 'flex-start',
     marginVertical: -50,
     alignContent: 'flex-start',
   },
-  footer:{
+  footer: {
     flex: 0.3,
-    flexDirection:'row',
+    flexDirection: 'row',
     backgroundColor: '#FFF',
     paddingVertical: 50,
     paddingHorizontal: 50,
     textAlign: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
     alignItems: 'flex-start',
     color: '#05375a',
   },
