@@ -16,6 +16,12 @@ target 'CDTN2_client_app' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNCPicker', :path => '../node_modules/@react-native-picker/picker'
+
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+
   target 'CDTN2_client_appTests' do
     inherit! :complete
     # Pods for testing

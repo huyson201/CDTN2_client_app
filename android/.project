@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>CDTN2_client_app</name>
+=======
+	<name>android</name>
+>>>>>>> login
 	<comment>Project android created by Buildship.</comment>
 	<projects>
 	</projects>
@@ -16,7 +20,11 @@
 	</natures>
 	<filteredResources>
 		<filter>
+<<<<<<< HEAD
 			<id>1632291288328</id>
+=======
+			<id>1632643076763</id>
+>>>>>>> login
 			<name></name>
 			<type>30</type>
 			<matcher>
