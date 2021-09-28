@@ -1,40 +1,72 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  useState,
+} from "react-native";
 import { BLUE1, LIGHT_GRAY } from "../src/values/color";
-import styled from "styled-components";
+import styled, { isStyledComponent } from "styled-components";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
-import RoomImage from "../src/values/1407953244000-177513283.jpg";
+import Room from "../src/components/hotel/Room";
 
-const RoomListScreen = function () {
+import { dataRoom, SEARCH_TITLE } from "../src/values/constants";
+import styles from "rn-range-slider/styles";
+
+const RoomListScreen = function ({ navigation }) {
+  const handleBack = () => {
+    navigation.navigate("Home");
+  };
+
   return (
-    <ScrollView>
-      <View>
-        <ViewRow style={[roomStyles.header, roomStyles.horizontal]}>
+    <View>
+      <ViewRow style={[roomStyles.header, roomStyles.horizontal]}>
+        <TouchableOpacity onPress={handleBack}>
           <Icon
             style={[roomStyles.icon, roomStyles.opacity]}
             name="arrow-circle-left"
             size={20}
           />
-          <View style={{ paddingLeft: 15 }}>
-            <Text style={roomStyles.headerTextName}>Hotel's Name</Text>
-            <Text style={roomStyles.headerTextAddress}>Hotel's Address</Text>
+        </TouchableOpacity>
+        <View style={{ paddingLeft: 15 }}>
+          <Text style={roomStyles.headerTextName}>Hotel's Name</Text>
+          <Text style={roomStyles.headerTextAddress}>Hotel's Address</Text>
+        </View>
+        <View style={roomStyles.horizontal}>
+          <Icon2 style={roomStyles.icon} name="bookmark-outline" size={20} />
+          <Icon2 style={roomStyles.icon} name="heart-outline" size={20} />
+          <Icon2 style={roomStyles.icon} name="dots-vertical" size={20} />
+        </View>
+      </ViewRow>
+
+      <ScrollView style={styles.marginScrollView}>
+        {/* <FlatList
+          keyExtractor={(item)=>item.id}
+          data={room}
+          renderItem={({item})=>(
+            <Text>{item.name}</Text>
+          )}
+        /> */}
+        {dataRoom.map((item) => (
+          <View>
+            <Room
+              name={item.name}
+              price={item.price}
+              adult={item.adult}
+              children={item.children}
+              status={item.status}
+              images={item.image}
+            />
           </View>
-          <View style={roomStyles.horizontal}>
-            <Icon2 style={roomStyles.icon} name="bookmark-outline" size={20} />
-            <Icon2 style={roomStyles.icon} name="heart-outline" size={20} />
-            <Icon2 style={roomStyles.icon} name="dots-vertical" size={20} />
-          </View>
-        </ViewRow>
-        <Image
-          style={roomStyles.image}
-          source={RoomImage}
-          resizeMode="stretch"
-        />
-      </View>
-      
-    </ScrollView>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -50,6 +82,8 @@ const roomStyles = StyleSheet.create({
     height: 50,
     backgroundColor: BLUE1,
     alignItems: "center",
+    // position: "absolute",
+    // zIndex: 999,
   },
   headerTextName: {
     color: "#fff",
@@ -63,11 +97,7 @@ const roomStyles = StyleSheet.create({
     marginLeft: 10,
     color: LIGHT_GRAY,
   },
-  image: {
-    flex: 1,
-    width: "auto",
-    height: 200,
-  },
+
   horizontal: {
     flexDirection: "row",
     paddingRight: 10,
@@ -75,6 +105,10 @@ const roomStyles = StyleSheet.create({
   opacity: {
     opacity: 0.8,
   },
+  // marginScrollView: {
+  //   marginTop: 50,
+  //   flex: 1
+  // },
 });
 
 export default RoomListScreen;
