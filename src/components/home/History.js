@@ -66,7 +66,7 @@ const History = function () {
 
 const ItemContainer = styled.TouchableOpacity`
   padding: 15px;
-  background-color: ${LIGHT_GRAY};
+  background-color: rgba(0,0,0,.05);
   max-width: 235px;
   border-radius: 8px;
   margin: 0 8px;

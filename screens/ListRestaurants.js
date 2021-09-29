@@ -30,7 +30,6 @@ const ListRestaurants = () => {
             data = filterAddress(data, searchAddress)
             data = filterStar(data, arrStar);
             data = filterPrice(data, maxPrice, minPrice)
-            console.log(data)
             setListData([...data])
         })
 

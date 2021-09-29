@@ -43,3 +43,8 @@ export const CONTACT_INFO = "Thông tin liên hệ"
 export const DETAIL_PRICE = "Chi tiết giá"
 export const SUM_PRICE_SRT = "Tổng giá tiền"
 export const CONFIRM_BTN = "Xác Nhận"
+
+/**================================================================================================
+ **                                         MESSAGE
+ *================================================================================================**/
+export const ADDRESS_NULL_MESSAGE = "Vui lòng chọn vị trí tìm kiếm khách sạn"

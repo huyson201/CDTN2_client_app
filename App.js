@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import SplashScreen from './screens/SplashScreen';
 import GGMap from './screens/GGMap';
 import HomeScreen from './screens/HomeScreen';
 import Invoice from './screens/Invoice';
@@ -12,7 +13,8 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Splash">
+        <Stack.Screen name="Splash" component={SplashScreen} options={{ title: "Home 1", headerShown: false }} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Home 1", headerShown: false }} />
         <Stack.Screen name="ListRestaurants" component={ListRestaurants} options={{ headerShown: false }} />
         <Stack.Screen name="GoogleMap" component={GGMap} options={{ title: "Google Map" }} />

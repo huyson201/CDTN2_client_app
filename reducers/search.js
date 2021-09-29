@@ -6,7 +6,7 @@ let tomorrow = getTomorrow(nowDate)
 // console.log(nowDate)
 
 let initialState = {
-    address: "xã tân hải, ninh hải, ninh thuận",
+    address: "",
     date: {
         numDate: 1,
         receivedDate: nowDate,

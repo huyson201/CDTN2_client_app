@@ -11,14 +11,12 @@ import styled from 'styled-components';
 import {
   SEARCH_TITLE,
   LOCAL_SEARCH_TEXT,
-  NIGHT_NUMBER,
-  CALENDAR_TEXT,
   HOTEL_CHECK_OUT,
   MAX_DAY,
-  PERSON_NUMBER,
   FILTER_STRING,
   SEARCH_MAP_STRING,
   SEARCH_BTN_STRING,
+  ADDRESS_NULL_MESSAGE
 } from '../src/values/constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
@@ -32,7 +30,7 @@ import NightPicker from '../src/components/home/NightPicker';
 import SearchFilterModal from '../src/components/home/SearchFilterModal';
 import SearchLocalModal from '../src/components/home/SearchLocalModal';
 import { useDispatch, useSelector } from "react-redux";
-import { convertDateToVNDate, convertStrPersonRooms, getDateFormatString } from '../src/utilFunction';
+import { convertDateToVNDate, convertStrPersonRooms } from '../src/utilFunction';
 
 const HomeScreen = function ({ navigation }) {
   const roomModalRef = React.createRef()
@@ -78,6 +76,10 @@ const HomeScreen = function ({ navigation }) {
   }
 
   const HandlePressSearch = () => {
+    if (address === "") {
+      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT)
+      return
+    }
     navigation.navigate("ListRestaurants")
   }
 
