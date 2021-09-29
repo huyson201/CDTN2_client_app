@@ -2,19 +2,19 @@ export const GOOGLE_MAP_KEY = "AIzaSyA5IMdhcOzepf2WVA3VTB5vm1zKuah0hK8";
 export const AUTO_COMPLETE_API = "eMRVbPp1uY1w9VSPnQgtOXVkVGSyhzhnEEvRQvhc";
 export const AUTO_COMPLETE_API2 = "jqp89VbSqzN0OiCDeliGO5fPyWZ5LOI86lVKhjaq";
 export const AUTO_COMPLETE_API3 = "X4FaPZaLKheykTc465XhtpObrtjB2BknzSm1ZIlH";
-export const LOGO_TEXT = "Booking Hotel"
+export const LOGO_TEXT = "Booking Hotel";
 
-
-export const SEARCH_TITLE = 'Đăng nhập để xem thứ hạng trong trang Lorem Ipsum is simply dummy text of the printing and typesetting';
-export const LOCAL_SEARCH_TEXT = 'Vị trí';
-export const CALENDAR_TEXT = 'T7, 18 thg 9 2021';
-export const NIGHT_NUMBER = '2 đêm';
-export const HOTEL_CHECK_OUT = 'Trả phòng: ';
-export const MAX_DAY = 'Tối đa: ';
-export const PERSON_NUMBER = '2 phòng, 2 Người lớn, 1 Trẻ em';
-export const FILTER_STRING = 'Bộ lọc';
-export const SEARCH_MAP_STRING = 'Bản đồ';
-export const SEARCH_BTN_STRING = 'Tìm kiếm';
+export const SEARCH_TITLE =
+  "Đăng nhập để xem thứ hạng trong trang Lorem Ipsum is simply dummy text of the printing and typesetting";
+export const LOCAL_SEARCH_TEXT = "Vị trí";
+export const CALENDAR_TEXT = "T7, 18 thg 9 2021";
+export const NIGHT_NUMBER = "2 đêm";
+export const HOTEL_CHECK_OUT = "Trả phòng: ";
+export const MAX_DAY = "Tối đa: ";
+export const PERSON_NUMBER = "2 phòng, 2 Người lớn, 1 Trẻ em";
+export const FILTER_STRING = "Bộ lọc";
+export const SEARCH_MAP_STRING = "Bản đồ";
+export const SEARCH_BTN_STRING = "Tìm kiếm";
 
 export const HISTORY_STRING = "Lịch sử tìm kiếm";
 export const HISTORY_REMOVE_BTN = "Xóa";
@@ -40,71 +40,68 @@ export const ROOM_PRICE_STRING = "Khoảng giá phòng mỗi đêm";
 export const STAR_RANK_STRING = "Hạng Sao";
 
 // hoa don
-export const SMALL_TEXT_TITLE = "Thông tin tóm tắt đặt phòng"
-export const CONTACT_INFO = "Thông tin liên hệ"
-export const DETAIL_PRICE = "Chi tiết giá"
-export const SUM_PRICE_SRT = "Tổng giá tiền"
-export const CONFIRM_BTN = "Xác Nhận"
+export const SMALL_TEXT_TITLE = "Thông tin tóm tắt đặt phòng";
+export const CONTACT_INFO = "Thông tin liên hệ";
+export const DETAIL_PRICE = "Chi tiết giá";
+export const SUM_PRICE_SRT = "Tổng giá tiền";
+export const CONFIRM_BTN = "Xác Nhận";
 
 /**================================================================================================
  **                                         MESSAGE
  *================================================================================================**/
-export const ADDRESS_NULL_MESSAGE = "Vui lòng chọn vị trí tìm kiếm khách sạn"
+export const ADDRESS_NULL_MESSAGE = "Vui lòng chọn vị trí tìm kiếm khách sạn";
 export const dataRoom = [
-    {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        name: "First Item",
-        price: "500",
-        adult: "3",
-        children: "2",
-        status: "Còn phòng",
-        image: [
-            "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-        ],
-    },
-    {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        name: "Second Item",
-        price: "600",
-        adult: "1",
-        children: "2",
-        status: "Còn phòng",
-        image: [
-            "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-        ],
-    },
-    {
-        id: "das-3da1-471f-bd96-145571e29d72",
-        name: "Third Item",
-        price: "400",
-        adult: "3",
-        children: "2",
-        status: "Còn phòng",
-        image: [
-            "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-        ],
-    },
-    {
-        id: "58694a0f-3da1-471f-3123-145571e29d72",
-        name: "Third Item",
-        price: "400",
-        adult: "3",
-        children: "2",
-        status: "Còn phòng",
-        image: [
-            "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
-            "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-        ],
-    },
+  {
+    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+    name: "First Item",
+    price: "500",
+    adult: "3",
+    children: "2",
+    status: "Còn phòng",
+    image: [
+      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    ],
+  },
+  {
+    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+    name: "Second Item",
+    price: "600",
+    adult: "1",
+    children: "2",
+    status: "Còn phòng",
+    image: [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    ],
+  },
+  {
+    id: "das-3da1-471f-bd96-145571e29d72",
+    name: "Third Item",
+    price: "400",
+    adult: "3",
+    children: "2",
+    status: "Còn phòng",
+    image: [
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    ],
+  },
+  {
+    id: "58694a0f-3da1-471f-3123-145571e29d72",
+    name: "Third Item",
+    price: "400",
+    adult: "3",
+    children: "2",
+    status: "Còn phòng",
+    image: [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80",
+    ],
+  },
 ];

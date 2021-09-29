@@ -1,30 +1,34 @@
-import React, { useState, onLayout } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  Button,
-  Image,
-  TouchableOpacity,
-  Alert,
-  NativeEventEmitter,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon1 from "react-native-vector-icons/FontAwesome";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
-import { BLUE2 } from "../../values/color";
+import { ORANGE_LIGHT, BLUE2 } from "../../values/color";
 import { SliderBox } from "react-native-image-slider-box";
 // import {dataImage} from "../../values/constants"
 // import onLayout from "react-native-on-layout";
 
-const Room = function ({ name, price, adult, children, status, images }) {
+const Room = function ({
+  name,
+  price,
+  adult,
+  children,
+  status,
+  images,
+  navigation,
+}) {
+  const handleDetail = () => {
+    // navigation.navigate('');
+    alert("Details");
+  };
+
+  const [state, setState] = useState(0);
+
   const handleBooking = () => {
     alert("you have been booked!!");
   };
-  const [state, setState] = useState(0);
 
   const layoutWidth = (e) => {
     setState({
@@ -33,18 +37,22 @@ const Room = function ({ name, price, adult, children, status, images }) {
   };
 
   return (
-    <View style={[styles.view,styles.textOption]} onLayout={layoutWidth}>
+    <View style={[styles.view, styles.textOption]} onLayout={layoutWidth}>
       <SliderBox
         images={images}
-        // onCurrentImagePressed={(index)}
         style={styles.image}
         parentWidth={state.width}
+        paginationBoxVerticalPadding={5}
+        dotStyle={{width: 7,height: 7,marginHorizontal: -5}}
+        autoplay={true}
+        imageLoadingColor={"#fff"}
+        // onCurrentImagePressed={(index)}
         // ImageComponentStyle={{ width: "97%", resizeMode: "stretch" }}
       />
       <ViewRow>
-        <View style={styles.textContent}>
+        <View>
           <Text style={styles.textName}>{name}</Text>
-          <Text>
+          <Text style={styles.textContent}>
             <Icon1 name="money" size={14} color="#05375a">
               {" "}
             </Icon1>
@@ -56,13 +64,13 @@ const Room = function ({ name, price, adult, children, status, images }) {
             ></Feather>
             /đêm
           </Text>
-          <Text>
+          <Text style={styles.textContent}>
             <Ionicon name="people" size={14} color="#05375a">
               {" "}
             </Ionicon>
             {adult} người lớn {children} trẻ em
           </Text>
-          <Text>
+          <Text style={styles.textContent}>
             <Icon name="check" size={14} color="#05375a">
               {" "}
             </Icon>
@@ -72,22 +80,22 @@ const Room = function ({ name, price, adult, children, status, images }) {
         <View>
           <TouchableOpacity activeOpacity={0.8}>
             <Button
-              title={"Chọn phòng"}
-              color={BLUE2}
+              title={"Chọn"}
+              color={ORANGE_LIGHT}
               onPress={handleBooking}
             />
           </TouchableOpacity>
-          <View style={styles.rowDetail}>
-            <Text style={styles.textDetail}>Room details </Text>
-            <TouchableOpacity onPress={handleBooking}>
+          <TouchableOpacity onPress={handleDetail}>
+            <Text style={styles.textDetail}>
+              Xem chi tiết{" "}
               <Icon1
                 name="angle-double-right"
                 size={15}
-                color="#525050"
+                color={BLUE2}
                 style={styles.iconDetail}
               ></Icon1>
-            </TouchableOpacity>
-          </View>
+            </Text>
+          </TouchableOpacity>
         </View>
       </ViewRow>
     </View>
@@ -99,8 +107,7 @@ const ViewRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 10px 10px;
 `;
 
 const styles = StyleSheet.create({
@@ -128,11 +135,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   textDetail: {
+    color: BLUE2,
     fontStyle: "italic",
     fontSize: 13,
-    color: "#767676",
     marginTop: 10,
     marginLeft: 10,
+    textTransform: "uppercase",
   },
   button: {
     width: 50,
@@ -141,12 +149,15 @@ const styles = StyleSheet.create({
   rowDetail: {
     flexDirection: "row",
   },
-  iconDetail:{
-    marginTop:12
+  iconDetail: {
+    marginTop: 12,
   },
-  textOption:{
-    fontFamily:"AnticSlab-Regular"
-  }
+  textOption: {
+    fontFamily: "AnticSlab-Regular",
+  },
+  textContent: {
+    color: "#464646",
+  },
 });
 
 export default Room;
