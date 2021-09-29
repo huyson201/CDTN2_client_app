@@ -17,7 +17,7 @@ import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Room from "../src/components/hotel/Room";
 
 import { dataRoom, SEARCH_TITLE } from "../src/values/constants";
-import styles from "rn-range-slider/styles";
+import {DEVICE_WIDTH,DEVICE_HEIGHT} from "../src/values/size"
 
 const RoomListScreen = function ({ navigation }) {
   const handleBack = () => {
@@ -25,34 +25,30 @@ const RoomListScreen = function ({ navigation }) {
   };
 
   return (
-    <View>
-      <ViewRow style={[roomStyles.header, roomStyles.horizontal]}>
-        <TouchableOpacity onPress={handleBack}>
-          <Icon
-            style={[roomStyles.icon, roomStyles.opacity]}
-            name="arrow-circle-left"
-            size={20}
-          />
-        </TouchableOpacity>
-        <View style={{ paddingLeft: 15 }}>
-          <Text style={roomStyles.headerTextName}>Hotel's Name</Text>
-          <Text style={roomStyles.headerTextAddress}>Hotel's Address</Text>
-        </View>
-        <View style={roomStyles.horizontal}>
-          <Icon2 style={roomStyles.icon} name="bookmark-outline" size={20} />
-          <Icon2 style={roomStyles.icon} name="heart-outline" size={20} />
-          <Icon2 style={roomStyles.icon} name="dots-vertical" size={20} />
-        </View>
-      </ViewRow>
+      <View style={{ flex: 1 }}>
+        <ViewRow style={[roomStyles.header, roomStyles.horizontal]}>
+          <TouchableOpacity onPress={handleBack}>
+            <Icon
+              style={[roomStyles.icon, roomStyles.opacity]}
+              name="arrow-circle-left"
+              size={20}
+            />
+          </TouchableOpacity>
+          <View style={{ paddingLeft: 15 }}>
+            <Text style={roomStyles.headerTextName}>Hotel's Name</Text>
+            <Text style={roomStyles.headerTextAddress}>Hotel's Address</Text>
+          </View>
+          <View style={roomStyles.horizontal}>
+            <Icon2 style={roomStyles.icon} name="bookmark-outline" size={20} />
+            <Icon2 style={roomStyles.icon} name="heart-outline" size={20} />
+            <Icon2 style={roomStyles.icon} name="dots-vertical" size={20} />
+          </View>
+        </ViewRow>
 
-      <ScrollView style={styles.marginScrollView}>
-        {/* <FlatList
-          keyExtractor={(item)=>item.id}
-          data={room}
-          renderItem={({item})=>(
-            <Text>{item.name}</Text>
-          )}
-        /> */}
+        {/* <View style={roomStyles.marginScrollView}></View> */}
+        
+      <ScrollView style={roomStyles.marginScrollView}>
+ 
         {dataRoom.map((item) => (
           <View>
             <Room
@@ -66,7 +62,7 @@ const RoomListScreen = function ({ navigation }) {
           </View>
         ))}
       </ScrollView>
-    </View>
+      </View>
   );
 };
 
@@ -79,9 +75,9 @@ const ViewRow = styled.View`
 
 const roomStyles = StyleSheet.create({
   header: {
-    height: 50,
     backgroundColor: BLUE1,
     alignItems: "center",
+    flex: 0.08,
     // position: "absolute",
     // zIndex: 999,
   },
@@ -105,10 +101,9 @@ const roomStyles = StyleSheet.create({
   opacity: {
     opacity: 0.8,
   },
-  // marginScrollView: {
-  //   marginTop: 50,
-  //   flex: 1
-  // },
+  marginScrollView: {
+    flex: 2,
+  },
 });
 
 export default RoomListScreen;

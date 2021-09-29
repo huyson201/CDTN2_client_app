@@ -19,21 +19,24 @@ const App = () => {
       <Stack.Navigator>
         {/* <Stack.Screen name="LoginScreen" component={LoginScreen}  options={{headerShown: false}}/>
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{headerShown: false}}/> */}
-       
+
         {/* <Stack.Screen
           name="GoogleMap"
           component={GGMap}
           options={{title: 'Google Map'}}
         /> */}
         <Stack.Screen
-         name="RoomListScreen"
+          name="RoomListScreen"
           component={RoomListScreen}
-          options={{title: 'RoomListScreen', headerShown: false}}
+          options={{
+            title: "RoomListScreen",
+            headerShown: false,
+          }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'Home 1', headerShown: false}}
+          options={{ title: "Home 1", headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
