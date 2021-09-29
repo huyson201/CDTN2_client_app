@@ -78,7 +78,7 @@ const HomeScreen = function ({ navigation }) {
   }
 
   const HandlePressSearch = () => {
-
+    navigation.navigate("ListRestaurants")
   }
 
   const handlePressMap = () => {

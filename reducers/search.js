@@ -6,7 +6,7 @@ let tomorrow = getTomorrow(nowDate)
 // console.log(nowDate)
 
 let initialState = {
-    address: "",
+    address: "xã tân hải, ninh hải, ninh thuận",
     date: {
         numDate: 1,
         receivedDate: nowDate,
@@ -18,9 +18,9 @@ let initialState = {
         children: 0
     },
     filter: {
-        maxPrice: "10000000",
-        minPrice: "0",
-        rankStars: []
+        maxPrice: "300000",
+        minPrice: "200000",
+        rankStars: [3]
     }
 }
 const searchReducer = function (state = initialState, action) {
