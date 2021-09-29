@@ -2,6 +2,10 @@ export const GOOGLE_MAP_KEY = 'AIzaSyA5IMdhcOzepf2WVA3VTB5vm1zKuah0hK8';
 export const AUTO_COMPLETE_API = "eMRVbPp1uY1w9VSPnQgtOXVkVGSyhzhnEEvRQvhc";
 export const AUTO_COMPLETE_API2 = "jqp89VbSqzN0OiCDeliGO5fPyWZ5LOI86lVKhjaq";
 export const AUTO_COMPLETE_API3 = "X4FaPZaLKheykTc465XhtpObrtjB2BknzSm1ZIlH";
+export const LOGO_TEXT = "Booking Hotel"
+
+
+
 export const SEARCH_TITLE = 'Đăng nhập để xem thứ hạng trong trang Lorem Ipsum is simply dummy text of the printing and typesetting';
 export const LOCAL_SEARCH_TEXT = 'Vị trí';
 export const CALENDAR_TEXT = 'T7, 18 thg 9 2021';

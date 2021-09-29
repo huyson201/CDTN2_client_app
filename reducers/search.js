@@ -18,9 +18,9 @@ let initialState = {
         children: 0
     },
     filter: {
-        maxPrice: "300000",
-        minPrice: "200000",
-        rankStars: [3]
+        maxPrice: "10000000",
+        minPrice: "",
+        rankStars: []
     }
 }
 const searchReducer = function (state = initialState, action) {
