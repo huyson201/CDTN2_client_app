@@ -2,13 +2,10 @@ import React from "react";
 import {
   View,
   StyleSheet,
-  ScrollView,
   Text,
-  Image,
   FlatList,
   TouchableOpacity,
-  useState,
-  ToastAndroid,
+
 } from "react-native";
 import { BLUE1, LIGHT_GRAY } from "../src/values/color";
 import styled from "styled-components";
@@ -17,12 +14,12 @@ import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Room from "../src/components/hotel/Room";
 
-import { dataRoom, SEARCH_TITLE } from "../src/values/constants";
-import { DEVICE_WIDTH, DEVICE_HEIGHT } from "../src/values/size"
+import { dataRoom } from "../src/values/constants";
+
 
 const RoomListScreen = function ({ navigation }) {
   const handleBack = () => {
-    navigation.navigate("Home");
+    navigation.goBack()
   };
 
   return (
@@ -48,7 +45,7 @@ const RoomListScreen = function ({ navigation }) {
       <FlatList
         style={roomStyles.marginScrollView}
         data={dataRoom}
-        renderItem={({ item, index }) => {
+        renderItem={({ item }) => {
 
           return (
             <View>
@@ -82,8 +79,7 @@ const roomStyles = StyleSheet.create({
     backgroundColor: BLUE1,
     alignItems: "center",
     flex: 0.08,
-    // position: "absolute",
-    // zIndex: 999,
+
   },
   headerTextName: {
     color: "#fff",
