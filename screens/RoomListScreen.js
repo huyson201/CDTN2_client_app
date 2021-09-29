@@ -10,7 +10,7 @@ import {
   useState,
 } from "react-native";
 import { BLUE1, LIGHT_GRAY } from "../src/values/color";
-import styled, { isStyledComponent } from "styled-components";
+import styled from "styled-components";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -45,10 +45,7 @@ const RoomListScreen = function ({ navigation }) {
           </View>
         </ViewRow>
 
-        {/* <View style={roomStyles.marginScrollView}></View> */}
-        
       <ScrollView style={roomStyles.marginScrollView}>
- 
         {dataRoom.map((item) => (
           <View>
             <Room
