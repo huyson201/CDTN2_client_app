@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from "@firebase/database";
-
+import { getAuth } from "firebase/auth";
 const firebaseConfig = {
     apiKey: "AIzaSyAIjnGE8nqdHDyNSGerOI6B3p_JLZZq-IQ",
     authDomain: "booking-hotel-app-fbd6a.firebaseapp.com",
@@ -11,9 +11,11 @@ const firebaseConfig = {
     appId: "1:592864550267:web:a13e7b8dde8a1f1d0eb1de",
     measurementId: "G-7MH5NCZ3KZ"
 };
+const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const db = getDatabase(app);
-// export const analytics = getAnalytics(app);
+const auth = getAuth(app)
+
+const db = getDatabase(app);
+
+export { app, auth, db }
 
