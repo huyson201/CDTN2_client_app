@@ -11,10 +11,10 @@ const ListRestaurants = () => {
     const [listData, setListData] = useState([])
     const searchData = useSelector(state => state.search)
 
-    const starCountRef = ref(db, "restaurants")
+    const starCountRef = ref(db, "hotels")
 
 
-    useEffect(async () => {
+    useEffect(() => {
         let data = []
         let searchAddress = searchData.address
         let arrStar = searchData.filter.rankStars
