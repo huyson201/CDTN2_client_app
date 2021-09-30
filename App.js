@@ -12,6 +12,8 @@ import SignUpScreen from './screens/SignUpScreen';
 import HotelList from './screens/HotelList';
 import {BLUE1, DARK_GRAY} from './src/values/color';
 import 'react-native-gesture-handler';
+import EditProfileScreen from './screens/EditProfileScreen';
+import ListRoomsOrderedScreen from './screens/ListRoomsOrderedScreen';
 import RoomListScreen from './screens/RoomListScreen';
 import TaskHome from './src/components/TaskScreen/TaskHome';
 import NotificationScreen from './screens/NotificationScreen';
@@ -23,73 +25,73 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
-    // <View style={{ flex: 1 }}>
-    //   <NavigationContainer>
-    //     <Tab.Navigator
-    //       screenOptions={({ route }) => ({
-    //         tabBarIcon: ({ focused, color, size }) => {
-    //           let iconName = ""
-    //           let iconColor = "rgba(0,0,0,.5)"
-    //           switch (route.name) {
-    //             case "HomeTask":
-    //               iconColor = focused ?? BLUE1
-    //               iconName = "home"
-    //               break;
-    //             case "Notify":
-    //               iconColor = focused ?? BLUE1
-    //               iconName = "bell"
-    //               break;
-    //             case "Profile":
-    //               iconColor = focused ?? BLUE1
-    //               iconName = "user-alt"
-    //               break;
-    //           }
+    <View style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName = ""
+              let iconColor = "rgba(0,0,0,.5)"
+              switch (route.name) {
+                case "HomeTask":
+                  iconColor = focused ?? BLUE1
+                  iconName = "home"
+                  break;
+                case "Notify":
+                  iconColor = focused ?? BLUE1
+                  iconName = "bell"
+                  break;
+                case "Profile":
+                  iconColor = focused ?? BLUE1
+                  iconName = "user-alt"
+                  break;
+              }
 
-    //           return (<Icon name={iconName} color={color} size={size} />)
-    //         }
-    //       })}
-    //     >
-    //       <Tab.Screen name="HomeTask" component={TaskHome} options={{ headerShown: false }} />
-    //       <Tab.Screen name="Notify" component={NotificationScreen} />
-    //       <Tab.Screen name="Profile" component={ProfileScreen} />
-    //     </Tab.Navigator>
-    //   </NavigationContainer>
-    // </View>
+              return (<Icon name={iconName} color={color} size={size} />)
+            }
+          })}
+        >
+          <Tab.Screen name="HomeTask" component={TaskHome} options={{ headerShown: false }} />
+          <Tab.Screen name="Notify" component={NotificationScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </View>
 
     // <SafeAreaView style={{ flex: 1 }}>
     //   <HotelList />
     //   {/* <HomeScreen /> */}
     // </SafeAreaView>
 
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="HotelList"
-          component={HotelList}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignUpScreen"
-          component={SignUpScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{title: 'Home 1', headerShown: false}}
-        />
-        <Stack.Screen
-          name="GoogleMap"
-          component={GGMap}
-          options={{title: 'Google Map'}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     <Stack.Screen
+    //       name="ProfileScreen"
+    //       component={ProfileScreen}
+    //       options={{headerShown: false}}
+    //     />
+    //     <Stack.Screen
+    //       name="LoginScreen"
+    //       component={LoginScreen}
+    //       options={{headerShown: false}}
+    //     />
+    //     <Stack.Screen
+    //       name="SignUpScreen"
+    //       component={SignUpScreen}
+    //       options={{headerShown: false}}
+    //     />
+    //     <Stack.Screen
+    //       name="Home"
+    //       component={HomeScreen}
+    //       options={{title: 'Home 1', headerShown: false}}
+    //     />
+    //     <Stack.Screen
+    //       name="GoogleMap"
+    //       component={GGMap}
+    //       options={{title: 'Google Map'}}
+    //     />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   );
 };
 
@@ -102,6 +104,7 @@ export default App;
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: "", headerShown: true, headerTransparent: true, headerShadowVisible: false, headerTintColor: "#fff" }} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="HotelList" component={HotelList} options={{ headerShown: false }} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RoomListScreen" component={RoomListScreen} options={{ headerShown: false, }} />
         <Stack.Screen name="ListRestaurants" component={ListRestaurants} options={{ headerShown: false }} />
         <Stack.Screen name="GoogleMap" component={GGMap} options={{ title: "Google Map" }} />

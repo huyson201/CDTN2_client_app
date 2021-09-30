@@ -1,20 +1,3 @@
-// import React from "react"
-// import { View, Text } from "react-native"
-
-// const ProfileScreen = () => {
-//     return (
-//         <View
-//             style={{
-//                 flex: 1,
-//                 justifyContent: "center",
-//                 alignItems: "center"
-//             }}>
-//             <Text>Profile</Text>
-//         </View>
-//     )
-// }
-
-// export default ProfileScreen;
 import React, {useState} from 'react';
 import {
   View,
@@ -52,7 +35,7 @@ const EditProfileScreen = function () {
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
         <Title style={EditProfileStyles.headerText}>
-           USER INFORMATION
+          EDIT USER INFORMATION
         </Title>
       </View>
       <Container>
@@ -66,7 +49,6 @@ const EditProfileScreen = function () {
             backgroundColor="#05375a"
             color="#05375a"></Icon>
           <TextInput
-            editable={false}
             defaultValue="Name of user"
             placeholder="Type Your Name Here"
             autoCapitalize="none"
@@ -81,7 +63,6 @@ const EditProfileScreen = function () {
             backgroundColor="#05375a"
             color="#05375a"></Icon>
           <TextInput
-            editable={false}
             defaultValue="0123456789"
             placeholder="Type Your Phone Here"
             autoCapitalize="none"
@@ -97,7 +78,6 @@ const EditProfileScreen = function () {
             backgroundColor="#05375a"
             color="#05375a"></Icon>
           <Picker
-            enabled={false}
             selectedValue={selectedValue}
             style={EditProfileStyles.Picker}
             onValueChange={(itemValue, itemIndex) =>
@@ -108,7 +88,7 @@ const EditProfileScreen = function () {
             <Picker.Item label="Other" Color="blue" value="Other" />
           </Picker>
         </View>
-        <Button title="Edit Information" buttonStyle={EditProfileStyles.Btn}></Button>
+        <Button title="OK" buttonStyle={EditProfileStyles.Btn}></Button>
         <Button
           title="Cancel"
           buttonStyle={EditProfileStyles.cancelBtn}></Button>
@@ -144,7 +124,6 @@ const EditProfileStyles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    textAlign:'center',
   },
   icon: {
     paddingTop: 13,
