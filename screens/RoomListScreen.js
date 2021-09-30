@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   ToastAndroid,
+  ScrollView,
 } from "react-native";
 import { BLUE1, LIGHT_GRAY } from "../src/values/color";
 import styled from "styled-components";
@@ -15,7 +16,6 @@ import Icon3 from "react-native-vector-icons/AntDesign";
 import Room from "../src/components/hotel/Room";
 import { db } from "../cf_firebase/ConfigFireBase";
 import { ref, onValue } from "@firebase/database";
-import { ScrollView } from "react-native-gesture-handler";
 
 const RoomListScreen = function ({ navigation, route }) {
   const [data, setData] = useState([]);
@@ -26,6 +26,7 @@ const RoomListScreen = function ({ navigation, route }) {
     adult: 0,
     children: 0,
     status: 0,
+    images: [],
   };
   const room = ref(db, "hotels/" + route.params.hotelId + "/rooms");
   useEffect(() => {
@@ -41,11 +42,11 @@ const RoomListScreen = function ({ navigation, route }) {
           adult: data.adult,
           children: data.children,
           status: data.status,
+          images: data.images.split(','),
         };
         roomData.push(itemData);
         setData([...roomData]);
       });
-      // console.log(roomData);
     });
   }, []);
   const [iconBookmarkState, setIconBookmarkState] = useState({ check: false });
@@ -131,12 +132,12 @@ const RoomListScreen = function ({ navigation, route }) {
             <View>
               <Room
                 key={item.id}
-                name={item.name}
+                name={item.roomName}
                 price={item.price}
                 adult={item.adult}
                 children={item.children}
                 status={item.status}
-                // images={item.image}
+                images={item.images}
                 navigation={navigation}
               />
             </View>
@@ -146,7 +147,7 @@ const RoomListScreen = function ({ navigation, route }) {
 
       {/* <ScrollView style={roomStyles.marginScrollView}>
         {data.map((e) => {
-          console.log(e);
+          console.log(e.images);
         })}
       </ScrollView> */}
     </View>
