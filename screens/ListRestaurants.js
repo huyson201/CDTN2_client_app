@@ -35,9 +35,9 @@ const ListRestaurants = ({ navigation }) => {
       data = snapshot.val();
       data = Object.values(data);
 
-      data = filterAddress(data, searchAddress);
-      data = filterStar(data, arrStar);
-      data = filterPrice(data, maxPrice, minPrice);
+      // data = filterAddress(data, searchAddress);
+      // data = filterStar(data, arrStar);
+      // data = filterPrice(data, maxPrice, minPrice);
       setListData([...data]);
     });
   }, []);
@@ -52,7 +52,9 @@ const ListRestaurants = ({ navigation }) => {
               <TouchableOpacity onPress={()=>{
                    navigation.navigate("RoomListScreen", {
                     id: 1,
-                    hotelId: item.hotel
+                    hotelId: item.hotel,
+                    hotelName: item.name,
+                    hotelAddress: item.address
                   });
               }}>
                 <Text>{item.name}</Text>

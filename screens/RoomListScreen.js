@@ -28,7 +28,9 @@ const RoomListScreen = function ({ navigation, route }) {
     status: 0,
     images: [],
   };
+
   const room = ref(db, "hotels/" + route.params.hotelId + "/rooms");
+
   useEffect(() => {
     let roomData = [];
     setData([]);
@@ -42,13 +44,14 @@ const RoomListScreen = function ({ navigation, route }) {
           adult: data.adult,
           children: data.children,
           status: data.status,
-          images: data.images.split(','),
+          images: data.images.split(","),
         };
         roomData.push(itemData);
         setData([...roomData]);
       });
     });
   }, []);
+
   const [iconBookmarkState, setIconBookmarkState] = useState({ check: false });
   const [iconHeartState, setIconHeartState] = useState({ check: false });
 
@@ -95,8 +98,12 @@ const RoomListScreen = function ({ navigation, route }) {
           />
         </TouchableOpacity>
         <View style={{ paddingLeft: 15 }}>
-          <Text style={roomStyles.headerTextName}>Hotel's Name</Text>
-          <Text style={roomStyles.headerTextAddress}>Hotel's Address</Text>
+          <Text style={roomStyles.headerTextName}>
+            {route.params.hotelName}
+          </Text>
+          <Text style={roomStyles.headerTextAddress}>
+            {route.params.hotelAddress}
+          </Text>
         </View>
         <View style={roomStyles.horizontal}>
           <TouchableOpacity onPress={handleIconBookmark}>
@@ -166,6 +173,7 @@ const roomStyles = StyleSheet.create({
     backgroundColor: BLUE1,
     alignItems: "center",
     flex: 0.08,
+    fontFamily:"AnticSlab-Regular"
   },
   headerTextName: {
     color: "#fff",
