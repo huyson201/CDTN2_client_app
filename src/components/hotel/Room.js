@@ -9,6 +9,7 @@ import { ORANGE_LIGHT, BLUE2 } from "../../values/color";
 import { SliderBox } from "react-native-image-slider-box";
 // import {dataImage} from "../../values/constants"
 // import onLayout from "react-native-on-layout";
+import { dataRoom } from "../../values/constants";
 
 const Room = function ({
   name,
@@ -16,7 +17,7 @@ const Room = function ({
   adult,
   children,
   status,
-  images,
+  // images,
   navigation,
 }) {
   const handleDetail = () => {
@@ -38,17 +39,16 @@ const Room = function ({
 
   return (
     <View style={[styles.view, styles.textOption]} onLayout={layoutWidth}>
-      <SliderBox
-        images={images}
+      {/* <SliderBox
+        images={dataRoom.image}
         style={styles.image}
         parentWidth={state.width}
         paginationBoxVerticalPadding={5}
         dotStyle={{width: 7,height: 7,marginHorizontal: -5}}
-        autoplay={true}
         imageLoadingColor={"#fff"}
         // onCurrentImagePressed={(index)}
         // ImageComponentStyle={{ width: "97%", resizeMode: "stretch" }}
-      />
+      /> */}
       <ViewRow>
         <View>
           <Text style={styles.textName}>{name}</Text>

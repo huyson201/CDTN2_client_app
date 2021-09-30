@@ -1,27 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
   Text,
   FlatList,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { BLUE1, LIGHT_GRAY } from "../src/values/color";
 import styled from "styled-components";
-import Icon from "react-native-vector-icons/FontAwesome5";
+// import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon3 from "react-native-vector-icons/AntDesign";
 import Room from "../src/components/hotel/Room";
-import { dataRoom } from "../src/values/constants";
+import { db } from "../cf_firebase/ConfigFireBase";
+import { ref, onValue } from "@firebase/database";
+import { ScrollView } from "react-native-gesture-handler";
 
-const RoomListScreen = function ({ navigation }) {
-
+const RoomListScreen = function ({ navigation, route }) {
+  const [data, setData] = useState([]);
+  let itemData = {
+    id: 0,
+    roomName: "",
+    price: "",
+    adult: 0,
+    children: 0,
+    status: 0,
+  };
+  const room = ref(db, "hotels/" + route.params.hotelId + "/rooms");
+  useEffect(() => {
+    let roomData = [];
+    setData([]);
+    onValue(room, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
+        itemData = {
+          id: data.roomId,
+          roomName: data.name,
+          price: data.price,
+          adult: data.adult,
+          children: data.children,
+          status: data.status,
+        };
+        roomData.push(itemData);
+        setData([...roomData]);
+      });
+      // console.log(roomData);
+    });
+  }, []);
   const [iconBookmarkState, setIconBookmarkState] = useState({ check: false });
   const [iconHeartState, setIconHeartState] = useState({ check: false });
 
   const handleBack = () => {
-    // navigation.goBack();
-    alert("go back")
+    navigation.goBack();
+    // alert("go back");
   };
 
   const handleIconBookmark = () => {
@@ -48,9 +80,9 @@ const RoomListScreen = function ({ navigation }) {
     }
   };
 
-  const handleMenu=()=>{
+  const handleMenu = () => {
     alert("Menu");
-  }
+  };
   return (
     <View style={{ flex: 1 }}>
       <ViewRow style={[roomStyles.header, roomStyles.horizontal]}>
@@ -85,15 +117,15 @@ const RoomListScreen = function ({ navigation }) {
               <Icon2 style={roomStyles.icon} name="heart" size={20} />
             )}
           </TouchableOpacity>
-          
+
           <TouchableOpacity onPress={handleMenu}>
-          <Icon2 style={roomStyles.icon} name="dots-vertical" size={20} />
+            <Icon2 style={roomStyles.icon} name="dots-vertical" size={20} />
           </TouchableOpacity>
         </View>
       </ViewRow>
       <FlatList
         style={roomStyles.marginScrollView}
-        data={dataRoom}
+        data={data}
         renderItem={({ item }) => {
           return (
             <View>
@@ -104,13 +136,19 @@ const RoomListScreen = function ({ navigation }) {
                 adult={item.adult}
                 children={item.children}
                 status={item.status}
-                images={item.image}
+                // images={item.image}
                 navigation={navigation}
               />
             </View>
           );
         }}
       />
+
+      {/* <ScrollView style={roomStyles.marginScrollView}>
+        {data.map((e) => {
+          console.log(e);
+        })}
+      </ScrollView> */}
     </View>
   );
 };
