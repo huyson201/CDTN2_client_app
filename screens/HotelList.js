@@ -1,9 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import styled from "styled-components";
-import {DARK_GRAY, WHITE, ORANGE} from "../values/color";
-import {HOTEL_NAME, HOTEL_ADDRESS, HOTEL_PRICE, VND, HOTEL_PRICE_SALE, UNIT, HOTEL_TEXT } from "../values/constains";
-import Icon from "react-native-vector-icons/FontAwesome5";
+import { DARK_GRAY, WHITE, ORANGE, GOLD_COLOR } from "../src/values/color";
+import { HOTEL_NAME, HOTEL_ADDRESS, HOTEL_PRICE, VND, HOTEL_PRICE_SALE, UNIT, HOTEL_TEXT } from "../src/values/constants";
+// import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 const hotelData = [
 
@@ -26,7 +28,7 @@ const HotelList = function () {
                     {/* Hotel image */}
                     <Image
                         style={styles.hotelImage}
-                        source={require('../images/the_cap_hotel.jpeg')} />
+                        source={require('../src/images/the_cap_hotel.jpeg')} />
                     <ItemContent>
                         {/* Hotel name */}
                         <Text style={styles.headText}>{item.name}</Text>
@@ -35,21 +37,22 @@ const HotelList = function () {
                             {/* <Image
                                 style={styles.starImage}
                                 source={require('../../images/star1.png')} /> */}
-                            <Icon name="star" size={15} />
+                            <Icon name="star" size={15} color={GOLD_COLOR}/>
+                            <Icon name="star" size={15} color={GOLD_COLOR}/>
                             <Icon name="star" size={15} />
                             <Icon name="star" size={15} />
                         </ViewRow>
                         {/* Address */}
                         <ViewRow>
-                            <Icon name="map-marker-alt" size={15} color={DARK_GRAY} />
-                            <Text style={styles.contentText}>{item.address}</Text>
+                            <Icon name="map-marker" size={12} color={DARK_GRAY} style={{ marginTop: 8}} />
+                            <Text style={styles.addressText}>{item.address}</Text>
                         </ViewRow>
                         {/* Hotel price */}
                         <Text style={styles.priceText}>{VND}   {item.price}</Text>
                         {/* Hotel price sale */}
                         <ViewRow>
-                        <Text style={{fontSize:13,fontWeight:"bold", color:ORANGE}}> {VND}  {item.price_sale}</Text>
-                        <Text style={styles.contentText}>{UNIT}</Text>
+                            <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}> {VND}  {item.price_sale}</Text>
+                            <Text style={styles.contentText}>{UNIT}</Text>
                         </ViewRow>
                         {/* Giá cuối cùng! */}
                         <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
@@ -74,7 +77,7 @@ const HotelList = function () {
 const ItemContainer = styled.TouchableOpacity`
     background-color: ${WHITE};
     border-radius: 8px;
-    margin: 3px 10px;
+    margin: 5px 10px;
 `
 const ItemContent = styled.View`
     margin-top: 8px;
@@ -82,21 +85,22 @@ const ItemContent = styled.View`
 `
 const ViewRow = styled.View`
     flex-direction: row;
-
 `;
 
 const styles = StyleSheet.create({
     hotelImage: {
         width: 120,
         height: 200,
+        borderTopLeftRadius: 8,
+        borderBottomLeftRadius: 8,
     },
-    starImage: {
-        width: 15,
-        height: 15,
+    starIcon: {
+        backgroundColor: GOLD_COLOR,
     },
     headText: {
         fontSize: 16,
         fontWeight: "bold",
+        marginBottom: 5,
     },
     contentText: {
         fontSize: 11,
@@ -105,13 +109,21 @@ const styles = StyleSheet.create({
         width: "100%",
         marginLeft: 5,
     },
+    addressText: {
+        fontSize: 11,
+        color: DARK_GRAY,
+        maxWidth: "90%",
+        width: "100%",
+        marginLeft: 5,
+        marginTop: 5,
+    },
     priceText: {
         fontSize: 11,
         color: DARK_GRAY,
         maxWidth: "90%",
         width: "100%",
         marginLeft: 5,
-        marginTop: 70,
+        marginTop: 60,
         textDecorationLine: "line-through"
     },
 })
