@@ -105,3 +105,11 @@ export const dataRoom = [
     ],
   },
 ];
+
+export const HOTEL_NAME = "The Cap Hotel";
+export const HOTEL_ADDRESS = 'Phường 8, Thành phố Vũng Tàu'
+export const HOTEL_PRICE_SALE = '1.480.338';
+export const HOTEL_PRICE = '1.874.056';
+export const VND = 'VND';
+export const UNIT = '/phòng/đêm';
+export const HOTEL_TEXT ='Giá cuối cùng!';

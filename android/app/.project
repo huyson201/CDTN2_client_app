@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-<<<<<<< HEAD
-<<<<<<< HEAD
-	<name>CDTN2_client_app</name>
-=======
-	<name>android</name>
->>>>>>> login
-=======
-	<name>android</name>
->>>>>>> 015d82d660da5f1257b230909aa9afdd635e28ef
-	<comment>Project android created by Buildship.</comment>
+	<name>app</name>
+	<comment>Project app created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
 			<arguments>
@@ -20,19 +17,12 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-<<<<<<< HEAD
-<<<<<<< HEAD
-			<id>1632291288328</id>
-=======
-			<id>1632643076763</id>
->>>>>>> login
-=======
-			<id>1632643076763</id>
->>>>>>> 015d82d660da5f1257b230909aa9afdd635e28ef
+			<id>1632291288356</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
