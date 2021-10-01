@@ -27,7 +27,7 @@ const App = () => {
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
+            tabBarIcon: ({ focused, color, size, padding }) => {
               let iconName = ""
               let iconColor = "rgba(0,0,0,.5)"
               switch (route.name) {
@@ -45,13 +45,13 @@ const App = () => {
                   break;
               }
 
-              return (<Icon name={iconName} color={color} size={size} />)
+              return (<Icon name={iconName} color={color} size={size} style={{ paddingBottom: padding }} />)
             }
           })}
         >
-          <Tab.Screen name="HomeTask" component={TaskHome} options={{ headerShown: false }} />
-          <Tab.Screen name="Notify" component={NotificationScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen name="HomeTask" component={TaskHome} options={{ headerShown: false, title: "Home" }} />
+          <Tab.Screen name="Notify" component={NotificationScreen} options={{ title: "Notification" }} />
+          <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
         </Tab.Navigator>
       </NavigationContainer>
     </View>
