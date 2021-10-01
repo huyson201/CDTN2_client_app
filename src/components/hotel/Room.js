@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  ImagePropTypes,
+} from "react-native";
 import styled from "styled-components";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon1 from "react-native-vector-icons/FontAwesome";
 import Ionicon from "react-native-vector-icons/Ionicons";
+import Octicons from "react-native-vector-icons/Octicons";
 import Feather from "react-native-vector-icons/Feather";
 import { ORANGE_LIGHT, BLUE2 } from "../../values/color";
 import { SliderBox } from "react-native-image-slider-box";
 // import {dataImage} from "../../values/constants"
 // import onLayout from "react-native-on-layout";
+import { dataRoom } from "../../values/constants";
 
 const Room = function ({
   name,
@@ -43,8 +52,7 @@ const Room = function ({
         style={styles.image}
         parentWidth={state.width}
         paginationBoxVerticalPadding={5}
-        dotStyle={{width: 7,height: 7,marginHorizontal: -5}}
-        autoplay={true}
+        dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
         imageLoadingColor={"#fff"}
         // onCurrentImagePressed={(index)}
         // ImageComponentStyle={{ width: "97%", resizeMode: "stretch" }}
@@ -55,27 +63,36 @@ const Room = function ({
           <Text style={styles.textContent}>
             <Icon1 name="money" size={14} color="#05375a">
               {" "}
-            </Icon1>
+            </Icon1>{" "}
             {price}
-            <Feather
-              style={{ paddingTop: 10 }}
-              name="dollar-sign"
-              size={14}
-            ></Feather>
+            <Feather style={{ paddingTop: 10 }} name="dollar-sign" size={14}>
+              {" "}
+            </Feather>
             /đêm
           </Text>
           <Text style={styles.textContent}>
-            <Ionicon name="people" size={14} color="#05375a">
+            <Ionicon name="people" size={15} color="#05375a">
               {" "}
             </Ionicon>
             {adult} người lớn {children} trẻ em
           </Text>
-          <Text style={styles.textContent}>
-            <Icon name="check" size={14} color="#05375a">
+
+          {status >= 1 ? (
+            <Text style={styles.textContent}>
+              <Icon name="check" size={14} color="#05375a">
+                {" "}
+              </Icon>
+              Còn {status} phòng
+            </Text>
+          ) : (
+            <Text style={styles.textContent}>
               {" "}
-            </Icon>
-            {status}
-          </Text>
+              <Octicons name="x" size={16} color="#05375a">
+                {" "}
+              </Octicons>{" "}
+              Hết phòng
+            </Text>
+          )}
         </View>
         <View>
           <TouchableOpacity activeOpacity={0.8}>

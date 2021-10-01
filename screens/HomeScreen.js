@@ -80,7 +80,7 @@ const HomeScreen = function ({ navigation }) {
       ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT)
       return
     }
-    navigation.navigate("ListRestaurants")
+    navigation.navigate("ListHotels")
   }
 
   const handlePressMap = () => {

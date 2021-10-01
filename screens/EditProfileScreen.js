@@ -1,18 +1,32 @@
-
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
   Text,
 } from 'react-native';
 import styled from 'styled-components';
-
+import {
+  SEARCH_TITLE,
+  LOCAL_SEARCH_TEXT,
+  NIGHT_NUMBER,
+  CALENDAR_TEXT,
+  HOTEL_CHECK_OUT,
+  MAX_DAY,
+  PERSON_NUMBER,
+  FILTER_STRING,
+  SEARCH_MAP_STRING,
+  SEARCH_BTN_STRING,
+} from '../src/values/constains';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1 } from '../src/values/color';
-import { Button } from 'react-native-elements';
-import { TextInput } from 'react-native';
-import { Picker } from "@react-native-picker/picker"
+import {BLUE1, DARK_GRAY, MAP_MARKER} from '../src/values/color';
+import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
+import {Button} from 'react-native-elements';
+import History from '../src/components/home/History';
+import About from '../src/components/home/About';
+import {AppRegistry, TextInput, Picker} from 'react-native';
 
 const EditProfileScreen = function () {
   const [selectedValue, setSelectedValue] = useState('java');
@@ -21,7 +35,7 @@ const EditProfileScreen = function () {
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
         <Title style={EditProfileStyles.headerText}>
-          USER INFORMATION
+          EDIT USER INFORMATION
         </Title>
       </View>
       <Container>
@@ -35,7 +49,6 @@ const EditProfileScreen = function () {
             backgroundColor="#05375a"
             color="#05375a"></Icon>
           <TextInput
-            editable={false}
             defaultValue="Name of user"
             placeholder="Type Your Name Here"
             autoCapitalize="none"
@@ -50,7 +63,6 @@ const EditProfileScreen = function () {
             backgroundColor="#05375a"
             color="#05375a"></Icon>
           <TextInput
-            editable={false}
             defaultValue="0123456789"
             placeholder="Type Your Phone Here"
             autoCapitalize="none"
@@ -66,7 +78,6 @@ const EditProfileScreen = function () {
             backgroundColor="#05375a"
             color="#05375a"></Icon>
           <Picker
-            enabled={false}
             selectedValue={selectedValue}
             style={EditProfileStyles.Picker}
             onValueChange={(itemValue, itemIndex) =>
@@ -77,7 +88,7 @@ const EditProfileScreen = function () {
             <Picker.Item label="Other" Color="blue" value="Other" />
           </Picker>
         </View>
-        <Button title="Edit Information" buttonStyle={EditProfileStyles.Btn}></Button>
+        <Button title="OK" buttonStyle={EditProfileStyles.Btn}></Button>
         <Button
           title="Cancel"
           buttonStyle={EditProfileStyles.cancelBtn}></Button>
@@ -102,7 +113,7 @@ const ViewRow = styled.View`
   align-items: center;
 `;
 const EditProfileStyles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
+  container: {flex: 1, backgroundColor: '#FFF'},
   header: {
     height: 150,
     backgroundColor: BLUE1,
@@ -113,7 +124,6 @@ const EditProfileStyles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    textAlign: 'center',
   },
   icon: {
     paddingTop: 13,
