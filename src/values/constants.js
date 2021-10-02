@@ -58,3 +58,11 @@ export const HOTEL_PRICE = '1.874.056';
 export const VND = 'VND';
 export const UNIT = '/phòng/đêm';
 export const HOTEL_TEXT ='Giá cuối cùng!';
+
+export const CHECK ='Đã có Check-in Trực Tiếp';
+export const CONTENT ='Tìm hiểu thêm';
+export const COMMENT_STRING ='Đánh giá hàng đầu';
+export const COMMENT ='"Lorem Ipsum is simply dummy text of the printing and typesetting dummy text"';
+export const USERNAME = 'Mai H. A. T.';
+
+export const UTIL_STRING ='Tiện nghi chung';
