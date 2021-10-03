@@ -1,6 +1,7 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RoomListScreen from "../../../screens/RoomListScreen";
+import DetailRoomScreen from "../../../screens/DetailRoomScreen"
 import HotelList from "../../../screens/HotelList";
 import { BLUE1 } from "../../values/color"
 import TabBar from "../home/TabBar";
