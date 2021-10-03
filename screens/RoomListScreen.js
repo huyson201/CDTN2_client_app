@@ -15,7 +15,7 @@ import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon3 from "react-native-vector-icons/AntDesign";
 import Room from "../src/components/hotel/Room";
 import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "@firebase/database";
+import { ref, onValue } from "firebase/database";
 
 const RoomListScreen = function ({ navigation, route }) {
   const [data, setData] = useState([]);
