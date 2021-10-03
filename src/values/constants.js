@@ -66,3 +66,5 @@ export const COMMENT ='"Lorem Ipsum is simply dummy text of the printing and typ
 export const USERNAME = 'Mai H. A. T.';
 
 export const UTIL_STRING ='Tiện nghi chung';
+export const DESSRIPTION_HOTEL = 'Lorem Ipsum is simply dummy text of the printing and typesetting. Lorem Ipsum is simply dummy text of the printing and typesetting.';
+

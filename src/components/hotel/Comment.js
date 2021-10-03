@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import { BLUE1, BLUE2, DARK_GRAY, LIGHT_GRAY } from '../../values/color';
 import {
@@ -22,7 +22,9 @@ const Comment = function () {
             <ItemContainer activeOpacity={0.5} underlayColor="#d3d3d3">
                 <ItemContent>
                     <Text style={styles.contentText}>{item.comment}</Text>
-                    <Text style={{ color: BLUE2, fontSize: 12 }}>Xem thêm</Text>
+                    <TouchableOpacity>
+                        <Text style={{ color: BLUE2, fontSize: 12 }}>Xem thêm</Text>
+                    </TouchableOpacity>
                     {/* <ViewRow> */}
                     <Text style={styles.username}>{item.userName}</Text>
                     {/* </ViewRow> */}
@@ -46,7 +48,9 @@ const Comment = function () {
             />
 
             <View style={styles.borderBottom}>
-                <Text style={{ fontSize: 12, color: BLUE2, fontWeight: 'bold' }}>XEM TOÀN BỘ ĐÁNH GIÁ</Text>
+                <TouchableOpacity>
+                    <Text style={{ fontSize: 12, color: BLUE2, fontWeight: 'bold' }}>XEM TOÀN BỘ ĐÁNH GIÁ</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         paddingBottom: 20,
-        paddingTop: 15,
+        paddingTop: 20,
     }
 });
 
