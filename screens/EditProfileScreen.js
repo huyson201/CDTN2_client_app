@@ -26,8 +26,8 @@ import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
 import {Button} from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
-import {AppRegistry, TextInput, Picker} from 'react-native';
-
+import {AppRegistry, TextInput} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 const EditProfileScreen = function () {
   const [selectedValue, setSelectedValue] = useState('java');
   return (

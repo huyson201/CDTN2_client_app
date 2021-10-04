@@ -15,7 +15,7 @@ const HotelList = function ({ navigation }) {
     const [listData, setListData] = useState([]);
     const searchData = useSelector((state) => state.search);
     const starCountRef = ref(db, "hotels");
-
+    
     // get data from firebase
     useEffect(() => {
         let data = [];

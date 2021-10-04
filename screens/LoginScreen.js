@@ -1,4 +1,4 @@
-import React ,{useEffect} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -9,13 +9,12 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from 'react-native';
-import styled from 'styled-components';
 import {BLUE1} from '../src/values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
 import CustomButton from '../src/components/CustomButton';
 import {auth} from '../cf_firebase/ConfigFireBase';
-import {onAuthStateChanged, signInWithEmailAndPassword} from '@firebase/auth';
+import { signInWithEmailAndPassword} from '@firebase/auth';
 const LoginScreen = ({navigation}) => {
 
  

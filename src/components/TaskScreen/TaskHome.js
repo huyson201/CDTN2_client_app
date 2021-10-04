@@ -13,6 +13,8 @@ const TaskHome = () => {
     
     return (
         <Stack.Navigator >
+            <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
             <Stack.Screen name="HomeTab" component={TabBar} options={{ headerShown: false }} />
             <Stack.Screen name="ListHotels" component={HotelList} options={{
                 headerShown: true,
@@ -21,8 +23,8 @@ const TaskHome = () => {
                 headerStyle: { backgroundColor: BLUE1 }
             }} />
             <Stack.Screen name="RoomListScreen" component={RoomListScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="DetailRoomScreen" component={DetailRoomScreen} options={{ headerShown: false }} />
+            
         
         </Stack.Navigator>
     )
