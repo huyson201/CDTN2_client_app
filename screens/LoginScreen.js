@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,14 +7,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import styled from 'styled-components';
-import { BLUE1 } from '../src/values/color';
+import {BLUE1} from '../src/values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../src/values/size';
+import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
 import CustomButton from '../src/components/CustomButton';
+import {auth} from '../cf_firebase/ConfigFireBase';
+import {onAuthStateChanged, signInWithEmailAndPassword} from '@firebase/auth';
+const LoginScreen = ({navigation}) => {
 
-const LoginScreen = ({ navigation }) => {
+ 
   const [data, setData] = React.useState({
     email: '',
     password: '',
@@ -37,9 +41,9 @@ const LoginScreen = ({ navigation }) => {
     }
   };
   const handlePressSignUp = () => {
-    navigation.navigate('SignUp');
+    navigation.navigate('SignUpScreen');
   };
-  const handlePressPassword = (val) => {
+  const handlePressPassword = val => {
     setData({
       ...data,
       password: val,
@@ -51,6 +55,21 @@ const LoginScreen = ({ navigation }) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
+  const handleLogin = () => {
+    try {
+      signInWithEmailAndPassword(auth, data['email'], data['password']).then(navigation.navigate('HomeTab'),ToastAndroid.show("Dang nhap thanh cong", ToastAndroid.SHORT))
+    } catch (error) {
+      console.log(error);
+    }
+   
+  };
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, user => {
+  //     if (user) {
+  //       navigation.navigate('HomeTab');
+  //     } 
+  //   })
+  // }, []);
   return (
     <SafeAreaView style={loginStyles.wrapper}>
       <View style={loginStyles.container}>
@@ -112,6 +131,7 @@ const LoginScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <CustomButton
+            onPress={handleLogin}
             text="login"
             bgColor={BLUE1}
             color={'#FFF'}></CustomButton>
@@ -119,7 +139,7 @@ const LoginScreen = ({ navigation }) => {
         <View style={loginStyles.footer}>
           <Text>Don't have an Account ? </Text>
           <TouchableOpacity onPress={handlePressSignUp}>
-            <Text style={{ color: BLUE1 }}>Sign Up</Text>
+            <Text style={{color: BLUE1}}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>

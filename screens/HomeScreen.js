@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -16,76 +16,82 @@ import {
   FILTER_STRING,
   SEARCH_MAP_STRING,
   SEARCH_BTN_STRING,
-  ADDRESS_NULL_MESSAGE
+  ADDRESS_NULL_MESSAGE,
 } from '../src/values/constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
-import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
-import { Button } from 'react-native-elements';
+import {BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE} from '../src/values/color';
+import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
+import {Button} from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
-import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal"
+import ClientAndRoomModal from '../src/components/home/ClientAndRoomModal';
 import CalendarModal from '../src/components/home/CalendarModal';
 import NightPicker from '../src/components/home/NightPicker';
 import SearchFilterModal from '../src/components/home/SearchFilterModal';
 import SearchLocalModal from '../src/components/home/SearchLocalModal';
-import { useDispatch, useSelector } from "react-redux";
-import { convertDateToVNDate, convertStrPersonRooms } from '../src/utilFunction';
+import {useDispatch, useSelector} from 'react-redux';
+import {convertDateToVNDate, convertStrPersonRooms} from '../src/utilFunction';
+import {onAuthStateChanged} from '@firebase/auth';
+import {auth} from '../cf_firebase/ConfigFireBase';
 
-const HomeScreen = function ({ navigation }) {
-  const roomModalRef = React.createRef()
-  const calendarRef = useRef()
-  const nightPickerRef = useRef()
-  const filterRef = useRef()
-  const addressRef = useRef()
+const HomeScreen = function ({navigation}) {
+  const roomModalRef = React.createRef();
+  const calendarRef = useRef();
+  const nightPickerRef = useRef();
+  const filterRef = useRef();
+  const addressRef = useRef();
 
   // address state
-  const address = useSelector(state => state.search.address)
+  const address = useSelector(state => state.search.address);
   // date state
-  const date = useSelector(state => state.search.date)
+  const date = useSelector(state => state.search.date);
 
   // number night
-  let receivedDate = convertDateToVNDate(date.receivedDate)
-  let payDate = convertDateToVNDate(date.payDate)
-  let numberNight = date.numDate
+  let receivedDate = convertDateToVNDate(date.receivedDate);
+  let payDate = convertDateToVNDate(date.payDate);
+  let numberNight = date.numDate;
 
   // person, rooms
-  const personsAndRooms = useSelector(state => state.search.personsAndRooms)
-  let strPARooms = convertStrPersonRooms(personsAndRooms)
+  const personsAndRooms = useSelector(state => state.search.personsAndRooms);
+  let strPARooms = convertStrPersonRooms(personsAndRooms);
 
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
+  const handlePressLogin = function () {
+    if(!auth.currentUser){
+      navigation.navigate('LoginScreen');
+    }
+   
+  };
   const handlePressRoomPicker = function () {
-    roomModalRef.current.show()
-  }
+    roomModalRef.current.show();
+  };
 
   const handlePressDate = () => {
-    calendarRef.current.show()
-  }
+    calendarRef.current.show();
+  };
 
   const handlePressNightPicker = () => {
-    nightPickerRef.current.show()
-  }
+    nightPickerRef.current.show();
+  };
 
   const handlePressFilterRef = () => {
-    filterRef.current.show()
-  }
+    filterRef.current.show();
+  };
   const handlePressAddress = () => {
-    addressRef.current.show()
-
-  }
+    addressRef.current.show();
+  };
 
   const HandlePressSearch = () => {
-    if (address === "") {
-      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT)
-      return
+    if (address === '') {
+      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT);
+      return;
     }
-    navigation.navigate("ListHotels")
-  }
+    navigation.navigate('ListHotels');
+  };
 
   const handlePressMap = () => {
-    navigation.navigate("GoogleMap")
-  }
+    navigation.navigate('GoogleMap');
+  };
   return (
     <ScrollView>
       <View style={homeStyles.header}>
@@ -100,7 +106,7 @@ const HomeScreen = function ({ navigation }) {
         <SearchBox style={homeStyles.elevation}>
           {/* search title */}
           <View style={homeStyles.searchTitle}>
-            <TouchableOpacity activeOpacity={0.7}>
+            <TouchableOpacity activeOpacity={0.7} onPress={handlePressLogin}>
               <ViewRow>
                 <Title ellipsizeMode="tail" numberOfLines={1}>
                   {SEARCH_TITLE}
@@ -120,7 +126,7 @@ const HomeScreen = function ({ navigation }) {
                   color={MAP_MARKER}
                 />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
-                  {address !== "" ? address : LOCAL_SEARCH_TEXT}
+                  {address !== '' ? address : LOCAL_SEARCH_TEXT}
                 </LabelSearch>
               </Field>
             </TouchableOpacity>
@@ -134,7 +140,7 @@ const HomeScreen = function ({ navigation }) {
                 activeOpacity={0.5}
                 style={homeStyles.searchCol1}>
                 <Field>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{flexDirection: 'row'}}>
                     <Icon name={'calendar-alt'} size={SEARCH_ICON_SIZE} />
                     <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
                       {receivedDate}
@@ -156,7 +162,7 @@ const HomeScreen = function ({ navigation }) {
               </TouchableOpacity>
             </ViewRow>
 
-            <ViewRow style={{ marginTop: 5 }}>
+            <ViewRow style={{marginTop: 5}}>
               <View style={homeStyles.searchCol1}>
                 <Text style={homeStyles.smallText}>
                   {HOTEL_CHECK_OUT} {payDate}
@@ -172,7 +178,9 @@ const HomeScreen = function ({ navigation }) {
 
           {/* select person numbers */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5} onPress={handlePressRoomPicker}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={handlePressRoomPicker}>
               <Field>
                 <Icon
                   name={'user-friends'}
@@ -188,9 +196,15 @@ const HomeScreen = function ({ navigation }) {
 
           {/* Filter */}
           <Container style={homeStyles.filedSpace}>
-            <TouchableOpacity activeOpacity={0.5} onPress={handlePressFilterRef}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={handlePressFilterRef}>
               <Field>
-                <Icon name={'sliders-h'} size={SEARCH_ICON_SIZE} color={BLUE1} />
+                <Icon
+                  name={'sliders-h'}
+                  size={SEARCH_ICON_SIZE}
+                  color={BLUE1}
+                />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
                   {FILTER_STRING}
                 </LabelSearch>
@@ -200,9 +214,9 @@ const HomeScreen = function ({ navigation }) {
 
           {/* btn control */}
           <Container>
-            <ViewRow style={{ marginTop: 12 }}>
+            <ViewRow style={{marginTop: 12}}>
               <TouchableOpacity activeOpacity={0.5} onPress={handlePressMap}>
-                <View style={{ flexDirection: 'row', marginLeft: 12 }}>
+                <View style={{flexDirection: 'row', marginLeft: 12}}>
                   <Icon
                     name={'map-marked-alt'}
                     size={SEARCH_ICON_SIZE}

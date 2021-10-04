@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   Text,
+  ToastAndroid,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -13,9 +14,14 @@ import { BLUE1 } from '../src/values/color';
 import { Button } from 'react-native-elements';
 import { TextInput } from 'react-native';
 import { Picker } from "@react-native-picker/picker"
+import { auth } from '../cf_firebase/ConfigFireBase';
+import { signOut } from '@firebase/auth';
 
-const EditProfileScreen = function () {
+const EditProfileScreen = function ({navigation}) {
   const [selectedValue, setSelectedValue] = useState('java');
+  const handleLogout =()=>{
+    signOut(auth).then(ToastAndroid.show("Dang xuat thanh cong", ToastAndroid.SHORT))
+  }
   return (
     <ScrollView>
       {/* HEADER */}
@@ -81,6 +87,7 @@ const EditProfileScreen = function () {
         <Button
           title="Cancel"
           buttonStyle={EditProfileStyles.cancelBtn}></Button>
+           <Button onPress={handleLogout} title="Logout" buttonStyle={EditProfileStyles.Btn}></Button>
       </Container>
     </ScrollView>
   );

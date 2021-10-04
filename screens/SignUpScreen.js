@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
-
 import {BLUE1} from '../src/values/color';
 import {DEVICE_HEIGHT, DEVICE_WIDTH} from '../src/values/size';
 import CustomButton from '../src/components/CustomButton';
-const SignUpScreen = () => {
-  const [data, setData] = React.useState({
+import {Button} from 'react-native-elements';
+import {auth} from '../cf_firebase/ConfigFireBase';
+import {createUserWithEmailAndPassword} from '@firebase/auth';
+const SignUpScreen = ({navigation}) => {
+  const [data, setData] = useState({
     email: '',
     password: '',
     confirm_password: '',
@@ -24,6 +26,8 @@ const SignUpScreen = () => {
     secureTextEntry: true,
     confirm_secureTextEntry: true,
   });
+  const [error, setError] = useState();
+  const [isLoading, setLoading] = useState(false);
   const textInputChange = val => {
     if (val.length != 0) {
       setData({
@@ -40,13 +44,13 @@ const SignUpScreen = () => {
     }
   };
 
-  const handlePressPassword = (val) => {
+  const handlePressPassword = val => {
     setData({
       ...data,
       password: val,
     });
   };
-  const handlePressConfirmPassword = (val) => {
+  const handlePressConfirmPassword = val => {
     setData({
       ...data,
       confirm_password: val,
@@ -64,12 +68,26 @@ const SignUpScreen = () => {
       confirm_secureTextEntry: !data.confirm_secureTextEntry,
     });
   };
+  const handleSignUp = () => {
+    console.log(data['email']);
+    console.log(data['password']);
+    if (data['password'] === data['confirm_password']) {
+      createUserWithEmailAndPassword(
+        auth,
+        data['email'],
+        data['password'],
+      ).then(navigation.navigate('HomeTab'));
+    } else {
+      console.log('sai');
+    }
+  };
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.textLogo}>Sign up</Text>
         </View>
+        {/* <Text>{currentUser && currentUser.email}</Text> */}
         <View style={styles.form}>
           <Text style={styles.text_footer}>Họ tên</Text>
           <View style={styles.action}>
@@ -180,10 +198,11 @@ const SignUpScreen = () => {
               )}
             </TouchableOpacity>
           </View>
-          <CustomButton
-            text="Sign up"
-            bgColor={BLUE1}
-            color={'#FFF'}></CustomButton>
+          <Button
+            disabled={isLoading}
+            onPress={handleSignUp}
+            buttonStyle={styles.buttonStyle}
+            title="Sign Up"></Button>
         </View>
         <View style={styles.footer}></View>
       </View>
@@ -191,6 +210,13 @@ const SignUpScreen = () => {
   );
 };
 const styles = StyleSheet.create({
+  buttonStyle: {
+    backgroundColor: BLUE1,
+    borderRadius: 10,
+    marginTop: 20,
+    fontWeight: 'bold',
+  },
+
   wrapper: {
     width: DEVICE_WIDTH,
     height: DEVICE_HEIGHT,
