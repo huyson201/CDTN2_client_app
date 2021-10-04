@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  ImagePropTypes,
-} from "react-native";
+import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon1 from "react-native-vector-icons/FontAwesome";
@@ -15,11 +8,10 @@ import Octicons from "react-native-vector-icons/Octicons";
 import Feather from "react-native-vector-icons/Feather";
 import { ORANGE_LIGHT, BLUE2 } from "../../values/color";
 import { SliderBox } from "react-native-image-slider-box";
-// import {dataImage} from "../../values/constants"
-// import onLayout from "react-native-on-layout";
-import { dataRoom } from "../../values/constants";
 
 const Room = function ({
+  roomId,
+  hotelId,
   name,
   price,
   adult,
@@ -28,11 +20,6 @@ const Room = function ({
   images,
   navigation,
 }) {
-  const handleDetail = () => {
-    // navigation.navigate('');
-    alert("Details");
-  };
-
   const [state, setState] = useState(0);
 
   const handleBooking = () => {
@@ -57,6 +44,7 @@ const Room = function ({
         // onCurrentImagePressed={(index)}
         // ImageComponentStyle={{ width: "97%", resizeMode: "stretch" }}
       />
+
       <ViewRow>
         <View>
           <Text style={styles.textName}>{name}</Text>
@@ -102,7 +90,14 @@ const Room = function ({
               onPress={handleBooking}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleDetail}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DetailRoomScreen", {
+                id: roomId,
+                hotelId: hotelId,
+              });
+            }}
+          >
             <Text style={styles.textDetail}>
               Xem chi tiết{" "}
               <Icon1

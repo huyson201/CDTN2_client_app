@@ -1,97 +1,133 @@
-import React, {useRef} from 'react';
+import React, { useRef, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
-  SafeAreaView,
-  ImageBackground,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
-  Image,
-} from 'react-native';
-import styled from 'styled-components';
-import {BLUE1, DARK_GRAY, ORANGE_LIGHT} from '../src/values/color';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
-import {Button} from 'react-native-elements';
+} from "react-native";
+import styled from "styled-components";
+import { BLUE1, DARK_GRAY, ORANGE_LIGHT } from "../src/values/color";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import EntypoIcon from "react-native-vector-icons/Entypo";
+import { DEVICE_WIDTH, DEVICE_HEIGHT } from "../src/values/size";
+import { Button } from "react-native-elements";
 import { SliderBox } from "react-native-image-slider-box";
-const imgs = [
-  'https://cdn.galaxy.tf/unit-media/tc-default/uploads/images/room_photo/001/579/602/dlx3-standard.jpg',
-  'https://cdn.galaxy.tf/unit-media/tc-default/uploads/images/room_photo/001/579/602/dlx3-standard.jpg',
-  'https://cdn.galaxy.tf/unit-media/tc-default/uploads/images/room_photo/001/579/602/dlx3-standard.jpg',
-];
-import DetailPriceModal from '../src/components/hotel/DetailPriceModal';
-const DetailRoomScreen = ({navigation}) => {
+import DetailPriceModal from "../src/components/hotel/DetailPriceModal";
+import { db } from "../cf_firebase/ConfigFireBase";
+import { ref, onValue } from "firebase/database";
+
+const DetailRoomScreen = ({ navigation, route }) => {
+  const detailRoom = ref(
+    db,
+    "hotels/" + route.params.hotelId + "/rooms/" + route.params.id
+  );
+
+  const [dataDetailRoom, setDataDetailRoom] = useState({
+    roomName: "",
+    adult: 0,
+    children: 0,
+    price: 0,
+    desc: "",
+    beds: 0,
+    area: 0,
+    status: 0,
+    images: [],
+  });
+
+  useEffect(() => {
+    setDataDetailRoom({ images: [] });
+    onValue(detailRoom, (snapshot) => {
+      const data = snapshot.val();
+      setDataDetailRoom({
+        roomName: data.name,
+        adult: data.adult,
+        children: data.children,
+        price: data.price,
+        desc: data.roomDesc,
+        beds: data.beds,
+        area: data.area,
+        status: data.status,
+        images: data.images.split(","),
+      });
+    });
+  }, []);
+
   const bottomPopupRef = useRef();
-  const test = () => {};
   const handlePress = () => {
     bottomPopupRef.current.show();
+  };
+
+  const handleBooking = () => {
+    navigation.navigate("Invoice");
   };
   return (
     <ScrollView>
       <View>
-      <SliderBox
-        images={imgs}
-        style={styles.img}
-        parentWidth={DEVICE_WIDTH}
-        paginationBoxVerticalPadding={5}
-        dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
-        imageLoadingColor={"#fff"}
-      />
+        <SliderBox
+          images={dataDetailRoom.images}
+          style={styles.img}
+          parentWidth={DEVICE_WIDTH}
+          paginationBoxVerticalPadding={5}
+          dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
+          imageLoadingColor={"#fff"}
+        />
       </View>
-      <View style={{paddingHorizontal: 20}}>
-        <Text style={styles.nameRoom}>Deluxe Double</Text>
+      <View style={{ paddingHorizontal: 20 }}>
+        <Text style={styles.nameRoom}>{dataDetailRoom.roomName}</Text>
         <View style={styles.description}>
-          <ViewRow style={{marginBottom: 20}}>
+          <ViewRow style={{ marginBottom: 20 }}>
             <ViewRow>
-              <Icon name="users" size={20} color={BLUE1}></Icon>
-              <View style={{marginLeft: 5}}>
-                <Text style={{fontSize: 15, fontWeight: '500'}}>Khách</Text>
-                <Text>2 khách/1 phòng</Text>
+              <Icon name="users" size={18} color={BLUE1}></Icon>
+              <View style={{ marginLeft: 5 }}>
+                <Text style={styles.title}>Khách</Text>
+                <Text style={{ fontSize: 11 }}>
+                  {dataDetailRoom.adult} người lớn {dataDetailRoom.children} trẻ
+                  em/1 phòng
+                </Text>
               </View>
             </ViewRow>
             <ViewRow>
-              <Icon name="ruler" size={20} color={BLUE1}></Icon>
-              <View style={{marginLeft: 5}}>
-                <Text style={{fontSize: 15, fontWeight: '500'}}>
-                  Kích thước phòng
-                </Text>
-                <Text>70.0 m2</Text>
+              <Icon name="ruler" size={18} color={BLUE1}></Icon>
+              <View style={{ marginLeft: 5 }}>
+                <Text style={styles.title}>Kích thước phòng</Text>
+                <Text style={{ fontSize: 11 }}>{dataDetailRoom.area} m2</Text>
               </View>
             </ViewRow>
           </ViewRow>
           <ViewRow>
             <ViewRow>
-              <Icon name="bed" size={20} color={BLUE1}></Icon>
-              <View style={{marginLeft: 5}}>
-                <Text style={{fontSize: 15, fontWeight: '500'}}>
-                  Loại giường
+              <Icon name="bed" size={18} color={BLUE1}></Icon>
+              <View style={{ marginLeft: 5 }}>
+                <Text style={styles.title}>Loại giường</Text>
+                <Text style={{ fontSize: 11 }}>
+                  {dataDetailRoom.beds == 2 ? "Giường đôi" : "Giường đơn"}
                 </Text>
-                <Text>Giường đôi</Text>
               </View>
             </ViewRow>
           </ViewRow>
         </View>
-        <View style={styles.description}>
-          <Text style={styles.title}>Tình trạng phòng</Text>
+        <ViewRow style={styles.description}>
+          <Text style={styles.title}>Tình trạng phòng: </Text>
           <View>
-            <Text>Còn phòng</Text>
+            <Text style={{ fontSize: 13 }}>
+              {" "}
+              {dataDetailRoom.status >= 1 ? "Còn phòng" : "Hết phòng"}
+            </Text>
           </View>
-        </View>
+        </ViewRow>
         <View style={styles.description}>
           <Text style={styles.title}>Dịch vụ phòng</Text>
-          <View >
-            <ViewRow style={{justifyContent:'flex-start'}}>
+          <View>
+            <ViewRow style={{ justifyContent: "flex-start" }}>
               <EntypoIcon name="dot-single"></EntypoIcon>
               <Text>Tủ lạnh</Text>
             </ViewRow>
-            <ViewRow style={{justifyContent:'flex-start'}}>
+            <ViewRow style={{ justifyContent: "flex-start" }}>
               <EntypoIcon name="dot-single"></EntypoIcon>
               <Text>Máy lạnh</Text>
             </ViewRow>
-            <ViewRow style={{justifyContent:'flex-start'}}>
+            <ViewRow style={{ justifyContent: "flex-start" }}>
               <EntypoIcon name="dot-single"></EntypoIcon>
               <Text>Tivi</Text>
             </ViewRow>
@@ -104,21 +140,26 @@ const DetailRoomScreen = ({navigation}) => {
       </View>
       <TouchableOpacity activeOpacity={1} onPress={handlePress}>
         <View style={styles.priceInfor}>
-          <ViewRow style={{justifyContent: 'flex-start'}}>
+          <ViewRow style={{ justifyContent: "flex-start" }}>
             <Icon
-              style={{paddingBottom: 3}}
+              style={{ paddingBottom: 3 }}
               color={BLUE1}
-              name="chevron-up"></Icon>
-            <Text style={{fontSize: 12, paddingBottom: 2, marginLeft: 3}}>
+              name="chevron-up"
+            ></Icon>
+            <Text style={{ fontSize: 12, paddingBottom: 2, marginLeft: 3 }}>
               Tổng giá tiền cho 29 - 30/9/2021 - 1 phòng - 1 đêm
             </Text>
           </ViewRow>
           <ViewRow>
             <View>
-              <Text style={styles.priceSale}>VND 1.088.000</Text>
-              <Text style={styles.price}>VND 4.088.000</Text>
+              {/* <Text style={styles.priceSale}>VND {dataDetailRoom.price}</Text> */}
+              <Text style={styles.price}>VND {dataDetailRoom.price}</Text>
             </View>
-            <Button buttonStyle={styles.button} title={'Chọn'} />
+            <Button
+              buttonStyle={styles.button}
+              title={"Chọn"}
+              onPress={handleBooking}
+            />
           </ViewRow>
         </View>
       </TouchableOpacity>
@@ -135,34 +176,34 @@ const styles = StyleSheet.create({
   priceInfor: {
     paddingHorizontal: 20,
     borderTopWidth: 2,
-    borderColor: 'rgba(158, 150, 150, .5)',
+    borderColor: "rgba(158, 150, 150, .5)",
     marginTop: 16,
     paddingVertical: 8,
   },
   priceSale: {
     color: DARK_GRAY,
     fontSize: 12,
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
   },
   price: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 17,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: "500",
   },
   nameRoom: {
-    fontWeight: '600',
-    fontSize: 16,
+    fontWeight: "600",
+    fontSize: 19,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderColor: 'rgba(158, 150, 150, .5)',
+    borderColor: "rgba(158, 150, 150, .5)",
   },
   description: {
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderColor: 'rgba(158, 150, 150, .5)',
+    borderColor: "rgba(158, 150, 150, .5)",
   },
   change: {
     paddingVertical: 16,
@@ -182,7 +223,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   button: {
     fontSize: 10,

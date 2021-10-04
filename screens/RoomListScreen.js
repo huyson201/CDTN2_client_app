@@ -5,12 +5,9 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  ToastAndroid,
-  ScrollView,
 } from "react-native";
 import { BLUE1, LIGHT_GRAY } from "../src/values/color";
 import styled from "styled-components";
-// import Icon from "react-native-vector-icons/FontAwesome5";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon3 from "react-native-vector-icons/AntDesign";
 import Room from "../src/components/hotel/Room";
@@ -57,7 +54,6 @@ const RoomListScreen = function ({ navigation, route }) {
 
   const handleBack = () => {
     navigation.goBack();
-    // alert("go back");
   };
 
   const handleIconBookmark = () => {
@@ -139,6 +135,8 @@ const RoomListScreen = function ({ navigation, route }) {
             <View>
               <Room
                 key={item.id}
+                roomId={item.id}
+                hotelId={route.params.hotelId}
                 name={item.roomName}
                 price={item.price}
                 adult={item.adult}
@@ -151,12 +149,6 @@ const RoomListScreen = function ({ navigation, route }) {
           );
         }}
       />
-
-      {/* <ScrollView style={roomStyles.marginScrollView}>
-        {data.map((e) => {
-          console.log(e.images);
-        })}
-      </ScrollView> */}
     </View>
   );
 };
@@ -173,7 +165,7 @@ const roomStyles = StyleSheet.create({
     backgroundColor: BLUE1,
     alignItems: "center",
     flex: 0.08,
-    fontFamily:"AnticSlab-Regular"
+    fontFamily: "AnticSlab-Regular",
   },
   headerTextName: {
     color: "#fff",
