@@ -4,14 +4,17 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import TaskHome from './src/components/TaskScreen/TaskHome';
 import { View } from 'react-native';
+import Invoice from './screens/Invoice';
+import DetailInvoice from './src/components/invoices/DetailInvoice';
 const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
     <View style={{ flex: 1 }}>
-      <NavigationContainer>
+      {/* <NavigationContainer>
         <TaskHome />
-      </NavigationContainer>
+      </NavigationContainer> */}
+      <DetailInvoice />
     </View>
   );
 };
