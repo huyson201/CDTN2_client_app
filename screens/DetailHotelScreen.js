@@ -35,10 +35,10 @@ const DetailHotelScreen = ({ navigation, route }) => {
     name: "",
     address: "",
     price: 0,
-    priceSale: 0,
     desc: "",
     star: 0,
     phone: "",
+    sale: "",
     images: [],
   });
 
@@ -50,11 +50,11 @@ const DetailHotelScreen = ({ navigation, route }) => {
         hotelId: data.hotel,
         name: data.name,
         address: data.address,
-        price: data.price,
-        priceSale: data.priceSale,
+        price: route.params.price,
         desc: data.desc,
         star: data.star,
         phone: data.phone,
+        sale: data.sale,
         images: data.image.split(","),
       });
     });
@@ -196,8 +196,9 @@ const DetailHotelScreen = ({ navigation, route }) => {
         <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
           <Text style={styles.contentText}>Giá/phòng/đêm từ</Text>
           <Text style={{ fontSize: 15, fontWeight: "bold", color: ORANGE }}>
-            {VND} {dataHotel.priceSale != null && dataHotel.priceSale != " "
-              ? dataHotel.priceSale
+            {VND}{" "}
+            {dataHotel.sale != null && dataHotel.sale != ""
+              ? dataHotel.price - dataHotel.price * dataHotel.sale
               : dataHotel.price}
           </Text>
           <Text style={{ fontSize: 11, fontWeight: "bold", color: DARK_GRAY }}>
@@ -213,6 +214,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
                 hotelId: dataHotel.hotelId,
                 hotelName: dataHotel.name,
                 hotelAddress: dataHotel.address,
+                sale: dataHotel.sale
               });
             }}
           >

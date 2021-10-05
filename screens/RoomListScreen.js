@@ -23,6 +23,7 @@ const RoomListScreen = function ({ navigation, route }) {
     adult: 0,
     children: 0,
     status: 0,
+    sale:0,
     images: [],
   };
 
@@ -41,6 +42,7 @@ const RoomListScreen = function ({ navigation, route }) {
           adult: data.adult,
           children: data.children,
           status: data.status,
+          sale: route.params.sale,
           images: data.images.split(","),
         };
         roomData.push(itemData);
@@ -139,6 +141,7 @@ const RoomListScreen = function ({ navigation, route }) {
                 hotelId={route.params.hotelId}
                 name={item.roomName}
                 price={item.price}
+                sale={item.sale}
                 adult={item.adult}
                 children={item.children}
                 status={item.status}
