@@ -17,15 +17,17 @@ for (let i = 1; i <= 31; i++) {
 }
 const NightPicker = forwardRef((props, ref) => {
     const [show, setShow] = useState(false)
-    const [currentValue, setCurrentValue] = useState(1)
     const dispatch = useDispatch()
+    const [currentValue, setCurrentValue] = useState(1)
     const onChangeValue = (selectedValue) => {
         setCurrentValue(selectedValue)
     }
 
     const handlePressChoose = () => {
+
         let action = setNightNumber(currentValue + 1)
         dispatch(action)
+
         setShow(false)
     }
 

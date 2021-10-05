@@ -9,7 +9,6 @@ import HotelList from "../../../screens/HotelList";
 import Invoice from "../../../screens/Invoice";
 import { BLUE1 } from "../../values/color";
 import TabBar from "../home/TabBar";
-import { color } from "react-native-elements/dist/helpers";
 const Stack = createNativeStackNavigator();
 
 const TaskHome = () => {
@@ -24,12 +23,12 @@ const TaskHome = () => {
         name="SignUpScreen"
         component={SignUpScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
       <Stack.Screen
         name="HomeTab"
         component={TabBar}
         options={{ headerShown: false }}
-      /> */}
+      />
       <Stack.Screen
         name="ListHotels"
         component={HotelList}
@@ -41,26 +40,27 @@ const TaskHome = () => {
         }}
       />
       <Stack.Screen
-        name="RoomListScreen"
-        component={RoomListScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
         name="DetailHotelScreen"
         component={DetailHotelScreen}
         options={{
           headerShown: true,
           headerTransparent: true,
-          headerTitle:"",
+          headerTitle: "",
           headerTintColor: "#fff",
         }}
       />
+      <Stack.Screen
+        name="RoomListScreen"
+        component={RoomListScreen}
+        options={{ headerShown: false }}
+      />
+
       <Stack.Screen
         name="DetailRoomScreen"
         component={DetailRoomScreen}
         options={{ headerShown: false }}
       />
-        <Stack.Screen
+      <Stack.Screen
         name="Invoice"
         component={Invoice}
         options={{ headerShown: false }}

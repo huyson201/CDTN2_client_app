@@ -48,7 +48,7 @@ const HotelList = function ({ navigation }) {
 
     if (item.sale != "" && item.sale != null) {
       itemSale = (
-        <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}>
+        <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }} key={item.priceSale}>
           {" "}
           {VND} {getMinPrice(prices) - getMinPrice(prices) * item.sale}
         </Text>
@@ -66,7 +66,7 @@ const HotelList = function ({ navigation }) {
           });
         }}
       >
-        <ViewRow key={item.id}>
+        <ViewRow>
           {/* Hotel image */}
           <Image
             style={styles.hotelImage}
@@ -124,7 +124,7 @@ const HotelList = function ({ navigation }) {
         style={{ marginTop: 5 }}
         data={listData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        extraData={(item) => item.id}
       />
     </View>
   );
