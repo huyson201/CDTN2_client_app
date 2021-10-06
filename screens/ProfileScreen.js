@@ -20,7 +20,7 @@ import { signOut } from '@firebase/auth';
 const EditProfileScreen = function ({navigation}) {
   const [selectedValue, setSelectedValue] = useState('java');
   const handleLogout =()=>{
-    signOut(auth).then(ToastAndroid.show("Dang xuat thanh cong", ToastAndroid.SHORT))
+    signOut(auth).then(ToastAndroid.show("Dang xuat thanh cong", ToastAndroid.SHORT),navigation.navigate("LoginScreen"))
   }
   return (
     <ScrollView>
