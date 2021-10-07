@@ -36,7 +36,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
     address: "",
     price: 0,
     desc: "",
-    star: 0,
+    star: [],
     phone: "",
     sale: "",
     images: [],
@@ -46,13 +46,19 @@ const DetailHotelScreen = ({ navigation, route }) => {
     setDataHotel({ images: [] });
     onValue(hotel, (snapshot) => {
       const data = snapshot.val();
+      let number = [];
+      number.length = data.star;
+      for (let i = 0; i < number.length; i++) {
+        number[i] = "star";
+      }
+
       setDataHotel({
         hotelId: data.hotel,
         name: data.name,
         address: data.address,
         price: route.params.price,
         desc: data.desc,
-        star: data.star,
+        star: number,
         phone: data.phone,
         sale: data.sale,
         images: data.image.split(","),
@@ -100,11 +106,9 @@ const DetailHotelScreen = ({ navigation, route }) => {
             </View>
             <View style={{ marginLeft: 5 }}>
               <ViewRow1>
-                <Icon1 name="star" size={15} color={GOLD_COLOR} />
-                <Icon1 name="star" size={15} color={GOLD_COLOR} />
-                <Icon1 name="star" size={15} color={GOLD_COLOR} />
-                <Icon1 name="star" size={15} color={GOLD_COLOR} />
-                <Icon1 name="star" size={15} color={GOLD_COLOR} />
+                {dataHotel.star.map((e) => {
+                  return <Icon1 name={e} size={15} color={GOLD_COLOR} />;
+                })}
               </ViewRow1>
             </View>
           </ViewRow1>
@@ -214,7 +218,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
                 hotelId: dataHotel.hotelId,
                 hotelName: dataHotel.name,
                 hotelAddress: dataHotel.address,
-                sale: dataHotel.sale
+                sale: dataHotel.sale,
               });
             }}
           >

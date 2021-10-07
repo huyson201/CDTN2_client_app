@@ -11,10 +11,10 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   return (
     <View style={{ flex: 1 }}>
-      {/* <NavigationContainer>
+      <NavigationContainer>
         <TaskHome />
-      </NavigationContainer> */}
-      <DetailInvoice />
+      </NavigationContainer>
+      {/* <DetailInvoice /> */}
     </View>
   );
 };

@@ -34,10 +34,11 @@ const DetailRoomScreen = ({ navigation, route }) => {
     status: 0,
     sale: 0,
     images: [],
+    services: [],
   });
 
   useEffect(() => {
-    setDataDetailRoom({ images: [] });
+    setDataDetailRoom({ services: [], images: [] });
     onValue(detailRoom, (snapshot) => {
       const data = snapshot.val();
       setDataDetailRoom({
@@ -51,17 +52,21 @@ const DetailRoomScreen = ({ navigation, route }) => {
         status: data.status,
         sale: route.params.sale,
         images: data.images.split(","),
+        services: data.services.split(","),
       });
     });
   }, []);
-
   const bottomPopupRef = useRef();
   const handlePress = () => {
     bottomPopupRef.current.show();
   };
 
   const handleBooking = () => {
-    navigation.navigate("Invoice");
+    navigation.navigate("Invoice", {
+      id: route.params.id,
+      data: dataDetailRoom,
+      hotelName: route.params.hotelName,
+    });
   };
   return (
     <ScrollView>
@@ -84,8 +89,7 @@ const DetailRoomScreen = ({ navigation, route }) => {
               <View style={{ marginLeft: 5 }}>
                 <Text style={styles.title}>Khách</Text>
                 <Text style={{ fontSize: 11 }}>
-                  {dataDetailRoom.adult} người lớn {dataDetailRoom.children} trẻ
-                  em/1 phòng
+                  {dataDetailRoom.adult + dataDetailRoom.children} người/1 phòng
                 </Text>
               </View>
             </ViewRow>
@@ -120,20 +124,14 @@ const DetailRoomScreen = ({ navigation, route }) => {
         </ViewRow>
         <View style={styles.description}>
           <Text style={styles.title}>Dịch vụ phòng</Text>
-          <View>
-            <ViewRow style={{ justifyContent: "flex-start" }}>
-              <EntypoIcon name="dot-single"></EntypoIcon>
-              <Text>Tủ lạnh</Text>
-            </ViewRow>
-            <ViewRow style={{ justifyContent: "flex-start" }}>
-              <EntypoIcon name="dot-single"></EntypoIcon>
-              <Text>Máy lạnh</Text>
-            </ViewRow>
-            <ViewRow style={{ justifyContent: "flex-start" }}>
-              <EntypoIcon name="dot-single"></EntypoIcon>
-              <Text>Tivi</Text>
-            </ViewRow>
-          </View>
+          {dataDetailRoom.services.map((e) => {
+            return (
+              <ViewRow style={{ justifyContent: "flex-start" }}>
+                <EntypoIcon name="dot-single"></EntypoIcon>
+                <Text>{e}</Text>
+              </ViewRow>
+            );
+          })}
         </View>
         <View style={styles.change}>
           <Text style={styles.title}>Đổi lịch và huỷ phòng</Text>
@@ -153,20 +151,17 @@ const DetailRoomScreen = ({ navigation, route }) => {
             </Text>
           </ViewRow>
           <ViewRow>
-            {dataDetailRoom.sale != null && dataDetailRoom.sale != "" ? (
-              <View>
+            {/*  ? ( */}
+            <View>
+              {dataDetailRoom.sale != null && dataDetailRoom.sale != "" ? (
                 <Text style={styles.priceSale}>VND {dataDetailRoom.price}</Text>
-                <Text style={styles.price}>
-                  VND{" "}
-                  {dataDetailRoom.price -
-                    dataDetailRoom.price * dataDetailRoom.sale}
-                </Text>
-              </View>
-            ) : (
-              <View>
-                <Text style={styles.price}>VND {dataDetailRoom.price}</Text>
-              </View>
-            )}
+              ) : (
+                <Text></Text>
+              )}
+              <Text style={styles.price}>
+                VND {getPrice(dataDetailRoom.price, dataDetailRoom.sale)}
+              </Text>
+            </View>
 
             <Button
               buttonStyle={styles.button}
@@ -176,10 +171,23 @@ const DetailRoomScreen = ({ navigation, route }) => {
           </ViewRow>
         </View>
       </TouchableOpacity>
-      <DetailPriceModal ref={bottomPopupRef}></DetailPriceModal>
+      <DetailPriceModal
+        ref={bottomPopupRef}
+        price={dataDetailRoom.price}
+        sale={dataDetailRoom.sale}
+        taxes={50000}
+      ></DetailPriceModal>
     </ScrollView>
   );
 };
+
+function getPrice(price, sale) {
+  if (sale != null && sale != "") {
+    price = price - price * sale;
+  }
+  return price;
+}
+
 const ViewRow = styled.View`
   flex-direction: row;
   justify-content: space-between;

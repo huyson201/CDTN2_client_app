@@ -49,8 +49,6 @@ const Utilities = function () {
         </View>
     );
 };
-
-
 const ViewRow = styled.View`
   flex-direction: row;
   align-items: center;
