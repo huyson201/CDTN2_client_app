@@ -13,19 +13,17 @@ const HotelList = function ({ navigation }) {
   const [listData, setListData] = useState([]);
   const searchData = useSelector((state) => state.search);
   const starCountRef = ref(db, "hotels");
-
   // get data from firebase
   useEffect(() => {
+    setListData([]);
     let data = [];
     let searchAddress = searchData.address;
     let arrStar = searchData.filter.rankStars;
     // let maxPrice = searchData.filter.maxPrice;
     // let minPrice = searchData.filter.minPrice;
-
     onValue(starCountRef, (snapshot) => {
       data = snapshot.val();
       data = Object.values(data);
-
       data = filterAddress(data, searchAddress);
       data = filterStar(data, arrStar);
       // data = filterPrice(data, maxPrice, minPrice);
@@ -36,11 +34,23 @@ const HotelList = function ({ navigation }) {
   //   render item in flat list
   const renderItem = function ({ item, index }) {
     let itemSale = null;
-    if (item.priceSale != " " && item.priceSale != null) {
+    let prices = [];
+
+    const rooms = ref(db, "hotels/" + item.hotel + "/rooms");
+    onValue(rooms, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const room = childSnapshot.val();
+        prices.push({
+          price: room.price,
+        });
+      });
+    });
+
+    if (item.sale != "" && item.sale != null) {
       itemSale = (
-        <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}>
+        <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }} key={item.priceSale}>
           {" "}
-          {VND} {item.priceSale}
+          {VND} {getMinPrice(prices) - getMinPrice(prices) * item.sale}
         </Text>
       );
     }
@@ -52,10 +62,11 @@ const HotelList = function ({ navigation }) {
           navigation.navigate("DetailHotelScreen", {
             id: 1,
             hotelId: item.hotel,
+            price: getMinPrice(prices),
           });
         }}
       >
-        <ViewRow key={item.id}>
+        <ViewRow>
           {/* Hotel image */}
           <Image
             style={styles.hotelImage}
@@ -84,7 +95,7 @@ const HotelList = function ({ navigation }) {
 
             {/* Hotel price */}
             <Text style={styles.priceText}>
-              {itemSale != null ? `${VND} ${item.price}` : ``}
+              {itemSale != null ? `${VND} ${getMinPrice(prices)}` : ``}
             </Text>
             {/* Hotel price sale */}
             <ViewRow>
@@ -95,7 +106,7 @@ const HotelList = function ({ navigation }) {
                   style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}
                 >
                   {" "}
-                  {VND} {item.price}
+                  {VND} {getMinPrice(prices)}
                 </Text>
               )}
               <Text style={styles.contentText}>{UNIT}</Text>
@@ -113,7 +124,7 @@ const HotelList = function ({ navigation }) {
         style={{ marginTop: 5 }}
         data={listData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        extraData={(item) => item.id}
       />
     </View>
   );
@@ -176,6 +187,17 @@ function removePrefixAddress(address) {
   str = str.replace("duong", "");
 
   return str;
+}
+
+//lấy giá min giữa các room của hotel
+function getMinPrice(prices) {
+  let min = prices[0].price;
+  prices.forEach((e) => {
+    if (min >= e.price) {
+      min = e.price;
+    }
+  });
+  return min;
 }
 
 const ItemContainer = styled.TouchableOpacity`

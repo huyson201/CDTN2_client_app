@@ -14,6 +14,7 @@ const Room = function ({
   hotelId,
   name,
   price,
+  sale,
   adult,
   children,
   status,
@@ -52,7 +53,7 @@ const Room = function ({
             <Icon1 name="money" size={14} color="#05375a">
               {" "}
             </Icon1>{" "}
-            {price}
+            {sale != null && sale != "" ? price - price * sale : price}
             <Feather style={{ paddingTop: 10 }} name="dollar-sign" size={14}>
               {" "}
             </Feather>
@@ -95,6 +96,7 @@ const Room = function ({
               navigation.navigate("DetailRoomScreen", {
                 id: roomId,
                 hotelId: hotelId,
+                sale: sale,
               });
             }}
           >

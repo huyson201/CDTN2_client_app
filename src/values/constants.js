@@ -4,8 +4,7 @@ export const AUTO_COMPLETE_API2 = "jqp89VbSqzN0OiCDeliGO5fPyWZ5LOI86lVKhjaq";
 export const AUTO_COMPLETE_API3 = "X4FaPZaLKheykTc465XhtpObrtjB2BknzSm1ZIlH";
 export const LOGO_TEXT = "Booking Hotel";
 
-export const SEARCH_TITLE =
-  "Đăng nhập để xem thứ hạng trong trang Lorem Ipsum is simply dummy text of the printing and typesetting";
+export const SEARCH_TITLE = "Nhập thông tin tìm kiếm";
 export const LOCAL_SEARCH_TEXT = "Vị trí";
 export const CALENDAR_TEXT = "T7, 18 thg 9 2021";
 export const NIGHT_NUMBER = "2 đêm";
@@ -57,19 +56,20 @@ export const HOTEL_PRICE_SALE = '1.480.338';
 export const HOTEL_PRICE = '1.874.056';
 export const VND = 'VND';
 export const UNIT = '/phòng/đêm';
-export const HOTEL_TEXT ='Giá cuối cùng!';
+export const HOTEL_TEXT = 'Giá cuối cùng!';
 
-export const CHECK ='Đã có Check-in Trực Tiếp';
-export const CONTENT ='Tìm hiểu thêm';
-export const COMMENT_STRING ='Đánh giá hàng đầu';
-export const COMMENT ='"Lorem Ipsum is simply dummy text of the printing and typesetting dummy text"';
+export const CHECK = 'Đã có Check-in Trực Tiếp';
+export const CONTENT = 'Tìm hiểu thêm';
+export const COMMENT_STRING = 'Đánh giá hàng đầu';
+export const COMMENT = '"Lorem Ipsum is simply dummy text of the printing and typesetting dummy text"';
 export const USERNAME = 'Mai H. A. T.';
 
-export const UTIL_STRING ='Tiện nghi chung';
+export const UTIL_STRING = 'Tiện nghi chung';
 export const DESSRIPTION_HOTEL = 'Lorem Ipsum is simply dummy text of the printing and typesetting. Lorem Ipsum is simply dummy text of the printing and typesetting.';
 
 export const LOGIN_SUCCESSFULLY = "Đăng nhập thành công"
 export const SIGNUP_SUCCESSFULLY = "Đăng kí thành công"
+export const SIGNOUT_SUCCESSFULLY = "Đăng xuất thành công"
 export const WRONG_PASSWORD = 'Nhập sai password'
 export const USER_NOT_FOUND = 'Không tìm thấy user'
 export const TOO_MANY_REQUEST = 'Tài khoản tạm thời bị vô hiệu hoá do nhiều lần đăng nhập không thành công. Vui lòng thử lại sau'

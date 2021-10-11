@@ -42,8 +42,7 @@ const searchReducer = function (state = initialState, action) {
         case "SET_NIGHT_NUMBER":
             payDate = getTomorrow(state.date.receivedDate, action.payload)
             let nDate = { ...state.date, ["payDate"]: payDate, numDate: action.payload }
-            state = { ...state, ["payDate"]: payDate, date: nDate }
-            console.log(action)
+            state = { ...state, date: nDate }
             return state
 
         case "SET_PERSON_ROOM":
@@ -52,8 +51,7 @@ const searchReducer = function (state = initialState, action) {
         case "SET_FILTER":
             let nFilter = { ...action.payload }
             state = { ...state, filter: nFilter }
-            console.log(action)
-            console.log(state)
+
             return state
         default:
             return state

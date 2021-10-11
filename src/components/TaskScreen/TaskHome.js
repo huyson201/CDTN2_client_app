@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import RoomListScreen from '../../../screens/RoomListScreen';
-import DetailRoomScreen from '../../../screens/DetailRoomScreen';
-import DetailHotelScreen from '../../../screens/DetailHotelScreen';
-import SignUpScreen from '../../../screens/SignUpScreen';
-import LoginScreen from '../../../screens/LoginScreen';
-import HotelList from '../../../screens/HotelList';
-import Invoice from '../../../screens/Invoice';
-import {BLUE1} from '../../values/color';
-import TabBar from '../home/TabBar';
-import {color} from 'react-native-elements/dist/helpers';
-import { auth } from '../../../cf_firebase/ConfigFireBase';
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import RoomListScreen from "../../../screens/RoomListScreen";
+import DetailRoomScreen from "../../../screens/DetailRoomScreen";
+import DetailHotelScreen from "../../../screens/DetailHotelScreen";
+import SignUpScreen from "../../../screens/SignUpScreen";
+import LoginScreen from "../../../screens/LoginScreen";
+import HotelList from "../../../screens/HotelList";
+import Invoice from "../../../screens/Invoice";
+import { BLUE1 } from "../../values/color";
+import TabBar from "../home/TabBar";
 const Stack = createNativeStackNavigator();
 
 const TaskHome = () => {
@@ -26,7 +24,7 @@ const TaskHome = () => {
         name="SignUpScreen"
         component={SignUpScreen}
         options={{ headerShown: false }}
-      />
+      /> 
       <Stack.Screen
         name="HomeTab"
         component={TabBar}
@@ -43,20 +41,21 @@ const TaskHome = () => {
         }}
       />
       <Stack.Screen
-        name="RoomListScreen"
-        component={RoomListScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name="DetailHotelScreen"
         component={DetailHotelScreen}
         options={{
           headerShown: true,
           headerTransparent: true,
-          headerTitle: '',
-          headerTintColor: '#fff',
+          headerTitle: "",
+          headerTintColor: "#fff",
         }}
       />
+      <Stack.Screen
+        name="RoomListScreen"
+        component={RoomListScreen}
+        options={{ headerShown: false }}
+      />
+
       <Stack.Screen
         name="DetailRoomScreen"
         component={DetailRoomScreen}

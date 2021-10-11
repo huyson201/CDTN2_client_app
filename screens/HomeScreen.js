@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -19,9 +19,9 @@ import {
   ADDRESS_NULL_MESSAGE,
 } from '../src/values/constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE} from '../src/values/color';
-import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
-import {Button} from 'react-native-elements';
+import { BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
+import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
+import { Button } from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
 import ClientAndRoomModal from '../src/components/home/ClientAndRoomModal';
@@ -29,12 +29,11 @@ import CalendarModal from '../src/components/home/CalendarModal';
 import NightPicker from '../src/components/home/NightPicker';
 import SearchFilterModal from '../src/components/home/SearchFilterModal';
 import SearchLocalModal from '../src/components/home/SearchLocalModal';
-import {useDispatch, useSelector} from 'react-redux';
-import {convertDateToVNDate, convertStrPersonRooms} from '../src/utilFunction';
-import {onAuthStateChanged} from '@firebase/auth';
-import {auth} from '../cf_firebase/ConfigFireBase';
+import { useDispatch, useSelector } from 'react-redux';
+import { convertDateToVNDate, convertStrPersonRooms } from '../src/utilFunction';
 
-const HomeScreen = function ({navigation}) {
+
+const HomeScreen = function ({ navigation }) {
   const roomModalRef = React.createRef();
   const calendarRef = useRef();
   const nightPickerRef = useRef();
@@ -56,12 +55,7 @@ const HomeScreen = function ({navigation}) {
   let strPARooms = convertStrPersonRooms(personsAndRooms);
 
   const dispatch = useDispatch();
-  const handlePressLogin = function () {
-    if(!auth.currentUser){
-      navigation.navigate('LoginScreen');
-    }
-   
-  };
+
   const handlePressRoomPicker = function () {
     roomModalRef.current.show();
   };
@@ -83,7 +77,7 @@ const HomeScreen = function ({navigation}) {
 
   const HandlePressSearch = () => {
     if (address === '') {
-      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT);
+      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT)
       return;
     }
     navigation.navigate('ListHotels');
@@ -92,6 +86,7 @@ const HomeScreen = function ({navigation}) {
   const handlePressMap = () => {
     navigation.navigate('GoogleMap');
   };
+
   return (
     <ScrollView>
       <View style={homeStyles.header}>
@@ -106,14 +101,12 @@ const HomeScreen = function ({navigation}) {
         <SearchBox style={homeStyles.elevation}>
           {/* search title */}
           <View style={homeStyles.searchTitle}>
-            <TouchableOpacity activeOpacity={0.7} onPress={handlePressLogin}>
-              <ViewRow>
-                <Title ellipsizeMode="tail" numberOfLines={1}>
-                  {SEARCH_TITLE}
-                </Title>
-                <Icon name="angle-right" size={20} color="#fff" />
-              </ViewRow>
-            </TouchableOpacity>
+            <ViewRow>
+              <Title style={{ width: "100%", textAlign: "center" }}>
+                {SEARCH_TITLE}
+              </Title>
+            </ViewRow>
+
           </View>
 
           {/* select location field */}
@@ -140,7 +133,7 @@ const HomeScreen = function ({navigation}) {
                 activeOpacity={0.5}
                 style={homeStyles.searchCol1}>
                 <Field>
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: 'row' }}>
                     <Icon name={'calendar-alt'} size={SEARCH_ICON_SIZE} />
                     <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
                       {receivedDate}
@@ -162,7 +155,7 @@ const HomeScreen = function ({navigation}) {
               </TouchableOpacity>
             </ViewRow>
 
-            <ViewRow style={{marginTop: 5}}>
+            <ViewRow style={{ marginTop: 5 }}>
               <View style={homeStyles.searchCol1}>
                 <Text style={homeStyles.smallText}>
                   {HOTEL_CHECK_OUT} {payDate}
@@ -214,9 +207,9 @@ const HomeScreen = function ({navigation}) {
 
           {/* btn control */}
           <Container>
-            <ViewRow style={{marginTop: 12}}>
+            <ViewRow style={{ marginTop: 12 }}>
               <TouchableOpacity activeOpacity={0.5} onPress={handlePressMap}>
-                <View style={{flexDirection: 'row', marginLeft: 12}}>
+                <View style={{ flexDirection: 'row', marginLeft: 12 }}>
                   <Icon
                     name={'map-marked-alt'}
                     size={SEARCH_ICON_SIZE}

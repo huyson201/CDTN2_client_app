@@ -126,7 +126,7 @@ const SearchFilterModal = forwardRef((props, ref) => {
         let nHighPrice = calPrice(high)
         let selectedStar = []
         for (let i = 0; i < starBtns.length; i++) {
-            if (starBtns[i].active) selectedStar.push(i)
+            if (starBtns[i].active) selectedStar.push(i + 1)
         }
 
         let nFilter = {

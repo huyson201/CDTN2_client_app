@@ -32,6 +32,7 @@ const DetailRoomScreen = ({navigation, route}) => {
     beds: 0,
     area: 0,
     status: 0,
+    sale: 0,
     images: [],
   });
 
@@ -48,7 +49,8 @@ const DetailRoomScreen = ({navigation, route}) => {
         beds: data.beds,
         area: data.area,
         status: data.status,
-        images: data.images.split(','),
+        sale: route.params.sale,
+        images: data.images.split(","),
       });
     });
   }, []);
@@ -152,10 +154,21 @@ const DetailRoomScreen = ({navigation, route}) => {
             </Text>
           </ViewRow>
           <ViewRow>
-            <View>
-              <Text style={styles.priceSale}>VND {dataDetailRoom.price}</Text>
-              <Text style={styles.price}>VND {dataDetailRoom.price}</Text>
-            </View>
+            {dataDetailRoom.sale != null && dataDetailRoom.sale != "" ? (
+              <View>
+                <Text style={styles.priceSale}>VND {dataDetailRoom.price}</Text>
+                <Text style={styles.price}>
+                  VND{" "}
+                  {dataDetailRoom.price -
+                    dataDetailRoom.price * dataDetailRoom.sale}
+                </Text>
+              </View>
+            ) : (
+              <View>
+                <Text style={styles.price}>VND {dataDetailRoom.price}</Text>
+              </View>
+            )}
+
             <Button
               buttonStyle={styles.button}
               title={'Chọn'}
