@@ -26,10 +26,15 @@ import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
 import {Button} from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
-import {AppRegistry, TextInput} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-const EditProfileScreen = function () {
-  const [selectedValue, setSelectedValue] = useState('java');
+import {AppRegistry, TextInput, Image} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+
+const EditProfileScreen = function ({navigation}) {
+  const [selectedValue, setSelectedValue] = useState('male');
+  const image = {uri: 'https://reactjs.org/logo-og.png'};
+  const handlePressUserProfile = () => {
+    navigation.navigate('ProfileScreen');
+  };
   return (
     <ScrollView>
       {/* HEADER */}
@@ -37,6 +42,22 @@ const EditProfileScreen = function () {
         <Title style={EditProfileStyles.headerText}>
           EDIT USER INFORMATION
         </Title>
+        <View style={EditProfileStyles.headerUserCicle}>
+          {/* <Icon
+            style={EditProfileStyles.headerUserimg}
+            name="user-alt"
+            size={50}
+            backgroundColor="#05375a"
+            color="#fff"></Icon> */}
+          <View>
+            <Image
+              style={EditProfileStyles.userImg}
+              source={require('../src/images/the_cap_hotel.jpeg')}
+            />
+          </View>
+
+          {/* <Text style={EditProfileStyles.headerUserimg}>Test </Text> */}
+        </View>
       </View>
       <Container>
         {/* EDIT BASIC INFORMATION */}
@@ -68,30 +89,42 @@ const EditProfileScreen = function () {
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
         </View>
-        {/* PICKER TO SELECT GENDER */}
-        <Text style={EditProfileStyles.textTitle}>Gender</Text>
-        <View style={EditProfileStyles.PickerStyle}>
+        {/* Modify identifier */}
+        <Text style={EditProfileStyles.textTitle}>Identifier</Text>
+        <View style={EditProfileStyles.action}>
           <Icon
             style={EditProfileStyles.icon}
-            name="question"
+            name="check"
             size={18}
             backgroundColor="#05375a"
             color="#05375a"></Icon>
+          <TextInput
+            defaultValue="01236655488"
+            placeholder="Type Your Identifier Here"
+            autoCapitalize="none"
+            style={EditProfileStyles.textInput}></TextInput>
+        </View>
+        {/* PICKER TO SELECT GENDER */}
+        <Text style={EditProfileStyles.textTitle}>Gender</Text>
+        <View style={EditProfileStyles.genderPicker}>
           <Picker
             selectedValue={selectedValue}
-            style={EditProfileStyles.Picker}
+            style={{backgroundColor: '#ade5ff'}}
             onValueChange={(itemValue, itemIndex) =>
               setSelectedValue(itemValue)
             }>
-            <Picker.Item label="Male" Color="blue" value="Male" />
-            <Picker.Item label="Female" Color="blue" value="Female" />
-            <Picker.Item label="Other" Color="blue" value="Other" />
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+            <Picker.Item label="Other" value="other" />
           </Picker>
         </View>
-        <Button title="OK" buttonStyle={EditProfileStyles.Btn}></Button>
-        <Button
-          title="Cancel"
-          buttonStyle={EditProfileStyles.cancelBtn}></Button>
+        <View style={EditProfileStyles.btn}>
+          <Button title="OK" buttonStyle={EditProfileStyles.okBtn}></Button>
+          <Button
+            title="Cancel"
+            onPress={handlePressUserProfile}
+            buttonStyle={EditProfileStyles.cancelBtn}></Button>
+        </View>
       </Container>
     </ScrollView>
   );
@@ -115,15 +148,76 @@ const ViewRow = styled.View`
 const EditProfileStyles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-    height: 150,
+    display: 'flex',
+    flexDirection: 'column',
     backgroundColor: BLUE1,
     padding: 15,
     color: '#fff',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
+    justifyContent: 'center',
+  },
+  headerUserCicle: {
+    display: 'flex',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center',
+    height: 100,
+    width: 100,
+    backgroundColor: 'pink',
+    borderWidth: 5,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  userImg: {
+    maxWidth: 100,
+    maxHeight: 100,
+    borderRadius: 50,
+    resizeMode: 'cover',
+    
+  },
+  headerUserText: {
+    // elevation: 5,
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 30,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    //
+    flex: 1,
+    justifyContent: 'center',
   },
   headerText: {
     fontSize: 20,
+    textAlign: 'center',
+  },
+  headerUserCicle: {
+    display: 'flex',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center',
+    height: 100,
+    width: 100,
+    backgroundColor: '#7CAFDA',
+    // borderWidth: 5,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  headerUserimg: {
+    // elevation: 5,
+    fontSize: 50,
+    textAlign: 'center',
+    marginTop: 15,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   icon: {
     paddingTop: 13,
@@ -165,14 +259,24 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#ade5ff',
   },
+  genderPicker: {
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    overflow: 'hidden',
+  },
+  btn: {
+    marginTop: 50,
+    justifyContent: 'center',
+    minWidth: '100%',
+  },
   cancelBtn: {
     marginTop: 10,
     backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
-  Btn: {
+  okBtn: {
     marginTop: 10,
-    // backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
   action: {

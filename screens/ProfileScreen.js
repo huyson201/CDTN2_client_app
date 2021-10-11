@@ -1,34 +1,38 @@
-
-import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Text,
-  ToastAndroid,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, ScrollView, Text, ToastAndroid} from 'react-native';
 import styled from 'styled-components';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1 } from '../src/values/color';
-import { Button } from 'react-native-elements';
-import { TextInput } from 'react-native';
-import { Picker } from "@react-native-picker/picker"
-import { auth } from '../cf_firebase/ConfigFireBase';
-import { signOut } from '@firebase/auth';
+import {BLUE1} from '../src/values/color';
+import {Button} from 'react-native-elements';
+import {TextInput, Image} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import {auth} from '../cf_firebase/ConfigFireBase';
+import {signOut} from '@firebase/auth';
 
 const EditProfileScreen = function ({navigation}) {
-  const [selectedValue, setSelectedValue] = useState('java');
-  const handleLogout =()=>{
-    signOut(auth).then(ToastAndroid.show("Dang xuat thanh cong", ToastAndroid.SHORT))
-  }
+  const [selectedValue, setSelectedValue] = useState('male');
+  const handlePressEditProfile = () => {
+    navigation.navigate('EditProfileScreen');
+  };
+  const handleLogout = () => {
+    signOut(auth).then(
+      ToastAndroid.show('Dang xuat thanh cong', ToastAndroid.SHORT),
+    );
+  };
   return (
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        <Title style={EditProfileStyles.headerText}>
-          USER INFORMATION
-        </Title>
+        <Title style={EditProfileStyles.headerText}>USER INFORMATION</Title>
+        <View style={EditProfileStyles.headerUserCicle}>
+          <View>
+            <Image
+              style={EditProfileStyles.userImg}
+              source={require('../src/images/detail_hotel_2.jpeg')}
+            />
+          </View>
+        </View>
       </View>
       <Container>
         {/* EDIT BASIC INFORMATION */}
@@ -62,37 +66,54 @@ const EditProfileScreen = function ({navigation}) {
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
         </View>
-        {/* PICKER TO SELECT GENDER */}
-        <Text style={EditProfileStyles.textTitle}>Gender</Text>
-        <View style={EditProfileStyles.PickerStyle}>
+        {/* IDENTIFIER  */}
+        <Text style={EditProfileStyles.textTitle}>Identifier</Text>
+        <View style={EditProfileStyles.action}>
           <Icon
             style={EditProfileStyles.icon}
-            name="question"
+            name="check"
             size={18}
             backgroundColor="#05375a"
             color="#05375a"></Icon>
+          <TextInput
+            editable={false}
+            defaultValue="01236655488"
+            placeholder="Type Your Identifier Here"
+            autoCapitalize="none"
+            style={EditProfileStyles.textInput}></TextInput>
+        </View>
+        {/* PICKER TO SELECT GENDER */}
+        <Text style={EditProfileStyles.textTitle}>Gender</Text>
+        <View style={EditProfileStyles.genderPicker}>
           <Picker
             enabled={false}
             selectedValue={selectedValue}
-            style={EditProfileStyles.Picker}
+            style={{backgroundColor: '#ade5ff'}}
             onValueChange={(itemValue, itemIndex) =>
               setSelectedValue(itemValue)
             }>
-            <Picker.Item label="Male" Color="blue" value="Male" />
-            <Picker.Item label="Female" Color="blue" value="Female" />
-            <Picker.Item label="Other" Color="blue" value="Other" />
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+            <Picker.Item label="Other" value="other" />
           </Picker>
         </View>
-        <Button title="Edit Information" buttonStyle={EditProfileStyles.Btn}></Button>
-        <Button
-          title="Cancel"
-          buttonStyle={EditProfileStyles.cancelBtn}></Button>
-           <Button onPress={handleLogout} title="Logout" buttonStyle={EditProfileStyles.Btn}></Button>
+        <View Style={EditProfileStyles.btn}>
+          <Button
+            onPress={handlePressEditProfile}
+            title="Edit Information"
+            buttonStyle={EditProfileStyles.editBtn}></Button>
+          <Button
+            title="Cancel"
+            buttonStyle={EditProfileStyles.cancelBtn}></Button>
+          <Button
+            onPress={handleLogout}
+            title="Logout"
+            buttonStyle={EditProfileStyles.okBtn}></Button>
+        </View>
       </Container>
     </ScrollView>
   );
 };
-
 const Title = styled.Text`
   color: #fff;
 `;
@@ -102,25 +123,54 @@ const Container = styled.View`
   width: 100%;
 `;
 
-const ViewRow = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
+// const ViewRow = styled.View`
+//   width: 100%;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+// `;
 const EditProfileStyles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
+  container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-    height: 150,
     backgroundColor: BLUE1,
     padding: 15,
     color: '#fff',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
+    justifyContent: 'space-between',
   },
   headerText: {
     fontSize: 20,
     textAlign: 'center',
+  },
+  headerUserCicle: {
+    display: 'flex',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center',
+    height: 100,
+    width: 100,
+    backgroundColor: '#7CAFDA',
+    // borderWidth: 5,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  userImg: {
+    maxWidth: 100,
+    maxHeight: 100,
+    borderRadius: 50,
+    resizeMode: 'cover',
+  },
+  headerUserText: {
+    // elevation: 5,
+    fontSize: 50,
+    textAlign: 'center',
+    marginTop: 15,
+    backgroundColor: 'transparent',
   },
   icon: {
     paddingTop: 13,
@@ -131,6 +181,7 @@ const EditProfileStyles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 5,
   },
+  textInput: {},
   box: {
     height: 40,
     marginTop: 10,
@@ -162,12 +213,27 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#ade5ff',
   },
+  genderPicker: {
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    overflow: 'hidden',
+  },
+  btn: {
+    justifyContent: 'center',
+    maxWidth: '100%',
+  },
+  editBtn: {
+    marginTop: 10,
+    backgroundColor: '#ffc107',
+    borderRadius: 40,
+  },
   cancelBtn: {
     marginTop: 10,
     backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
-  Btn: {
+  okBtn: {
     marginTop: 10,
     // backgroundColor: '#cfcfcf',
     borderRadius: 40,
@@ -180,6 +246,7 @@ const EditProfileStyles = StyleSheet.create({
     borderBottomColor: '#f2f2f2',
     backgroundColor: '#ade5ff',
     borderRadius: 40,
+    // overflow: "hidden",
   },
 });
 
