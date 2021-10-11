@@ -25,7 +25,7 @@ const HotelList = function ({ navigation }) {
       data = snapshot.val();
       data = Object.values(data);
       data = filterAddress(data, searchAddress);
-      data = filterStar(data, arrStar);
+      // data = filterStar(data, arrStar);
       // data = filterPrice(data, maxPrice, minPrice);
       setListData([...data]);
     });
