@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,21 +9,27 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from 'react-native';
+import {Button} from 'react-native-elements';
 import {BLUE1} from '../src/values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
-import CustomButton from '../src/components/CustomButton';
 import {auth} from '../cf_firebase/ConfigFireBase';
-import { signInWithEmailAndPassword} from '@firebase/auth';
-const LoginScreen = ({navigation}) => {
+import {onAuthStateChanged, signInWithEmailAndPassword} from '@firebase/auth';
+import {
+  LOGIN_SUCCESSFULLY,
+  TOO_MANY_REQUEST,
+  USER_NOT_FOUND,
+  WRONG_PASSWORD,
+} from '../src/values/constants';
 
- 
-  const [data, setData] = React.useState({
+const LoginScreen = ({navigation}) => {
+  const [data, setData] = useState({
     email: '',
     password: '',
     checkTextInputChange: false,
     secureTextEntry: true,
   });
+  const [isLoading, setisLoading] = useState(false);
   const textInputChange = val => {
     if (val.length != 0) {
       setData({
@@ -54,21 +60,32 @@ const LoginScreen = ({navigation}) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-  const handleLogin = () => {
-    try {
-      signInWithEmailAndPassword(auth, data['email'], data['password']).then(navigation.navigate('HomeTab'),ToastAndroid.show("Dang nhap thanh cong", ToastAndroid.SHORT))
-    } catch (error) {
-      console.log(error);
+  const handleLogin = async () => {
+    const user = await signInWithEmailAndPassword(
+      auth,
+      data['email'],
+      data['password'],
+    )
+      .catch(err => {
+        if (err.code == 'auth/wrong-password') {
+          ToastAndroid.show(WRONG_PASSWORD, ToastAndroid.SHORT);
+        } else if (err.code == 'auth/user-not-found') {
+          ToastAndroid.show(USER_NOT_FOUND, ToastAndroid.SHORT);
+        } else {
+          ToastAndroid.show(TOO_MANY_REQUEST, ToastAndroid.LONG);
+        }
+        setisLoading(false);
+        
+      })
+      .then(setisLoading(true));
+    if (user != undefined) {
+      setisLoading(false);
+      ToastAndroid.show(LOGIN_SUCCESSFULLY, ToastAndroid.SHORT);
+      navigation.navigate('HomeTab');
     }
-   
+
   };
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, user => {
-  //     if (user) {
-  //       navigation.navigate('HomeTab');
-  //     } 
-  //   })
-  // }, []);
+
   return (
     <SafeAreaView style={loginStyles.wrapper}>
       <View style={loginStyles.container}>
@@ -129,11 +146,11 @@ const LoginScreen = ({navigation}) => {
               )}
             </TouchableOpacity>
           </View>
-          <CustomButton
+          <Button
+            title={'LOGIN'}
+            buttonStyle={loginStyles.buttonStyle}
             onPress={handleLogin}
-            text="login"
-            bgColor={BLUE1}
-            color={'#FFF'}></CustomButton>
+            loading={isLoading}></Button>
         </View>
         <View style={loginStyles.footer}>
           <Text>Don't have an Account ? </Text>
@@ -146,6 +163,12 @@ const LoginScreen = ({navigation}) => {
   );
 };
 const loginStyles = StyleSheet.create({
+  buttonStyle: {
+    backgroundColor: BLUE1,
+    borderRadius: 10,
+    marginTop: 20,
+    fontWeight: 'bold',
+  },
   wrapper: {
     width: DEVICE_WIDTH,
     height: DEVICE_HEIGHT,

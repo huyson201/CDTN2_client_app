@@ -139,6 +139,7 @@ const RoomListScreen = function ({ navigation, route }) {
                 key={item.id}
                 roomId={item.id}
                 hotelId={route.params.hotelId}
+                hotelName={route.params.hotelName}
                 name={item.roomName}
                 price={item.price}
                 sale={item.sale}

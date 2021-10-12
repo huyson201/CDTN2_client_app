@@ -47,6 +47,7 @@ const HomeScreen = function ({ navigation }) {
 
   // number night
   let receivedDate = convertDateToVNDate(date.receivedDate);
+  // console.log(receivedDate.split(",")[1].split(" "));
   let payDate = convertDateToVNDate(date.payDate);
   let numberNight = date.numDate;
 

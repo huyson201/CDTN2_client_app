@@ -12,6 +12,7 @@ import { SliderBox } from "react-native-image-slider-box";
 const Room = function ({
   roomId,
   hotelId,
+  hotelName,
   name,
   price,
   sale,
@@ -96,6 +97,7 @@ const Room = function ({
               navigation.navigate("DetailRoomScreen", {
                 id: roomId,
                 hotelId: hotelId,
+                hotelName:hotelName,
                 sale: sale,
               });
             }}

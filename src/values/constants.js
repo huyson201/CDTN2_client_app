@@ -67,3 +67,9 @@ export const USERNAME = 'Mai H. A. T.';
 export const UTIL_STRING = 'Tiện nghi chung';
 export const DESSRIPTION_HOTEL = 'Lorem Ipsum is simply dummy text of the printing and typesetting. Lorem Ipsum is simply dummy text of the printing and typesetting.';
 
+export const LOGIN_SUCCESSFULLY = "Đăng nhập thành công"
+export const SIGNUP_SUCCESSFULLY = "Đăng kí thành công"
+export const SIGNOUT_SUCCESSFULLY = "Đăng xuất thành công"
+export const WRONG_PASSWORD = 'Nhập sai password'
+export const USER_NOT_FOUND = 'Không tìm thấy user'
+export const TOO_MANY_REQUEST = 'Tài khoản tạm thời bị vô hiệu hoá do nhiều lần đăng nhập không thành công. Vui lòng thử lại sau'
