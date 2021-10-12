@@ -67,3 +67,8 @@ export const USERNAME = 'Mai H. A. T.';
 export const UTIL_STRING = 'Tiện nghi chung';
 export const DESSRIPTION_HOTEL = 'Lorem Ipsum is simply dummy text of the printing and typesetting. Lorem Ipsum is simply dummy text of the printing and typesetting.';
 
+export const LOGIN_SUCCESSFULLY = "Đăng nhập thành công"
+export const SIGNUP_SUCCESSFULLY = "Đăng kí thành công"
+export const SIGNOUT_SUCCESSFULLY = "Đăng xuất thành công"
+export const EMAIL_OR_PHONE_EXISTED = "Email hoặc số điện thoại đã có người đăng kí"
+export const PHONE_INVALID = "Số điện thoại không hợp lệ"

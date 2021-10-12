@@ -26,17 +26,27 @@ import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
 import {Button} from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
-import {AppRegistry, TextInput} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-const EditProfileScreen = function () {
-  const [selectedValue, setSelectedValue] = useState('java');
+import {AppRegistry, TextInput, Image} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+
+const EditProfileScreen = function ({navigation}) {
+  const [selectedValue, setSelectedValue] = useState('male');
+  const image = {uri: 'https://reactjs.org/logo-og.png'};
+  const handlePressUserProfile = () => {
+    navigation.goBack();
+  };
   return (
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        <Title style={EditProfileStyles.headerText}>
-          EDIT USER INFORMATION
-        </Title>
+        <View style={EditProfileStyles.headerUserCicle}>
+          <View>
+            <Image
+              style={EditProfileStyles.userImg}
+              source={require('../src/images/the_cap_hotel.jpeg')}
+            />
+          </View>
+        </View>
       </View>
       <Container>
         {/* EDIT BASIC INFORMATION */}
@@ -68,30 +78,42 @@ const EditProfileScreen = function () {
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
         </View>
-        {/* PICKER TO SELECT GENDER */}
-        <Text style={EditProfileStyles.textTitle}>Gender</Text>
-        <View style={EditProfileStyles.PickerStyle}>
+        {/* Modify identifier */}
+        <Text style={EditProfileStyles.textTitle}>Identifier</Text>
+        <View style={EditProfileStyles.action}>
           <Icon
             style={EditProfileStyles.icon}
-            name="question"
+            name="check"
             size={18}
             backgroundColor="#05375a"
             color="#05375a"></Icon>
+          <TextInput
+            defaultValue="01236655488"
+            placeholder="Type Your Identifier Here"
+            autoCapitalize="none"
+            style={EditProfileStyles.textInput}></TextInput>
+        </View>
+        {/* PICKER TO SELECT GENDER */}
+        <Text style={EditProfileStyles.textTitle}>Gender</Text>
+        <View style={EditProfileStyles.genderPicker}>
           <Picker
             selectedValue={selectedValue}
-            style={EditProfileStyles.Picker}
+            style={{backgroundColor: '#ade5ff'}}
             onValueChange={(itemValue, itemIndex) =>
               setSelectedValue(itemValue)
             }>
-            <Picker.Item label="Male" Color="blue" value="Male" />
-            <Picker.Item label="Female" Color="blue" value="Female" />
-            <Picker.Item label="Other" Color="blue" value="Other" />
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+            <Picker.Item label="Other" value="other" />
           </Picker>
         </View>
-        <Button title="OK" buttonStyle={EditProfileStyles.Btn}></Button>
-        <Button
-          title="Cancel"
-          buttonStyle={EditProfileStyles.cancelBtn}></Button>
+        <View style={EditProfileStyles.btn}>
+          <Button title="OK" buttonStyle={EditProfileStyles.okBtn}></Button>
+          <Button
+            title="Cancel"
+            onPress={handlePressUserProfile}
+            buttonStyle={EditProfileStyles.cancelBtn}></Button>
+        </View>
       </Container>
     </ScrollView>
   );
@@ -115,15 +137,33 @@ const ViewRow = styled.View`
 const EditProfileStyles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-    height: 150,
-    backgroundColor: BLUE1,
-    padding: 15,
+     backgroundColor: BLUE1,
+    paddingTop: 10,
+    paddingBottom: 25,
     color: '#fff',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },
-  headerText: {
-    fontSize: 20,
+    headerUserCicle: {
+    display: 'flex',
+    marginHorizontal: '33%',
+    marginBottom: 10,
+    height: 100,
+    width: 100,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  userImg: {
+    maxWidth: 120,
+    maxHeight: 120,
+    borderRadius: 60,
+    resizeMode: 'cover',
+  },
+  
+   textInput: {
+    color:'#000',
   },
   icon: {
     paddingTop: 13,
@@ -156,7 +196,7 @@ const EditProfileStyles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    backgroundColor: '#ade5ff',
+    // backgroundColor: '#ade5ff',
     borderRadius: 40,
   },
   Picker: {
@@ -165,14 +205,24 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#ade5ff',
   },
+  genderPicker: {
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    overflow: 'hidden',
+  },
+  btn: {
+    marginTop: 50,
+    justifyContent: 'center',
+    minWidth: '100%',
+  },
   cancelBtn: {
     marginTop: 10,
     backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
-  Btn: {
+  okBtn: {
     marginTop: 10,
-    // backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
   action: {

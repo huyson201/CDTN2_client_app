@@ -1,61 +1,56 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
   SafeAreaView,
-  ImageBackground,
   Text,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import {BLUE1} from '../src/values/color';
 import {DEVICE_HEIGHT, DEVICE_WIDTH} from '../src/values/size';
-import CustomButton from '../src/components/CustomButton';
 import {Button} from 'react-native-elements';
-import {auth} from '../cf_firebase/ConfigFireBase';
-import {createUserWithEmailAndPassword} from '@firebase/auth';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {EMAIL_OR_PHONE_EXISTED, PHONE_INVALID, SIGNUP_SUCCESSFULLY} from '../src/values/constants';
+import userApi from '../api/userApi';
+
+const validationSchema = Yup.object({
+  fullname: Yup.string()
+    .trim()
+    .min(3, 'Invalid name!')
+    .required('Name is required!'),
+  email: Yup.string().email('Invalid email!').required('Email is required!'),
+  password: Yup.string()
+    .trim()
+    .min(6, 'Password is too short!')
+    .required('Password is required!'),
+  confirm_password: Yup.string().equals(
+    [Yup.ref('password'), null],
+    'Password does not match!',
+  ),
+  phone: Yup.string().min(10, 'Invalid phone!').required('phone is required!'),
+});
+
 const SignUpScreen = ({navigation}) => {
   const [data, setData] = useState({
+    secureTextEntry: true,
+    confirm_secureTextEntry: true,
+  });
+  const userInfor = {
+    fullname: '',
     email: '',
     password: '',
     confirm_password: '',
     phone: '',
-    checkTextInputChange: false,
-    secureTextEntry: true,
-    confirm_secureTextEntry: true,
-  });
-  const [error, setError] = useState();
+  };
   const [isLoading, setLoading] = useState(false);
-  const textInputChange = val => {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        email: val,
-        checkTextInputChange: true,
-      });
-    } else {
-      setData({
-        ...data,
-        email: val,
-        checkTextInputChange: false,
-      });
-    }
-  };
 
-  const handlePressPassword = val => {
-    setData({
-      ...data,
-      password: val,
-    });
-  };
-  const handlePressConfirmPassword = val => {
-    setData({
-      ...data,
-      confirm_password: val,
-    });
-  };
   const updateSecureTextEntry = () => {
     setData({
       ...data,
@@ -68,145 +63,200 @@ const SignUpScreen = ({navigation}) => {
       confirm_secureTextEntry: !data.confirm_secureTextEntry,
     });
   };
-  const handleSignUp = () => {
-    console.log(data['email']);
-    console.log(data['password']);
-    if (data['password'] === data['confirm_password']) {
-      createUserWithEmailAndPassword(
-        auth,
-        data['email'],
-        data['password'],
-      ).then(navigation.navigate('HomeTab'));
-    } else {
-      console.log('sai');
+  const handleSignUp = async (values, formikActions) => {
+    setLoading(true);
+    try {
+      const res = await userApi.signUp(
+        values.fullname,
+        values.email,
+        values.password,
+        values.confirm_password,
+        values.phone,
+      );
+      if (res.data.message == 'success') {
+        formikActions.resetForm();
+        setLoading(false);
+        ToastAndroid.show(SIGNUP_SUCCESSFULLY, ToastAndroid.SHORT);
+        navigation.navigate('LoginScreen', {
+          emailUser: values.email,
+        });
+      } else {
+        setLoading(false);
+        ToastAndroid.show(EMAIL_OR_PHONE_EXISTED, ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      setLoading(false);
+      ToastAndroid.show(PHONE_INVALID, ToastAndroid.SHORT);
+      console.log(error);
     }
   };
+
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.textLogo}>Sign up</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.wrapper}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.textLogo}>Sign up</Text>
+          </View>
+          <Formik
+            initialValues={userInfor}
+            validationSchema={validationSchema}
+            onSubmit={(values, formikActions) => {
+              handleSignUp(values, formikActions);
+            }}>
+            {({
+              values,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              errors,
+            }) => {
+              return (
+                <View style={styles.form}>
+                  <Text style={styles.text_footer}>Họ tên</Text>
+                  <View style={styles.action}>
+                    <Icon
+                      style={styles.icon}
+                      name="user-alt"
+                      size={18}
+                      backgroundColor="#05375a"
+                      color="#05375a"></Icon>
+                    <TextInput
+                      value={values.fullname}
+                      onBlur={handleBlur('fullname')}
+                      placeholder="Your Name"
+                      autoCapitalize="none"
+                      style={styles.textInput}
+                      onChangeText={handleChange('fullname')}></TextInput>
+                  </View>
+                  {errors.fullname && touched.fullname ? (
+                    <Text style={{color: 'red'}}>{errors.fullname}</Text>
+                  ) : null}
+                  <Text style={styles.text_footer}>Email</Text>
+                  <View style={styles.action}>
+                    <Icon2
+                      style={styles.icon}
+                      name="envelope"
+                      size={18}
+                      color="#05375a"></Icon2>
+                    <TextInput
+                      value={values.email}
+                      onBlur={handleBlur('email')}
+                      placeholder="Your Email"
+                      autoCapitalize="none"
+                      onChangeText={handleChange('email')}
+                      style={styles.textInput}></TextInput>
+                  </View>
+                  {errors.email && touched.email ? (
+                    <Text style={{color: 'red'}}>{errors.email}</Text>
+                  ) : null}
+                  <Text style={styles.text_footer}>Số điện thoại</Text>
+                  <View style={styles.action}>
+                    <Icon
+                      style={styles.icon}
+                      name="phone-alt"
+                      size={18}
+                      backgroundColor="#05375a"
+                      color="#05375a"></Icon>
+                    <TextInput
+                      value={values.phone}
+                      onBlur={handleBlur('phone')}
+                      placeholder="Your Phone Number"
+                      autoCapitalize="none"
+                      style={styles.textInput}
+                      onChangeText={handleChange('phone')}></TextInput>
+                  </View>
+                  {errors.phone && touched.phone ? (
+                    <Text style={{color: 'red'}}>{errors.phone}</Text>
+                  ) : null}
+                  <Text style={styles.text_footer}>Mật khẩu</Text>
+                  <View style={styles.action}>
+                    <Icon
+                      style={styles.icon}
+                      name="key"
+                      size={18}
+                      backgroundColor="#05375a"
+                      color="#05375a"></Icon>
+                    <TextInput
+                      value={values.password}
+                      onBlur={handleBlur('password')}
+                      secureTextEntry={data.secureTextEntry ? true : false}
+                      placeholder="Your Password"
+                      autoCapitalize="none"
+                      onChangeText={handleChange('password')}
+                      style={styles.textInput}></TextInput>
+                    <TouchableOpacity onPress={updateSecureTextEntry}>
+                      {data.secureTextEntry ? (
+                        <Icon
+                          style={styles.icon}
+                          name="eye-slash"
+                          size={18}
+                          color="#05375a"></Icon>
+                      ) : (
+                        <Icon
+                          style={styles.icon}
+                          name="eye"
+                          size={18}
+                          color="#05375a"></Icon>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  {errors.password && touched.password ? (
+                    <Text style={{color: 'red'}}>{errors.password}</Text>
+                  ) : null}
+                  <Text style={styles.text_footer}>Xác nhận mật khẩu</Text>
+                  <View style={styles.action}>
+                    <Icon
+                      style={styles.icon}
+                      name="key"
+                      size={18}
+                      backgroundColor="#05375a"
+                      color="#05375a"></Icon>
+                    <TextInput
+                      value={values.confirm_password}
+                      onBlur={handleBlur('confirm_password')}
+                      secureTextEntry={
+                        data.confirm_secureTextEntry ? true : false
+                      }
+                      placeholder="Confirm password"
+                      onChangeText={handleChange('confirm_password')}
+                      autoCapitalize="none"
+                      style={styles.textInput}></TextInput>
+                    <TouchableOpacity onPress={updateSecureConfirmTextEntry}>
+                      {data.confirm_secureTextEntry ? (
+                        <Icon
+                          style={styles.icon}
+                          name="eye-slash"
+                          size={18}
+                          color="#05375a"></Icon>
+                      ) : (
+                        <Icon
+                          style={styles.icon}
+                          name="eye"
+                          size={18}
+                          color="#05375a"></Icon>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  {errors.confirm_password && touched.confirm_password ? (
+                    <Text style={{color: 'red'}}>
+                      {errors.confirm_password}
+                    </Text>
+                  ) : null}
+                  <Button
+                    onPress={handleSubmit}
+                    buttonStyle={styles.buttonStyle}
+                    title="Sign Up"
+                    loading={isLoading}></Button>
+                </View>
+              );
+            }}
+          </Formik>
+          <View style={styles.footer}></View>
         </View>
-        {/* <Text>{currentUser && currentUser.email}</Text> */}
-        <View style={styles.form}>
-          <Text style={styles.text_footer}>Họ tên</Text>
-          <View style={styles.action}>
-            <Icon
-              style={styles.icon}
-              name="user-alt"
-              size={18}
-              backgroundColor="#05375a"
-              color="#05375a"></Icon>
-            <TextInput
-              placeholder="Your Name"
-              autoCapitalize="none"
-              style={styles.textInput}></TextInput>
-          </View>
-          <Text style={styles.text_footer}>Email</Text>
-          <View style={styles.action}>
-            <Icon2
-              style={styles.icon}
-              name="envelope"
-              size={18}
-              color="#05375a"></Icon2>
-            <TextInput
-              placeholder="Your Email"
-              autoCapitalize="none"
-              onChangeText={val => textInputChange(val)}
-              style={styles.textInput}></TextInput>
-            <Icon
-              style={styles.icon}
-              name="check"
-              size={18}
-              color="#05375a"></Icon>
-          </View>
-          <Text style={styles.text_footer}>Số điện thoại</Text>
-          <View style={styles.action}>
-            <Icon
-              style={styles.icon}
-              name="phone-alt"
-              size={18}
-              backgroundColor="#05375a"
-              color="#05375a"></Icon>
-            <TextInput
-              placeholder="Your Phone Number"
-              autoCapitalize="none"
-              style={styles.textInput}></TextInput>
-            <Icon
-              style={styles.icon}
-              name="check"
-              size={18}
-              color="#05375a"></Icon>
-          </View>
-          <Text style={styles.text_footer}>Mật khẩu</Text>
-          <View style={styles.action}>
-            <Icon
-              style={styles.icon}
-              name="key"
-              size={18}
-              backgroundColor="#05375a"
-              color="#05375a"></Icon>
-            <TextInput
-              secureTextEntry={data.secureTextEntry ? true : false}
-              placeholder="Your Password"
-              autoCapitalize="none"
-              onChangeText={val => handlePressPassword(val)}
-              style={styles.textInput}></TextInput>
-            <TouchableOpacity onPress={updateSecureTextEntry}>
-              {data.secureTextEntry ? (
-                <Icon
-                  style={styles.icon}
-                  name="eye-slash"
-                  size={18}
-                  color="#05375a"></Icon>
-              ) : (
-                <Icon
-                  style={styles.icon}
-                  name="eye"
-                  size={18}
-                  color="#05375a"></Icon>
-              )}
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.text_footer}>Xác nhận mật khẩu</Text>
-          <View style={styles.action}>
-            <Icon
-              style={styles.icon}
-              name="key"
-              size={18}
-              backgroundColor="#05375a"
-              color="#05375a"></Icon>
-            <TextInput
-              secureTextEntry={data.confirm_secureTextEntry ? true : false}
-              placeholder="Confirm password"
-              onChangeText={val => handlePressConfirmPassword(val)}
-              autoCapitalize="none"
-              style={styles.textInput}></TextInput>
-            <TouchableOpacity onPress={updateSecureConfirmTextEntry}>
-              {data.confirm_secureTextEntry ? (
-                <Icon
-                  style={styles.icon}
-                  name="eye-slash"
-                  size={18}
-                  color="#05375a"></Icon>
-              ) : (
-                <Icon
-                  style={styles.icon}
-                  name="eye"
-                  size={18}
-                  color="#05375a"></Icon>
-              )}
-            </TouchableOpacity>
-          </View>
-          <Button
-            disabled={isLoading}
-            onPress={handleSignUp}
-            buttonStyle={styles.buttonStyle}
-            title="Sign Up"></Button>
-        </View>
-        <View style={styles.footer}></View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 const styles = StyleSheet.create({
@@ -243,7 +293,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   form: {
-    flex: 2,
+    flex: 3,
     elevation: 2,
     shadowColor: '#000',
     borderRadius: 20,
@@ -256,17 +306,7 @@ const styles = StyleSheet.create({
     marginVertical: -50,
     alignContent: 'flex-start',
   },
-  footer: {
-    flex: 0.3,
-    flexDirection: 'row',
-    backgroundColor: '#FFF',
-    paddingVertical: 50,
-    paddingHorizontal: 50,
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    color: '#05375a',
-  },
+  footer: {},
   text_footer: {
     color: '#05375a',
     fontSize: 18,

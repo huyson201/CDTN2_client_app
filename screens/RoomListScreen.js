@@ -1,54 +1,53 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import { BLUE1, LIGHT_GRAY } from "../src/values/color";
-import styled from "styled-components";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon3 from "react-native-vector-icons/AntDesign";
-import Room from "../src/components/hotel/Room";
-import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "firebase/database";
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native';
+import { BLUE1, LIGHT_GRAY } from '../src/values/color';
+import styled from 'styled-components';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon3 from 'react-native-vector-icons/AntDesign';
+import Room from '../src/components/hotel/Room';
+import hotelApi from '../api/hotelApi';
 
 const RoomListScreen = function ({ navigation, route }) {
   const [data, setData] = useState([]);
   let itemData = {
     id: 0,
-    roomName: "",
-    price: "",
-    adult: 0,
+    roomName: '',
+    price: '',
+    people: 0,
     children: 0,
     status: 0,
-    sale:0,
+    sale: 0,
     images: [],
   };
+  // const room = ref(db, 'hotels/' + route.params.hotelId + '/rooms');
 
-  const room = ref(db, "hotels/" + route.params.hotelId + "/rooms");
+  const getAllRoomsByIdHotel = async hotelId => {
+    try {
+      const res = await hotelApi.getAllRoomsByIdHotel(hotelId);
+      let roomData = [];
+      setData([]);
+      if (!res.data.error) {
+        res.data.data.length !== 0
+          ? res.data.data.map(e => {
+            itemData = {
+              id: e.room_id,
+              children: 1,
+              sale: route.params.sale,
+            };
+            roomData.push(itemData);
+            setData([...roomData]);
+          })
+          : setData([{ message: 'Khong co du lieu phong', id: null }]);
+      } else {
+        console.log(res.data.error);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    let roomData = [];
-    setData([]);
-    onValue(room, (snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        const data = childSnapshot.val();
-        itemData = {
-          id: data.roomId,
-          roomName: data.name,
-          price: data.price,
-          adult: data.adult,
-          children: data.children,
-          status: data.status,
-          sale: route.params.sale,
-          images: data.images.split(","),
-        };
-        roomData.push(itemData);
-        setData([...roomData]);
-      });
-    });
+    getAllRoomsByIdHotel(route.params.hotelId);
   }, []);
 
   const [iconBookmarkState, setIconBookmarkState] = useState({ check: false });
@@ -83,8 +82,11 @@ const RoomListScreen = function ({ navigation, route }) {
   };
 
   const handleMenu = () => {
-    alert("Menu");
+    alert('Menu');
   };
+  console.log(data);
+
+
   return (
     <View style={{ flex: 1 }}>
       <ViewRow style={[roomStyles.header, roomStyles.horizontal]}>
@@ -129,29 +131,31 @@ const RoomListScreen = function ({ navigation, route }) {
           </TouchableOpacity>
         </View>
       </ViewRow>
-      <FlatList
-        style={roomStyles.marginScrollView}
-        data={data}
-        renderItem={({ item }) => {
-          return (
-            <View>
-              <Room
-                key={item.id}
-                roomId={item.id}
-                hotelId={route.params.hotelId}
-                name={item.roomName}
-                price={item.price}
-                sale={item.sale}
-                adult={item.adult}
-                children={item.children}
-                status={item.status}
-                images={item.images}
-                navigation={navigation}
-              />
-            </View>
-          );
-        }}
-      />
+      {data.message ? (
+        <Text style={{ display: flex, justifyContent: 'center' }}>
+          {data.message}
+        </Text>
+      ) : (
+        <FlatList
+          style={roomStyles.marginScrollView}
+          data={data}
+          renderItem={({ item }) => {
+            return (
+              <View>
+                <Room
+                  key={item.id}
+                  roomId={item.id}
+                  hotelId={route.params.hotelId}
+                  hotelName={route.params.hotelName}
+                  sale={item.sale}
+                  children={item.children}
+                  navigation={navigation}
+                />
+              </View>
+            );
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -166,16 +170,16 @@ const ViewRow = styled.View`
 const roomStyles = StyleSheet.create({
   header: {
     backgroundColor: BLUE1,
-    alignItems: "center",
+    alignItems: 'center',
     flex: 0.08,
-    fontFamily: "AnticSlab-Regular",
+    fontFamily: 'AnticSlab-Regular',
   },
   headerTextName: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 15,
   },
   headerTextAddress: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 10,
   },
   icon: {
@@ -183,7 +187,7 @@ const roomStyles = StyleSheet.create({
     color: LIGHT_GRAY,
   },
   horizontal: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingRight: 10,
   },
   marginScrollView: {

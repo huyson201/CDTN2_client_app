@@ -1,4 +1,4 @@
-import React, {forwardRef, useState, useImperativeHandle} from 'react';
+import React, { forwardRef, useState, useImperativeHandle } from "react";
 import {
   TouchableOpacity,
   Modal,
@@ -6,14 +6,13 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-  ToastAndroid,
-} from 'react-native';
-import styled from 'styled-components';
-import {Button} from 'react-native-elements';
-import {useDispatch, useSelector} from 'react-redux';
-import {BLUE1, DARK_GRAY, ORANGE_LIGHT} from '../../values/color';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../../values/size';
+} from "react-native";
+import styled from "styled-components";
+import { Button } from "react-native-elements";
+import { BLUE1, DARK_GRAY, ORANGE_LIGHT } from "../../values/color";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { convertDateToVNDate, formatCurrency } from "../../utilFunction";
+import { useSelector } from "react-redux";
 const DetailPriceModal = forwardRef((props, ref) => {
   const [show, setShow] = useState(false);
   const close = () => {
@@ -24,12 +23,28 @@ const DetailPriceModal = forwardRef((props, ref) => {
       setShow(true);
     },
   }));
+
+  // date state
+  const date = useSelector((state) => state.search.date);
+  let dateForRoom = date.dateString;
+  let numberNight = date.numDate;
+
+  const handlePressBooking = () => {
+    props.navigation.navigate("Invoice", {
+      id: props.id,
+      data: props.data,
+      hotelName: props.hotelName,
+      taxes: props.taxes,
+      sum: props.sum,
+    });
+  };
   return (
     <Modal
       animationType="fade"
       transparent={true}
       visible={show}
-      onRequestClose={close}>
+      onRequestClose={close}
+    >
       <TouchableWithoutFeedback onPress={close}>
         <TransparentView>
           <Title>Chi tiết giá </Title>
@@ -38,51 +53,68 @@ const DetailPriceModal = forwardRef((props, ref) => {
       <Content>
         <ViewRow>
           <Text>Ngày</Text>
-          <DetailText>4-5 tháng 10 2021</DetailText>
+          <DetailText>{dateForRoom}</DetailText>
         </ViewRow>
-        <ViewRow style={{marginBottom: 20}}>
+        <ViewRow style={{ marginBottom: 20 }}>
           <Text>Số phòng</Text>
-          <DetailText>2 phòng</DetailText>
+          <DetailText>{1} phòng</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Giá mỗi đêm</Text>
-          <DetailText style={{color: ORANGE_LIGHT}}>VND 1.088.000</DetailText>
+          <DetailText style={{ color: ORANGE_LIGHT }}>
+            VND {props.data.price}
+          </DetailText>
         </ViewRow>
         <ViewRow>
-          <Text>Tổng giá tiền cho 1 đêm</Text>
-          <DetailText>VND 1.088.000</DetailText>
+          <Text>Tổng giá tiền cho {numberNight} đêm</Text>
+          <DetailText>VND {props.data.price * numberNight}</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Thuế và phí</Text>
-          <Text style={{paddingBottom:5}}>VND 550.000</Text>
+          <Text style={{ paddingBottom: 5 }}>VND {props.taxes}</Text>
         </ViewRow>
       </Content>
       <TouchableOpacity
-        style={{backgroundColor: 'white'}}
+        style={{ backgroundColor: "white" }}
         activeOpacity={1}
-        onPress={close}>
+        onPress={close}
+      >
         <View style={styles.priceInfor}>
-          <ViewRow style={{justifyContent: 'flex-start'}}>
+          <ViewRow style={{ justifyContent: "flex-start" }}>
             <Icon
-              style={{paddingBottom: 3}}
+              style={{ paddingBottom: 3 }}
               color={BLUE1}
-              name="chevron-up"></Icon>
-            <Text style={{fontSize: 12, paddingBottom: 2, marginLeft: 3}}>
-              Tổng giá tiền cho 29 - 30/9/2021 - 1 phòng - 1 đêm
+              name="chevron-up"
+            ></Icon>
+            <Text style={{ fontSize: 12, paddingBottom: 2, marginLeft: 3 }}>
+              {`Tổng giá tiền cho ${dateForRoom} - ${numberNight} đêm - 1 phòng`}
             </Text>
           </ViewRow>
           <ViewRow>
             <View>
-              <Text style={styles.priceSale}>VND 1.088.000</Text>
-              <Text style={styles.price}>VND 4.088.000</Text>
+              {props.data.sale != null && props.data.sale != "" ? (
+                <Text style={styles.priceSale}>
+                  {formatCurrency(props.sumPre, "VND")}
+                </Text>
+              ) : (
+                <Text></Text>
+              )}
+              <Text style={styles.price}>
+                {formatCurrency(props.sum, "VND")}
+              </Text>
             </View>
-            <Button buttonStyle={styles.button} title={'Chọn'} />
+            <Button
+              buttonStyle={styles.button}
+              title={"Chọn"}
+              onPress={handlePressBooking}
+            />
           </ViewRow>
         </View>
       </TouchableOpacity>
     </Modal>
   );
 });
+
 const DetailText = styled.Text`
   padding-bottom: 5px;
   font-weight: 500;
@@ -113,16 +145,16 @@ const styles = StyleSheet.create({
   priceInfor: {
     paddingHorizontal: 20,
     borderTopWidth: 2,
-    borderColor: 'rgba(158, 150, 150, .5)',
+    borderColor: "rgba(158, 150, 150, .5)",
     paddingVertical: 5,
   },
   priceSale: {
     color: DARK_GRAY,
     fontSize: 12,
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
   },
   price: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 17,
   },
 

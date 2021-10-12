@@ -14,19 +14,15 @@ import { DEVICE_WIDTH, DEVICE_HEIGHT } from "../src/values/size";
 import { Button } from "react-native-elements";
 import { SliderBox } from "react-native-image-slider-box";
 import DetailPriceModal from "../src/components/hotel/DetailPriceModal";
-import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "firebase/database";
+import { useSelector } from "react-redux";
+import { convertDateToVNDate } from "../src/utilFunction";
+import hotelApi from "../api/hotelApi";
 
 const DetailRoomScreen = ({ navigation, route }) => {
-  const detailRoom = ref(
-    db,
-    "hotels/" + route.params.hotelId + "/rooms/" + route.params.id
-  );
-
   const [dataDetailRoom, setDataDetailRoom] = useState({
     roomName: "",
-    adult: 0,
-    children: 0,
+    people: 0,
+    // children: 0,
     price: 0,
     desc: "",
     beds: 0,
@@ -34,114 +30,149 @@ const DetailRoomScreen = ({ navigation, route }) => {
     status: 0,
     sale: 0,
     images: [],
+    services: [],
   });
 
-  useEffect(() => {
-    setDataDetailRoom({ images: [] });
-    onValue(detailRoom, (snapshot) => {
-      const data = snapshot.val();
-      setDataDetailRoom({
-        roomName: data.name,
-        adult: data.adult,
-        children: data.children,
-        price: data.price,
-        desc: data.roomDesc,
-        beds: data.beds,
-        area: data.area,
-        status: data.status,
-        sale: route.params.sale,
-        images: data.images.split(","),
-      });
-    });
-  }, []);
+  // date state
+  const date = useSelector((state) => state.search.date);
+  let dateForRoom = date.dateString;
+  let numberNight = date.numDate;
+  const getRoomById = async (roomId) => {
+    try {
+      if (roomId) {
+        const res = await hotelApi.getRoomById(roomId);
+        !res.data.error
+          ? setDataDetailRoom({
+            roomName: res.data.data.room_name,
+            price: res.data.data.room_price,
+            people: res.data.data.room_num_people,
+            desc: res.data.data.room_desc,
+            beds: res.data.data.room_beds,
+            area: res.data.data.room_area,
+            status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
+            // images: e.images.split(','),
+            sale: route.params.sale,
+            images: [
+              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+            ],
+            services: res.data.data.room_services ? res.data.data.room_services : ["Khong co dich vu uu dai nao khac"]
+          })
+          : setDataDetailRoom([{ message: 'Khong co du lieu phong' }]);
+      } else {
+        console.log("Khong co id phong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(() => {
+    getRoomById(route.params.id)
+  }, []);
+  const taxes = 50000;
   const bottomPopupRef = useRef();
   const handlePress = () => {
     bottomPopupRef.current.show();
   };
+  let sum = sumPrice(
+    dataDetailRoom.price,
+    dataDetailRoom.sale,
+    taxes,
+    numberNight
+  );
+
+  let sumPre = dataDetailRoom.price * numberNight + taxes;
 
   const handleBooking = () => {
-    navigation.navigate("Invoice");
+    navigation.navigate("Invoice", {
+      id: route.params.id,
+      hotelId: route.params.hotelId,
+      hotelName: route.params.hotelName,
+      taxes: taxes,
+      sum: sum,
+    });
   };
   return (
-    <ScrollView>
-      <View>
-        <SliderBox
-          images={dataDetailRoom.images}
-          style={styles.img}
-          parentWidth={DEVICE_WIDTH}
-          paginationBoxVerticalPadding={5}
-          dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
-          imageLoadingColor={"#fff"}
-        />
-      </View>
-      <View style={{ paddingHorizontal: 20 }}>
-        <Text style={styles.nameRoom}>{dataDetailRoom.roomName}</Text>
-        <View style={styles.description}>
-          <ViewRow style={{ marginBottom: 20 }}>
-            <ViewRow>
-              <Icon name="users" size={18} color={BLUE1}></Icon>
-              <View style={{ marginLeft: 5 }}>
-                <Text style={styles.title}>Khách</Text>
-                <Text style={{ fontSize: 11 }}>
-                  {dataDetailRoom.adult} người lớn {dataDetailRoom.children} trẻ
-                  em/1 phòng
-                </Text>
-              </View>
-            </ViewRow>
-            <ViewRow>
-              <Icon name="ruler" size={18} color={BLUE1}></Icon>
-              <View style={{ marginLeft: 5 }}>
-                <Text style={styles.title}>Kích thước phòng</Text>
-                <Text style={{ fontSize: 11 }}>{dataDetailRoom.area} m2</Text>
-              </View>
-            </ViewRow>
-          </ViewRow>
-          <ViewRow>
-            <ViewRow>
-              <Icon name="bed" size={18} color={BLUE1}></Icon>
-              <View style={{ marginLeft: 5 }}>
-                <Text style={styles.title}>Loại giường</Text>
-                <Text style={{ fontSize: 11 }}>
-                  {dataDetailRoom.beds == 2 ? "Giường đôi" : "Giường đơn"}
-                </Text>
-              </View>
-            </ViewRow>
-          </ViewRow>
+    <View>
+      <ScrollView>
+        <View>
+          <SliderBox
+            images={dataDetailRoom.images}
+            style={styles.img}
+            parentWidth={DEVICE_WIDTH}
+            paginationBoxVerticalPadding={5}
+            dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
+            imageLoadingColor={"#fff"}
+          />
         </View>
-        <ViewRow style={styles.description}>
-          <Text style={styles.title}>Tình trạng phòng: </Text>
-          <View>
-            <Text style={{ fontSize: 13 }}>
-              {" "}
-              {dataDetailRoom.status >= 1 ? "Còn phòng" : "Hết phòng"}
-            </Text>
-          </View>
-        </ViewRow>
-        <View style={styles.description}>
-          <Text style={styles.title}>Dịch vụ phòng</Text>
-          <View>
-            <ViewRow style={{ justifyContent: "flex-start" }}>
-              <EntypoIcon name="dot-single"></EntypoIcon>
-              <Text>Tủ lạnh</Text>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={styles.nameRoom}>{dataDetailRoom.roomName}</Text>
+          <View style={styles.description}>
+            <ViewRow style={{ marginBottom: 20 }}>
+              <ViewRow>
+                <Icon name="users" size={18} color={BLUE1}></Icon>
+                <View style={{ marginLeft: 5 }}>
+                  <Text style={styles.title}>Khách</Text>
+                  <Text style={{ fontSize: 11 }}>
+                    {dataDetailRoom.people} người/1
+                    phòng
+                  </Text>
+                </View>
+              </ViewRow>
+              <ViewRow>
+                <Icon name="ruler" size={18} color={BLUE1}></Icon>
+                <View style={{ marginLeft: 5 }}>
+                  <Text style={styles.title}>Kích thước phòng</Text>
+                  <Text style={{ fontSize: 11 }}>{dataDetailRoom.area} m2</Text>
+                </View>
+              </ViewRow>
             </ViewRow>
-            <ViewRow style={{ justifyContent: "flex-start" }}>
-              <EntypoIcon name="dot-single"></EntypoIcon>
-              <Text>Máy lạnh</Text>
-            </ViewRow>
-            <ViewRow style={{ justifyContent: "flex-start" }}>
-              <EntypoIcon name="dot-single"></EntypoIcon>
-              <Text>Tivi</Text>
+            <ViewRow>
+              <ViewRow>
+                <Icon name="bed" size={18} color={BLUE1}></Icon>
+                <View style={{ marginLeft: 5 }}>
+                  <Text style={styles.title}>Loại giường</Text>
+                  <Text style={{ fontSize: 11 }}>
+                    {dataDetailRoom.beds == 2 ? "Giường đôi" : "Giường đơn"}
+                  </Text>
+                </View>
+              </ViewRow>
             </ViewRow>
           </View>
+          <ViewRow style={styles.description}>
+            <Text style={styles.title}>Tình trạng phòng: </Text>
+            <View>
+              <Text style={{ fontSize: 13 }}>
+                {" "}
+                {dataDetailRoom.status >= 1 ? "Còn phòng" : "Hết phòng"}
+              </Text>
+            </View>
+          </ViewRow>
+          <View style={styles.description}>
+            <Text style={styles.title}>Dịch vụ phòng</Text>
+            {dataDetailRoom.services.map((e, i) => {
+              return (
+                <ViewRow key={i} style={{ justifyContent: "flex-start" }}>
+                  <EntypoIcon key={i} name="dot-single"></EntypoIcon>
+                  <Text>{e}</Text>
+                </ViewRow>
+              );
+            })}
+          </View>
+          <View style={styles.change}>
+            <Text style={styles.title}>Đổi lịch và huỷ phòng</Text>
+            <Text>Không áp dụng đổi lịch</Text>
+          </View>
         </View>
-        <View style={styles.change}>
-          <Text style={styles.title}>Đổi lịch và huỷ phòng</Text>
-          <Text>Không áp dụng đổi lịch</Text>
-        </View>
-      </View>
-      <TouchableOpacity activeOpacity={1} onPress={handlePress}>
-        <View style={styles.priceInfor}>
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.priceInfor}
+        activeOpacity={1}
+        onPress={handlePress}
+      >
+        <View>
           <ViewRow style={{ justifyContent: "flex-start" }}>
             <Icon
               style={{ paddingBottom: 3 }}
@@ -149,24 +180,19 @@ const DetailRoomScreen = ({ navigation, route }) => {
               name="chevron-up"
             ></Icon>
             <Text style={{ fontSize: 12, paddingBottom: 2, marginLeft: 3 }}>
-              Tổng giá tiền cho 29 - 30/9/2021 - 1 phòng - 1 đêm
+              {`Tổng giá tiền cho ${dateForRoom} - ${numberNight} đêm - 1 phòng`}
             </Text>
           </ViewRow>
           <ViewRow>
-            {dataDetailRoom.sale != null && dataDetailRoom.sale != "" ? (
-              <View>
-                <Text style={styles.priceSale}>VND {dataDetailRoom.price}</Text>
-                <Text style={styles.price}>
-                  VND{" "}
-                  {dataDetailRoom.price -
-                    dataDetailRoom.price * dataDetailRoom.sale}
-                </Text>
-              </View>
-            ) : (
-              <View>
-                <Text style={styles.price}>VND {dataDetailRoom.price}</Text>
-              </View>
-            )}
+            {/*  ? ( */}
+            <View>
+              {dataDetailRoom.sale != null && dataDetailRoom.sale != "" ? (
+                <Text style={styles.priceSale}>VND {sumPre}</Text>
+              ) : (
+                <Text></Text>
+              )}
+              <Text style={styles.price}>VND {sum}</Text>
+            </View>
 
             <Button
               buttonStyle={styles.button}
@@ -176,10 +202,29 @@ const DetailRoomScreen = ({ navigation, route }) => {
           </ViewRow>
         </View>
       </TouchableOpacity>
-      <DetailPriceModal ref={bottomPopupRef}></DetailPriceModal>
-    </ScrollView>
+      <DetailPriceModal
+        ref={bottomPopupRef}
+        data={dataDetailRoom}
+        id={route.params.id}
+        taxes={taxes}
+        sum={sum}
+        sumPre={sumPre}
+        hotelName={route.params.hotelName}
+        navigation={navigation}
+      ></DetailPriceModal>
+    </View>
   );
 };
+
+//Tính tổng tiền bao gồm cả thuế
+function sumPrice(price, sale, taxes, numberNight) {
+  let sum = price * numberNight + taxes;
+  if (sale != null && sale != "") {
+    sum = price * numberNight + taxes - price * sale;
+  }
+  return sum;
+}
+
 const ViewRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -187,11 +232,15 @@ const ViewRow = styled.View`
 `;
 const styles = StyleSheet.create({
   priceInfor: {
+    zIndex: 999,
+    width: DEVICE_WIDTH,
+    position: "absolute",
+    bottom: 0,
     paddingHorizontal: 20,
     borderTopWidth: 2,
     borderColor: "rgba(158, 150, 150, .5)",
-    marginTop: 16,
     paddingVertical: 8,
+    backgroundColor: "white",
   },
   priceSale: {
     color: DARK_GRAY,
@@ -219,6 +268,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(158, 150, 150, .5)",
   },
   change: {
+    height: 200,
     paddingVertical: 16,
   },
   wrapper: {

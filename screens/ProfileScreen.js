@@ -1,34 +1,58 @@
-
-import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Text,
-  ToastAndroid,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, ScrollView, Text, ToastAndroid} from 'react-native';
 import styled from 'styled-components';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1 } from '../src/values/color';
-import { Button } from 'react-native-elements';
-import { TextInput } from 'react-native';
-import { Picker } from "@react-native-picker/picker"
-import { auth } from '../cf_firebase/ConfigFireBase';
-import { signOut } from '@firebase/auth';
+import {BLUE1} from '../src/values/color';
+import {Button} from 'react-native-elements';
+import {TextInput, Image} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import {auth} from '../cf_firebase/ConfigFireBase';
+import {signOut} from '@firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCurrentUser, setRememberMe} from '../action_creators/user';
+import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
+import userApi from '../api/userApi';
 
 const EditProfileScreen = function ({navigation}) {
-  const [selectedValue, setSelectedValue] = useState('java');
-  const handleLogout =()=>{
-    signOut(auth).then(ToastAndroid.show("Dang xuat thanh cong", ToastAndroid.SHORT))
-  }
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.currentUser);
+  console.log(user);
+  const [selectedValue, setSelectedValue] = useState('male');
+  const handlePressEditProfile = () => {
+    navigation.navigate('EditProfileScreen');
+  };
+  const handleToListRooms = () => {
+    navigation.navigate('My Ordered Room');
+  };
+
+  const handleLogout = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      await userApi.logout(token);
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('refresh_token');
+      dispatch(setCurrentUser(null));
+      dispatch(setRememberMe(false));
+      ToastAndroid.show(SIGNOUT_SUCCESSFULLY, ToastAndroid.SHORT);
+    } catch (e) {
+      console.log(e)
+    }
+  };
   return (
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        <Title style={EditProfileStyles.headerText}>
-          USER INFORMATION
-        </Title>
+        {/* <Title style={EditProfileStyles.headerText}>USER INFORMATION</Title> */}
+        <View style={EditProfileStyles.headerUserCicle}>
+          <View>
+            <Image
+              style={EditProfileStyles.userImg}
+              source={require('../src/images/detail_hotel_2.jpeg')}
+            />
+          </View>
+        </View>
       </View>
       <Container>
         {/* EDIT BASIC INFORMATION */}
@@ -42,7 +66,7 @@ const EditProfileScreen = function ({navigation}) {
             color="#05375a"></Icon>
           <TextInput
             editable={false}
-            defaultValue="Name of user"
+            defaultValue={user && user.user_name}
             placeholder="Type Your Name Here"
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
@@ -57,42 +81,60 @@ const EditProfileScreen = function ({navigation}) {
             color="#05375a"></Icon>
           <TextInput
             editable={false}
-            defaultValue="0123456789"
+            defaultValue={user &&  user.user_phone}
             placeholder="Type Your Phone Here"
+            autoCapitalize="none"
+            style={EditProfileStyles.textInput}></TextInput>
+        </View>
+        {/* IDENTIFIER  */}
+        <Text style={EditProfileStyles.textTitle}>Identifier</Text>
+        <View style={EditProfileStyles.action}>
+          <Icon
+            style={EditProfileStyles.icon}
+            name="check"
+            size={18}
+            backgroundColor="#05375a"
+            color="#05375a"></Icon>
+          <TextInput
+            editable={false}
+            defaultValue="01236655488"
+            placeholder="Type Your Identifier Here"
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
         </View>
         {/* PICKER TO SELECT GENDER */}
         <Text style={EditProfileStyles.textTitle}>Gender</Text>
-        <View style={EditProfileStyles.PickerStyle}>
-          <Icon
-            style={EditProfileStyles.icon}
-            name="question"
-            size={18}
-            backgroundColor="#05375a"
-            color="#05375a"></Icon>
+        <View style={EditProfileStyles.genderPicker}>
           <Picker
             enabled={false}
             selectedValue={selectedValue}
-            style={EditProfileStyles.Picker}
+            style={{backgroundColor: '#ade5ff'}}
             onValueChange={(itemValue, itemIndex) =>
               setSelectedValue(itemValue)
             }>
-            <Picker.Item label="Male" Color="blue" value="Male" />
-            <Picker.Item label="Female" Color="blue" value="Female" />
-            <Picker.Item label="Other" Color="blue" value="Other" />
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+            <Picker.Item label="Other" value="other" />
           </Picker>
         </View>
-        <Button title="Edit Information" buttonStyle={EditProfileStyles.Btn}></Button>
-        <Button
-          title="Cancel"
-          buttonStyle={EditProfileStyles.cancelBtn}></Button>
-           <Button onPress={handleLogout} title="Logout" buttonStyle={EditProfileStyles.Btn}></Button>
+        <View Style={EditProfileStyles.btn}>
+          <Button
+            onPress={handlePressEditProfile}
+            title="Edit Information"
+            buttonStyle={EditProfileStyles.editBtn}></Button>
+          <Button
+            onPress={handleToListRooms}
+            title="My ordered Rooms"
+            buttonStyle={EditProfileStyles.listRoomsBtn}></Button>
+          <Button
+            onPress={handleLogout}
+            title="Logout"
+            buttonStyle={EditProfileStyles.LogoutBtn}></Button>
+        </View>
       </Container>
     </ScrollView>
   );
 };
-
 const Title = styled.Text`
   color: #fff;
 `;
@@ -102,18 +144,18 @@ const Container = styled.View`
   width: 100%;
 `;
 
-const ViewRow = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
+// const ViewRow = styled.View`
+//   width: 100%;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+// `;
 const EditProfileStyles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
+  container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-    height: 150,
     backgroundColor: BLUE1,
-    padding: 15,
+    paddingTop: 10,
+    paddingBottom: 25,
     color: '#fff',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
@@ -121,6 +163,23 @@ const EditProfileStyles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     textAlign: 'center',
+  },
+  headerUserCicle: {
+    display: 'flex',
+    marginHorizontal: '33%',
+    marginBottom: 10,
+    height: 100,
+    width: 100,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  userImg: {
+    maxWidth: 120,
+    maxHeight: 120,
+    borderRadius: 60,
+    resizeMode: 'cover',
   },
   icon: {
     paddingTop: 13,
@@ -130,6 +189,9 @@ const EditProfileStyles = StyleSheet.create({
     fontSize: 15,
     marginTop: 10,
     marginLeft: 5,
+  },
+  textInput: {
+    color: '#000',
   },
   box: {
     height: 40,
@@ -141,15 +203,16 @@ const EditProfileStyles = StyleSheet.create({
     paddingRight: 32,
   },
   PickerStyle: {
-    height: 50,
-    width: 150,
+    // height: 50,
+    // width: 150,
     borderRadius: 50,
     backgroundColor: '#ade5ff',
     color: '#20232a',
     textAlign: 'center',
     //  Add Action Style
     paddingLeft: 20,
-    marginTop: 10,
+    // marginTop: 10,
+    marginVertical: 10,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
@@ -162,13 +225,29 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#ade5ff',
   },
-  cancelBtn: {
+  genderPicker: {
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    overflow: 'hidden',
     marginTop: 10,
-    backgroundColor: '#cfcfcf',
+  },
+  btn: {
+    justifyContent: 'center',
+    maxWidth: '100%',
+  },
+  editBtn: {
+    marginTop: 10,
+    backgroundColor: '#ffc107',
     borderRadius: 40,
   },
-  Btn: {
+  listRoomsBtn: {
     marginTop: 10,
+    backgroundColor: '#28a745',
+    borderRadius: 40,
+  },
+  LogoutBtn: {
+    marginVertical: 10,
     // backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
@@ -180,6 +259,7 @@ const EditProfileStyles = StyleSheet.create({
     borderBottomColor: '#f2f2f2',
     backgroundColor: '#ade5ff',
     borderRadius: 40,
+    // overflow: "hidden",
   },
 });
 

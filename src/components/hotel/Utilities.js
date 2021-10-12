@@ -49,13 +49,11 @@ const Utilities = function () {
         </View>
     );
 };
-
-
 const ViewRow = styled.View`
   flex-direction: row;
   align-items: center;
-  marginLeft: 15px;
-  marginRight: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
 `;
 const ViewCol = styled.View`
   flex-direction: column;
