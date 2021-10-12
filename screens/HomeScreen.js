@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   Text,
   ToastAndroid,
-} from 'react-native';
-import styled from 'styled-components';
+} from "react-native";
+import styled from "styled-components";
 import {
   SEARCH_TITLE,
   LOCAL_SEARCH_TEXT,
@@ -17,21 +17,29 @@ import {
   SEARCH_MAP_STRING,
   SEARCH_BTN_STRING,
   ADDRESS_NULL_MESSAGE,
-} from '../src/values/constants';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1, BLUE2, DARK_GRAY, MAP_MARKER, ORANGE } from '../src/values/color';
-import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from '../src/values/size';
-import { Button } from 'react-native-elements';
-import History from '../src/components/home/History';
-import About from '../src/components/home/About';
-import ClientAndRoomModal from '../src/components/home/ClientAndRoomModal';
-import CalendarModal from '../src/components/home/CalendarModal';
-import NightPicker from '../src/components/home/NightPicker';
-import SearchFilterModal from '../src/components/home/SearchFilterModal';
-import SearchLocalModal from '../src/components/home/SearchLocalModal';
-import { useDispatch, useSelector } from 'react-redux';
-import { convertDateToVNDate, convertStrPersonRooms } from '../src/utilFunction';
-
+} from "../src/values/constants";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import {
+  BLUE1,
+  BLUE2,
+  DARK_GRAY,
+  MAP_MARKER,
+  ORANGE,
+} from "../src/values/color";
+import { SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE } from "../src/values/size";
+import { Button } from "react-native-elements";
+import History from "../src/components/home/History";
+import About from "../src/components/home/About";
+import ClientAndRoomModal from "../src/components/home/ClientAndRoomModal";
+import CalendarModal from "../src/components/home/CalendarModal";
+import NightPicker from "../src/components/home/NightPicker";
+import SearchFilterModal from "../src/components/home/SearchFilterModal";
+import SearchLocalModal from "../src/components/home/SearchLocalModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  convertDateToVNDate,
+  convertStrPersonRooms,
+} from "../src/utilFunction";
 
 const HomeScreen = function ({ navigation }) {
   const roomModalRef = React.createRef();
@@ -41,18 +49,19 @@ const HomeScreen = function ({ navigation }) {
   const addressRef = useRef();
 
   // address state
-  const address = useSelector(state => state.search.address);
+  const address = useSelector((state) => state.search.address);
   // date state
-  const date = useSelector(state => state.search.date);
+  const date = useSelector((state) => state.search.date);
 
   // number night
   let receivedDate = convertDateToVNDate(date.receivedDate);
   // console.log(receivedDate.split(",")[1].split(" "));
   let payDate = convertDateToVNDate(date.payDate);
+
   let numberNight = date.numDate;
 
   // person, rooms
-  const personsAndRooms = useSelector(state => state.search.personsAndRooms);
+  const personsAndRooms = useSelector((state) => state.search.personsAndRooms);
   let strPARooms = convertStrPersonRooms(personsAndRooms);
 
   const dispatch = useDispatch();
@@ -77,15 +86,15 @@ const HomeScreen = function ({ navigation }) {
   };
 
   const HandlePressSearch = () => {
-    if (address === '') {
-      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT)
+    if (address === "") {
+      ToastAndroid.show(ADDRESS_NULL_MESSAGE, ToastAndroid.SHORT);
       return;
     }
-    navigation.navigate('ListHotels');
+    navigation.navigate("ListHotels");
   };
 
   const handlePressMap = () => {
-    navigation.navigate('GoogleMap');
+    navigation.navigate("GoogleMap");
   };
 
   return (
@@ -107,7 +116,6 @@ const HomeScreen = function ({ navigation }) {
                 {SEARCH_TITLE}
               </Title>
             </ViewRow>
-
           </View>
 
           {/* select location field */}
@@ -115,12 +123,12 @@ const HomeScreen = function ({ navigation }) {
             <TouchableOpacity activeOpacity={0.5} onPress={handlePressAddress}>
               <Field>
                 <Icon
-                  name={'map-marker-alt'}
+                  name={"map-marker-alt"}
                   size={SEARCH_ICON_SIZE}
                   color={MAP_MARKER}
                 />
                 <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
-                  {address !== '' ? address : LOCAL_SEARCH_TEXT}
+                  {address !== "" ? address : LOCAL_SEARCH_TEXT}
                 </LabelSearch>
               </Field>
             </TouchableOpacity>
@@ -132,10 +140,11 @@ const HomeScreen = function ({ navigation }) {
               <TouchableOpacity
                 onPress={handlePressDate}
                 activeOpacity={0.5}
-                style={homeStyles.searchCol1}>
+                style={homeStyles.searchCol1}
+              >
                 <Field>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Icon name={'calendar-alt'} size={SEARCH_ICON_SIZE} />
+                  <View style={{ flexDirection: "row" }}>
+                    <Icon name={"calendar-alt"} size={SEARCH_ICON_SIZE} />
                     <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
                       {receivedDate}
                     </LabelSearch>
@@ -145,7 +154,8 @@ const HomeScreen = function ({ navigation }) {
               <TouchableOpacity
                 onPress={handlePressNightPicker}
                 activeOpacity={0.5}
-                style={homeStyles.searchCol2}>
+                style={homeStyles.searchCol2}
+              >
                 <Field>
                   <View>
                     <LabelSearch ellipsizeMode="tail" numberOfLines={1}>
@@ -174,10 +184,11 @@ const HomeScreen = function ({ navigation }) {
           <Container style={homeStyles.filedSpace}>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={handlePressRoomPicker}>
+              onPress={handlePressRoomPicker}
+            >
               <Field>
                 <Icon
-                  name={'user-friends'}
+                  name={"user-friends"}
                   size={SEARCH_ICON_SIZE}
                   color={BLUE1}
                 />
@@ -192,10 +203,11 @@ const HomeScreen = function ({ navigation }) {
           <Container style={homeStyles.filedSpace}>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={handlePressFilterRef}>
+              onPress={handlePressFilterRef}
+            >
               <Field>
                 <Icon
-                  name={'sliders-h'}
+                  name={"sliders-h"}
                   size={SEARCH_ICON_SIZE}
                   color={BLUE1}
                 />
@@ -210,16 +222,17 @@ const HomeScreen = function ({ navigation }) {
           <Container>
             <ViewRow style={{ marginTop: 12 }}>
               <TouchableOpacity activeOpacity={0.5} onPress={handlePressMap}>
-                <View style={{ flexDirection: 'row', marginLeft: 12 }}>
+                <View style={{ flexDirection: "row", marginLeft: 12 }}>
                   <Icon
-                    name={'map-marked-alt'}
+                    name={"map-marked-alt"}
                     size={SEARCH_ICON_SIZE}
                     color={BLUE1}
                   />
                   <LabelSearch
                     style={homeStyles.mapString}
                     ellipsizeMode="tail"
-                    numberOfLines={1}>
+                    numberOfLines={1}
+                  >
                     {SEARCH_MAP_STRING}
                   </LabelSearch>
                 </View>
@@ -290,7 +303,7 @@ const homeStyles = StyleSheet.create({
     height: 150,
     backgroundColor: BLUE1,
     padding: 15,
-    color: '#fff',
+    color: "#fff",
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },
@@ -302,11 +315,11 @@ const homeStyles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     backgroundColor: BLUE2,
-    width: '100%',
+    width: "100%",
   },
   elevation: {
     elevation: 2,
-    shadowColor: '#52006A',
+    shadowColor: "#52006A",
     paddingBottom: 15,
   },
   filedSpace: {
@@ -318,21 +331,21 @@ const homeStyles = StyleSheet.create({
     color: DARK_GRAY,
   },
   searchCol1: {
-    maxWidth: '60%',
-    width: '100%',
+    maxWidth: "60%",
+    width: "100%",
   },
   searchCol2: {
-    maxWidth: '30%',
-    width: '100%',
+    maxWidth: "30%",
+    width: "100%",
   },
   mapString: {
     color: BLUE1,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   searchBtn: {
     backgroundColor: ORANGE,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
     borderRadius: 8,
     paddingLeft: 32,
     paddingRight: 32,

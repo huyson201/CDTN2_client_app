@@ -97,7 +97,7 @@ const Room = function ({
               navigation.navigate("DetailRoomScreen", {
                 id: roomId,
                 hotelId: hotelId,
-                hotelName:hotelName,
+                hotelName: hotelName,
                 sale: sale,
               });
             }}

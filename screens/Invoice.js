@@ -10,7 +10,6 @@ import {
 import styled from "styled-components";
 import { BLUE1, DARK_GRAY, LIGHT_GRAY, ORANGE } from "../src/values/color";
 import {
-  CALENDAR_TEXT,
   CONFIRM_BTN,
   CONTACT_INFO,
   DETAIL_PRICE,
@@ -20,21 +19,22 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { formatCurrency } from "../src/utilFunction";
 import { Button } from "react-native-elements";
-const Invoice = (props) => {
-  console.log(props.route.params.data.roomName);
 
+const Invoice = (props) => {
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
+  let sumPriceRoom = (props.route.params.sum) - (props.route.params.taxes);
+
   if (showDetailPrice) {
     detailPrice = (
       <DetailPrice>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
           <Text>(x1) {props.route.params.data.roomName}</Text>
-          <Text>{formatCurrency(1000000, "VND")}</Text>
+          <Text>{formatCurrency(sumPriceRoom, "VND")}</Text>
         </RowView>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
           <Text>Phí khách sạn</Text>
-          <Text>{formatCurrency(150000, "VND")}</Text>
+          <Text>{formatCurrency(props.route.params.taxes, "VND")}</Text>
         </RowView>
       </DetailPrice>
     );
@@ -77,7 +77,7 @@ const Invoice = (props) => {
                   numberOfLines={1}
                   style={styles.receivedDate}
                 >
-                  {CALENDAR_TEXT} (14:00)
+                  {props.route.params.receivedDate} (14:00)
                 </Text>
               </RowView>
               <RowView style={styles.mTop}>
@@ -93,7 +93,7 @@ const Invoice = (props) => {
                   numberOfLines={1}
                   style={styles.receivedDate}
                 >
-                  {CALENDAR_TEXT} (12:00)
+                  {props.route.params.payDate} (12:00)
                 </Text>
               </RowView>
             </View>
@@ -157,7 +157,7 @@ const Invoice = (props) => {
               <Text style={styles.sumPriceString}>{SUM_PRICE_SRT}</Text>
             </RowView>
             <Text style={styles.priceStyle}>
-              {formatCurrency(6928593, "VND")}
+              {formatCurrency(props.route.params.sum, "VND")}
             </Text>
           </RowView>
         </TouchableNativeFeedback>

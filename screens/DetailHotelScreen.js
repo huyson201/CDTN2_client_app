@@ -71,21 +71,12 @@ const DetailHotelScreen = ({ navigation, route }) => {
       <ScrollView style={{ marginBottom: 80 }}>
         <View>
           <SliderBox
+            key={Math.random()}
             images={dataHotel.images}
             paginationBoxVerticalPadding={5}
             dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
             imageLoadingColor={"#fff"}
           />
-          {/* <ScrollView
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            horizontal
-          >
-            {dataHotel.images.map((e) => {
-              console.log(e);
-              <Image style={styles.img} source={{ uri: `${e}` }}></Image>
-            })}
-          </ScrollView> */}
         </View>
         <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
           {/* Hotel name */}
@@ -107,7 +98,14 @@ const DetailHotelScreen = ({ navigation, route }) => {
             <View style={{ marginLeft: 5 }}>
               <ViewRow1>
                 {dataHotel.star.map((e) => {
-                  return <Icon1 name={e} size={15} color={GOLD_COLOR} />;
+                  return (
+                    <Icon1
+                      key={Math.random(dataHotel.star.length)}
+                      name={e}
+                      size={15}
+                      color={GOLD_COLOR}
+                    />
+                  );
                 })}
               </ViewRow1>
             </View>

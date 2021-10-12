@@ -18,12 +18,12 @@ const TaskHome = () => {
   
   return (
     <Stack.Navigator>
-      <Stack.Screen
+      {/* <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
         options={{ headerShown: false }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
         options={{ headerShown: false }}
@@ -32,7 +32,7 @@ const TaskHome = () => {
         name="SignUpScreen"
         component={SignUpScreen}
         options={{ headerShown: false }}
-      /> 
+      />  */}
       <Stack.Screen
         name="HomeTab"
         component={TabBar}

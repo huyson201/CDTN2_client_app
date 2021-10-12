@@ -11,8 +11,8 @@ import styled from "styled-components";
 import { Button } from "react-native-elements";
 import { BLUE1, DARK_GRAY, ORANGE_LIGHT } from "../../values/color";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { formatCurrency } from "../../utilFunction";
 const DetailPriceModal = forwardRef((props, ref) => {
-  const numberNight = 2;
   const [show, setShow] = useState(false);
   const close = () => {
     setShow(false);
@@ -22,6 +22,17 @@ const DetailPriceModal = forwardRef((props, ref) => {
       setShow(true);
     },
   }));
+  const handlePressBooking = () => {
+    props.navigation.navigate("Invoice", {
+      id: props.id,
+      data: props.data,
+      hotelName: props.hotelName,
+      receivedDate: props.receivedDate,
+      payDate: props.payDate,
+      taxes: props.taxes,
+      sum: props.sum,
+    });
+  };
   return (
     <Modal
       animationType="fade"
@@ -37,7 +48,7 @@ const DetailPriceModal = forwardRef((props, ref) => {
       <Content>
         <ViewRow>
           <Text>Ngày</Text>
-          <DetailText>4-5 tháng 10 2021</DetailText>
+          <DetailText>{props.date}</DetailText>
         </ViewRow>
         <ViewRow style={{ marginBottom: 20 }}>
           <Text>Số phòng</Text>
@@ -46,12 +57,12 @@ const DetailPriceModal = forwardRef((props, ref) => {
         <ViewRow>
           <Text>Giá mỗi đêm</Text>
           <DetailText style={{ color: ORANGE_LIGHT }}>
-            VND {props.price}
+            VND {props.data.price}
           </DetailText>
         </ViewRow>
         <ViewRow>
-          <Text>Tổng giá tiền cho {numberNight} đêm</Text>
-          <DetailText>VND {props.price * numberNight}</DetailText>
+          <Text>Tổng giá tiền cho {props.numberNight} đêm</Text>
+          <DetailText>VND {props.data.price * props.numberNight}</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Thuế và phí</Text>
@@ -71,39 +82,33 @@ const DetailPriceModal = forwardRef((props, ref) => {
               name="chevron-up"
             ></Icon>
             <Text style={{ fontSize: 12, paddingBottom: 2, marginLeft: 3 }}>
-              Tổng giá tiền cho 29 - 30/9/2021 - 1 phòng - 1 đêm
+              {`Tổng giá tiền cho ${props.date} - ${props.numberNight} đêm - 1 phòng`}
             </Text>
           </ViewRow>
           <ViewRow>
             <View>
               {props.sale != null && props.sale != "" ? (
                 <Text style={styles.priceSale}>
-                  VND {props.price * numberNight + props.taxes}
+                  VND {formatCurrency(props.sumPre, "VND")}
                 </Text>
               ) : (
-                ""
+                <Text></Text>
               )}
               <Text style={styles.price}>
-                VND{" "}
-                {sumPrice(props.price, props.sale, props.taxes, numberNight)}
+                VND {formatCurrency(props.sum, "VND")}
               </Text>
             </View>
-            <Button buttonStyle={styles.button} title={"Chọn"} />
+            <Button
+              buttonStyle={styles.button}
+              title={"Chọn"}
+              onPress={handlePressBooking}
+            />
           </ViewRow>
         </View>
       </TouchableOpacity>
     </Modal>
   );
 });
-
-//Tính tổng tiền bao gồm cả thuế
-function sumPrice(price, sale, taxes, numberNight) {
-  let sum = price * numberNight + taxes;
-  if (sale != null && sale != "") {
-    sum = price * numberNight + taxes - price * sale;
-  }
-  return sum;
-}
 
 const DetailText = styled.Text`
   padding-bottom: 5px;

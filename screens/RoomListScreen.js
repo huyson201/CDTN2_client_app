@@ -23,7 +23,7 @@ const RoomListScreen = function ({ navigation, route }) {
     adult: 0,
     children: 0,
     status: 0,
-    sale:0,
+    sale: 0,
     images: [],
   };
 
@@ -34,16 +34,16 @@ const RoomListScreen = function ({ navigation, route }) {
     setData([]);
     onValue(room, (snapshot) => {
       snapshot.forEach((childSnapshot) => {
-        const data = childSnapshot.val();
+        const dataChild = childSnapshot.val();
         itemData = {
-          id: data.roomId,
-          roomName: data.name,
-          price: data.price,
-          adult: data.adult,
-          children: data.children,
-          status: data.status,
+          id: dataChild.roomId,
+          roomName: dataChild.name,
+          price: dataChild.price,
+          adult: dataChild.adult,
+          children: dataChild.children,
+          status: dataChild.status,
           sale: route.params.sale,
-          images: data.images.split(","),
+          images: dataChild.images.split(","),
         };
         roomData.push(itemData);
         setData([...roomData]);
