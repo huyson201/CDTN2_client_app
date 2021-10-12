@@ -24,7 +24,7 @@ const EditProfileScreen = function ({navigation}) {
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        <Title style={EditProfileStyles.headerText}>USER INFORMATION</Title>
+        {/* <Title style={EditProfileStyles.headerText}>USER INFORMATION</Title> */}
         <View style={EditProfileStyles.headerUserCicle}>
           <View>
             <Image
@@ -102,9 +102,9 @@ const EditProfileScreen = function ({navigation}) {
             onPress={handlePressEditProfile}
             title="Edit Information"
             buttonStyle={EditProfileStyles.editBtn}></Button>
-          <Button
+          {/* <Button
             title="Cancel"
-            buttonStyle={EditProfileStyles.cancelBtn}></Button>
+            buttonStyle={EditProfileStyles.cancelBtn}></Button> */}
           <Button
             onPress={handleLogout}
             title="Logout"

@@ -33,15 +33,15 @@ const EditProfileScreen = function ({navigation}) {
   const [selectedValue, setSelectedValue] = useState('male');
   const image = {uri: 'https://reactjs.org/logo-og.png'};
   const handlePressUserProfile = () => {
-    navigation.navigate('ProfileScreen');
+    navigation.goBack();
   };
   return (
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        <Title style={EditProfileStyles.headerText}>
+        {/* <Title style={EditProfileStyles.headerText}>
           EDIT USER INFORMATION
-        </Title>
+        </Title> */}
         <View style={EditProfileStyles.headerUserCicle}>
           {/* <Icon
             style={EditProfileStyles.headerUserimg}

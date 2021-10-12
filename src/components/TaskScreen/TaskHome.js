@@ -18,7 +18,7 @@ const TaskHome = () => {
   
   return (
     <Stack.Navigator>
-      <Stack.Screen
+      {/* <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
         options={{ headerShown: false }}
@@ -32,7 +32,7 @@ const TaskHome = () => {
         name="SignUpScreen"
         component={SignUpScreen}
         options={{ headerShown: false }}
-      /> 
+      />  */}
       <Stack.Screen
         name="HomeTab"
         component={TabBar}
@@ -78,12 +78,13 @@ const TaskHome = () => {
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true , headerStyle: {backgroundColor: BLUE1}, headerTintColor: "#fff",}}
+        
       />
       <Stack.Screen
         name="EditProfileScreen"
         component={EditProfileScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true, headerStyle: {backgroundColor: BLUE1},  headerTintColor: "#fff", }}
       />
     </Stack.Navigator>
   );
