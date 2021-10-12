@@ -15,6 +15,10 @@ const EditProfileScreen = function ({navigation}) {
   const handlePressEditProfile = () => {
     navigation.navigate('EditProfileScreen');
   };
+ const handleToListRooms = () => {
+    navigation.navigate('My Ordered Room');
+  };
+  
   const handleLogout = () => {
     signOut(auth).then(
       ToastAndroid.show('Dang xuat thanh cong', ToastAndroid.SHORT),
@@ -102,9 +106,10 @@ const EditProfileScreen = function ({navigation}) {
             onPress={handlePressEditProfile}
             title="Edit Information"
             buttonStyle={EditProfileStyles.editBtn}></Button>
-          {/* <Button
-            title="Cancel"
-            buttonStyle={EditProfileStyles.cancelBtn}></Button> */}
+          <Button
+           onPress={handleToListRooms}
+            title="My ordered Rooms"
+            buttonStyle={EditProfileStyles.listRoomsBtn}></Button>
           <Button
             onPress={handleLogout}
             title="Logout"
@@ -228,9 +233,9 @@ const EditProfileStyles = StyleSheet.create({
     backgroundColor: '#ffc107',
     borderRadius: 40,
   },
-  cancelBtn: {
+  listRoomsBtn: {
     marginTop: 10,
-    backgroundColor: '#cfcfcf',
+    backgroundColor: '#28a745',
     borderRadius: 40,
   },
   okBtn: {

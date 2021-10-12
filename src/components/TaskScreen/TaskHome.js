@@ -2,6 +2,8 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import EditProfileScreen from "../../../screens/EditProfileScreen";
 import ProfileScreen from "../../../screens/ProfileScreen";
+import ListRoomsOrderedScreen from "../../../screens/ListRoomsOrderedScreen";
+
 import RoomListScreen from "../../../screens/RoomListScreen";
 import DetailRoomScreen from "../../../screens/DetailRoomScreen";
 import DetailHotelScreen from "../../../screens/DetailHotelScreen";
@@ -86,7 +88,15 @@ const TaskHome = () => {
         component={EditProfileScreen}
         options={{ headerShown: true, headerStyle: {backgroundColor: BLUE1},  headerTintColor: "#fff", }}
       />
+       <Stack.Screen
+        name="My Ordered Room"
+        component={ListRoomsOrderedScreen}
+        options={{ headerShown: true, headerStyle: {backgroundColor: BLUE1},  headerTintColor: "#fff", }}
+      />
     </Stack.Navigator>
+
+
+    
   );
 };
 

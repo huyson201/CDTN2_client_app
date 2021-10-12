@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   Picker,
+  Image,
 } from 'react-native';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -37,13 +38,47 @@ const ListRoomsOrderedScreen = function () {
   const ItemView = (item, index) => {
     return (
       <View key={index} style={ListRoomsOrderedStyle.listItemStyle}>
+        <Text style={ListRoomsOrderedStyle.itemFont_id} numberOfLines={1}>
+          No.{item.id}
+        </Text>
+        <View style={ListRoomsOrderedStyle.itemBody}>
+          <Image
+            style={ListRoomsOrderedStyle.itemBoDyImg}
+            source={require('../src/images/detail_hotel_2.jpeg')}
+          />
+          <Text style={ListRoomsOrderedStyle.itemBoDyText}>
+            <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
+              <Text
+                style={ListRoomsOrderedStyle.itemFont_HotelName}
+                numberOfLines={1}>
+                {item.username} Hotel {item.id}{' '}
+                <Icon
+                  // style={ListRoomsOrderedStyle.icon}
+                  name="star"
+                  size={20}
+                  backgroundColor="#F0FF00"
+                  color="#05375a"></Icon>
+              </Text>
+            </Text>
+          </Text>
+        </View>
         <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
-          {item.id} : {item.name}
+          <Text
+            style={ListRoomsOrderedStyle.itemFont_HotelName}
+            numberOfLines={1}>
+            {/* {item.username} */}
+          </Text>
         </Text>
-         <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
-          {item.email}
+
+        <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
+          {item.address.suite}
         </Text>
-          <Button title="Detail" buttonStyle={ListRoomsOrderedStyle.toPropertiesItemBtn}></Button>
+        <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
+          {item.address.city}
+        </Text>
+        <Button
+          title="Detail"
+          buttonStyle={ListRoomsOrderedStyle.toPropertiesItemBtn}></Button>
         <ItemSeparatorView />
       </View>
     );
@@ -58,14 +93,17 @@ const ListRoomsOrderedScreen = function () {
       <ScrollView>
         {/* HEADER */}
         <View style={ListRoomsOrderedStyle.header}>
-          <Title style={ListRoomsOrderedStyle.headerText}>
+          <View style={ListRoomsOrderedStyle.headerListItemStyle}>
+            <Text style={ListRoomsOrderedStyle.textTitle}>ID Properties</Text>
+          </View>
+          {/* <Title style={ListRoomsOrderedStyle.headerText}>
             LIST ROOMS HAVE BEEN ORDERED
-          </Title>
+          </Title> */}
         </View>
         <Container>
-          <View style={ListRoomsOrderedStyle.headerListItemStyle}>
+          {/* <View style={ListRoomsOrderedStyle.headerListItemStyle}>
             <Text style={ListRoomsOrderedStyle.textTitle}>ID                         Properties</Text>
-          </View>
+          </View> */}
           <ScrollView>{dataSource.map(ItemView)}</ScrollView>
         </Container>
       </ScrollView>
@@ -102,31 +140,68 @@ const ListRoomsOrderedStyle = StyleSheet.create({
     backgroundColor: '#cfcfcf',
     borderWidth: 2,
     borderColor: '#f96700',
-    marginTop:10,
-    padding:10,
-    borderRadius:20,
-
-    
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 20,
   },
   listItemStyle: {
-    backgroundColor: "#c9efff",
+    backgroundColor: '#c9efff',
     borderWidth: 1,
-    borderRadius:10,
+    borderRadius: 10,
     padding: 10,
     marginTop: 10,
+  },
+  itemBody: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+  },
+  itemBoDyText: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 0,
+    marginTop: '5%',
+  },
+  itemBoDyImg: {
+    marginHorizontal: 10,
+    marginVertical: 20,
+    maxWidth: 100,
+    maxHeight: 100,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#000',
+    resizeMode: 'cover',
   },
   // ItemSeparatorView: {
   //   height: 0.5,
   //   width: '100%',
   //   backgroundColor: '#000000',
   // },
+  itemFont_HotelName: {
+    color: '#104FDF',
+    fontSize: 25,
+  },
+  itemFont_id: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 0,
+    marginTop: 0,
+    borderWidth: 3,
+    borderRadius: 20,
+    paddingHorizontal: '40%',
+    // paddingVertical: '3%',
+    backgroundColor: '#808080',
+    color: '#fff',
+  },
   itemFont: {
     padding: 10,
     fontSize: 20,
   },
-  toPropertiesItemBtn:{
-    height:35,
-    borderRadius:50,
+  toPropertiesItemBtn: {
+    height: 35,
+    borderRadius: 50,
   },
 });
 
