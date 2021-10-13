@@ -163,9 +163,6 @@ const styles = StyleSheet.create({
     contentText: {
         fontSize: 14,
         color: DARK_GRAY,
-        // maxWidth: "90%",
-        // width: "100%",
-        // marginLeft: 5,
     },
     footer: {
         position: 'absolute',
@@ -185,11 +182,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#fff'
     },
-    // description: {
-    //     paddingVertical: 16,
-    //     borderBottomWidth: 1,
-    //     borderColor: 'rgba(158, 150, 150, .5)',
-    // },
     img: {
         width: DEVICE_WIDTH,
         height: 240,
