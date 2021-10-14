@@ -186,7 +186,9 @@ const EditProfileStyles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 5,
   },
-  textInput: {},
+  textInput: {
+    color:'#000',
+  },
   box: {
     height: 40,
     marginTop: 10,

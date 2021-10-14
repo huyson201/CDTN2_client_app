@@ -39,24 +39,13 @@ const EditProfileScreen = function ({navigation}) {
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        {/* <Title style={EditProfileStyles.headerText}>
-          EDIT USER INFORMATION
-        </Title> */}
         <View style={EditProfileStyles.headerUserCicle}>
-          {/* <Icon
-            style={EditProfileStyles.headerUserimg}
-            name="user-alt"
-            size={50}
-            backgroundColor="#05375a"
-            color="#fff"></Icon> */}
           <View>
             <Image
               style={EditProfileStyles.userImg}
               source={require('../src/images/the_cap_hotel.jpeg')}
             />
           </View>
-
-          {/* <Text style={EditProfileStyles.headerUserimg}>Test </Text> */}
         </View>
       </View>
       <Container>
@@ -219,6 +208,9 @@ const EditProfileStyles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 0,
   },
+   textInput: {
+    color:'#000',
+  },
   icon: {
     paddingTop: 13,
     paddingRight: 15,
@@ -250,7 +242,7 @@ const EditProfileStyles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    backgroundColor: '#ade5ff',
+    // backgroundColor: '#ade5ff',
     borderRadius: 40,
   },
   Picker: {
