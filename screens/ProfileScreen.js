@@ -113,7 +113,7 @@ const EditProfileScreen = function ({navigation}) {
           <Button
             onPress={handleLogout}
             title="Logout"
-            buttonStyle={EditProfileStyles.okBtn}></Button>
+            buttonStyle={EditProfileStyles.LogoutBtn}></Button>
         </View>
       </Container>
     </ScrollView>
@@ -187,15 +187,16 @@ const EditProfileStyles = StyleSheet.create({
     paddingRight: 32,
   },
   PickerStyle: {
-    height: 50,
-    width: 150,
+    // height: 50,
+    // width: 150,
     borderRadius: 50,
     backgroundColor: '#ade5ff',
     color: '#20232a',
     textAlign: 'center',
     //  Add Action Style
     paddingLeft: 20,
-    marginTop: 10,
+    // marginTop: 10,
+    marginVertical:10,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
@@ -213,6 +214,7 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bdc3c7',
     overflow: 'hidden',
+    marginTop:10,
   },
   btn: {
     justifyContent: 'center',
@@ -228,8 +230,8 @@ const EditProfileStyles = StyleSheet.create({
     backgroundColor: '#28a745',
     borderRadius: 40,
   },
-  okBtn: {
-    marginTop: 10,
+  LogoutBtn: {
+    marginVertical: 10,
     // backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },
