@@ -134,9 +134,9 @@ const ListRoomsOrderedStyle = StyleSheet.create({
   container: {},
   header: {
     // height: 150,
-    position: 'relative',
+    // position: 'relative',
     backgroundColor: BLUE1,
-    paddingTop: 5,
+    paddingTop: 10,
     paddingBottom: 25,
     color: '#fff',
     borderBottomLeftRadius: 15,
@@ -161,7 +161,6 @@ const ListRoomsOrderedStyle = StyleSheet.create({
     borderBottomRightRadius: 50,
   },
   userImg: {
-
     maxWidth: 120,
     maxHeight: 120,
     borderRadius: 60,
