@@ -1,6 +1,6 @@
 import axios from 'axios'
 const axiosClient = axios.create({
-    baseURL: "https://localhost:3000/",
+    baseURL: "https://my-booking-hotel.herokuapp.com/",
     headers: {
         "Content-Type":"application/json"
     },
