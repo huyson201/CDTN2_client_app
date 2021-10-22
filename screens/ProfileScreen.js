@@ -118,7 +118,7 @@ const EditProfileScreen = function ({navigation}) {
           <Button
             onPress={handleLogout}
             title="Logout"
-            buttonStyle={EditProfileStyles.okBtn}></Button>
+            buttonStyle={EditProfileStyles.LogoutBtn}></Button>
         </View>
       </Container>
     </ScrollView>
@@ -142,45 +142,33 @@ const Container = styled.View`
 const EditProfileStyles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-    backgroundColor: BLUE1,
-    padding: 15,
+     backgroundColor: BLUE1,
+    paddingTop: 10,
+    paddingBottom: 25,
     color: '#fff',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
-    justifyContent: 'space-between',
   },
   headerText: {
     fontSize: 20,
     textAlign: 'center',
   },
-  headerUserCicle: {
+    headerUserCicle: {
     display: 'flex',
-    marginTop: 10,
+    marginHorizontal: '33%',
     marginBottom: 10,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    textAlign: 'center',
     height: 100,
     width: 100,
-    backgroundColor: '#7CAFDA',
-    // borderWidth: 5,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
   userImg: {
-    maxWidth: 100,
-    maxHeight: 100,
-    borderRadius: 50,
+    maxWidth: 120,
+    maxHeight: 120,
+    borderRadius: 60,
     resizeMode: 'cover',
-  },
-  headerUserText: {
-    // elevation: 5,
-    fontSize: 50,
-    textAlign: 'center',
-    marginTop: 15,
-    backgroundColor: 'transparent',
   },
   icon: {
     paddingTop: 13,
@@ -191,7 +179,9 @@ const EditProfileStyles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 5,
   },
-  textInput: {},
+  textInput: {
+    color:'#000',
+  },
   box: {
     height: 40,
     marginTop: 10,
@@ -202,15 +192,16 @@ const EditProfileStyles = StyleSheet.create({
     paddingRight: 32,
   },
   PickerStyle: {
-    height: 50,
-    width: 150,
+    // height: 50,
+    // width: 150,
     borderRadius: 50,
     backgroundColor: '#ade5ff',
     color: '#20232a',
     textAlign: 'center',
     //  Add Action Style
     paddingLeft: 20,
-    marginTop: 10,
+    // marginTop: 10,
+    marginVertical:10,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
@@ -228,6 +219,7 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bdc3c7',
     overflow: 'hidden',
+    marginTop:10,
   },
   btn: {
     justifyContent: 'center',
@@ -243,8 +235,8 @@ const EditProfileStyles = StyleSheet.create({
     backgroundColor: '#28a745',
     borderRadius: 40,
   },
-  okBtn: {
-    marginTop: 10,
+  LogoutBtn: {
+    marginVertical: 10,
     // backgroundColor: '#cfcfcf',
     borderRadius: 40,
   },

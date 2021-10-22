@@ -37,7 +37,7 @@ const TaskHome = () => {
   // console.log(user);
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
+      <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
         options={{ headerShown: false }}
@@ -50,9 +50,14 @@ const TaskHome = () => {
       <Stack.Screen
         name="SignUpScreen"
         component={SignUpScreen}
+<<<<<<< HEAD
         options={{headerShown: false}}
       /> */}
 
+=======
+        options={{ headerShown: false }}
+      /> 
+>>>>>>> 10e6a8b222f497dafe2a0ff2c66c74abbbada2c1
       <Stack.Screen
         name="HomeTab"
         component={TabBar}

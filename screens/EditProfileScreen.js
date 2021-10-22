@@ -39,24 +39,13 @@ const EditProfileScreen = function ({navigation}) {
     <ScrollView>
       {/* HEADER */}
       <View style={EditProfileStyles.header}>
-        {/* <Title style={EditProfileStyles.headerText}>
-          EDIT USER INFORMATION
-        </Title> */}
         <View style={EditProfileStyles.headerUserCicle}>
-          {/* <Icon
-            style={EditProfileStyles.headerUserimg}
-            name="user-alt"
-            size={50}
-            backgroundColor="#05375a"
-            color="#fff"></Icon> */}
           <View>
             <Image
               style={EditProfileStyles.userImg}
               source={require('../src/images/the_cap_hotel.jpeg')}
             />
           </View>
-
-          {/* <Text style={EditProfileStyles.headerUserimg}>Test </Text> */}
         </View>
       </View>
       <Container>
@@ -148,76 +137,33 @@ const ViewRow = styled.View`
 const EditProfileStyles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: BLUE1,
-    padding: 15,
+     backgroundColor: BLUE1,
+    paddingTop: 10,
+    paddingBottom: 25,
     color: '#fff',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
-    justifyContent: 'center',
   },
-  headerUserCicle: {
+    headerUserCicle: {
     display: 'flex',
-    marginTop: 10,
+    marginHorizontal: '33%',
     marginBottom: 10,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    textAlign: 'center',
     height: 100,
     width: 100,
-    backgroundColor: 'pink',
-    borderWidth: 5,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
   userImg: {
-    maxWidth: 100,
-    maxHeight: 100,
-    borderRadius: 50,
+    maxWidth: 120,
+    maxHeight: 120,
+    borderRadius: 60,
     resizeMode: 'cover',
-    
   },
-  headerUserText: {
-    // elevation: 5,
-    fontSize: 20,
-    textAlign: 'center',
-    marginTop: 30,
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    //
-    flex: 1,
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  headerUserCicle: {
-    display: 'flex',
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    textAlign: 'center',
-    height: 100,
-    width: 100,
-    backgroundColor: '#7CAFDA',
-    // borderWidth: 5,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-  },
-  headerUserimg: {
-    // elevation: 5,
-    fontSize: 50,
-    textAlign: 'center',
-    marginTop: 15,
-    backgroundColor: 'transparent',
-    borderWidth: 0,
+  
+   textInput: {
+    color:'#000',
   },
   icon: {
     paddingTop: 13,
@@ -250,7 +196,7 @@ const EditProfileStyles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    backgroundColor: '#ade5ff',
+    // backgroundColor: '#ade5ff',
     borderRadius: 40,
   },
   Picker: {
