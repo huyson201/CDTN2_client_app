@@ -50,9 +50,8 @@ const TaskHome = () => {
       <Stack.Screen
         name="SignUpScreen"
         component={SignUpScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />  */}
-
       <Stack.Screen
         name="HomeTab"
         component={TabBar}
