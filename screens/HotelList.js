@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList } from "react-native";
-import styled from "styled-components";
-import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "firebase/database";
 import { xoaDau } from "../src/utilFunction";
 import { useSelector } from "react-redux";
 import Hotel from "../src/components/hotel/Hotel";
+import hotelApi from "../api/hotelApi";
 
 const HotelList = function ({ navigation }) {
   // get data from firebase
   const [listData, setListData] = useState([]);
   const searchData = useSelector((state) => state.search);
-  const starCountRef = ref(db, "hotels");
+
+  async function getAll() {
+    const res = await hotelApi.getAll();
+    return res.data.data;
+  }
+
   // get data from firebase
   useEffect(() => {
-    setListData([]);
-    let data = [];
+    let filterData = [];
+    let data = getAll();
     let searchAddress = searchData.address;
-    // let arrStar = searchData.filter.rankStars;
-    onValue(starCountRef, (snapshot) => {
-      data = snapshot.val();
-      data = Object.values(data);
-      data = filterAddress(data, searchAddress);
-      setListData([...data]);
+    data.then((res) => {
+      filterData = res.rows;
+      // filterData = Object.values(filterData);
+      // filterData = filterAddress(filterData, searchAddress);
+      // console.log(filterData);
+      setListData([...filterData]);
+      console.log(listData);
     });
+
   }, []);
 
   return (
@@ -35,13 +40,10 @@ const HotelList = function ({ navigation }) {
           return (
             <View>
               <Hotel
-                key={Math.random()}
-                hotelId={item.hotel}
-                hotelName={item.name}
-                priceSale={item.priceSale}
-                sale={item.sale}
-                images={item.image}
-                address={item.address}
+                key={item.hotel_id}
+                hotelId={item.hotel_id}
+                priceSale={5000000}
+                sale={0.5}
                 navigation={navigation}
               />
             </View>

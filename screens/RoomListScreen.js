@@ -13,6 +13,7 @@ import Icon3 from "react-native-vector-icons/AntDesign";
 import Room from "../src/components/hotel/Room";
 import { db } from "../cf_firebase/ConfigFireBase";
 import { ref, onValue } from "firebase/database";
+import hotelApi from "../api/hotelApi";
 
 const RoomListScreen = function ({ navigation, route }) {
   const [data, setData] = useState([]);
@@ -28,6 +29,24 @@ const RoomListScreen = function ({ navigation, route }) {
   };
 
   const room = ref(db, "hotels/" + route.params.hotelId + "/rooms");
+
+// const getAllRoomsByIdHotel = async (hotelId) => {
+  //   try {
+  //     const res = await hotelApi.getAllRoomsByIdHotel(hotelId);
+  //     if (!res.data.error) {
+  //       res.data.data.rooms.length !== 0
+  //         ? res.data.data.rooms.map((e) => {
+  //             prices.push(e.room_price);
+  //           })
+  //         : prices.push(0);
+  //     } else {
+  //       console.log(res.data.error);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
 
   useEffect(() => {
     let roomData = [];

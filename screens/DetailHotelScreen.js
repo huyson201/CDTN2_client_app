@@ -24,13 +24,10 @@ import Icon3 from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/Octicons";
 import Comment from "../src/components/hotel/Comment";
 import Utilities from "../src/components/hotel/Utilities";
-import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "firebase/database";
 import { SliderBox } from "react-native-image-slider-box";
-import axiosClient from "../api/axiosClient";
+import hotelApi from "../api/hotelApi";
 
 const DetailHotelScreen = ({ navigation, route }) => {
-  const hotel = ref(db, "hotels/" + route.params.hotelId);
   const [dataHotel, setDataHotel] = useState({
     hotelId: 0,
     name: "",
@@ -42,39 +39,41 @@ const DetailHotelScreen = ({ navigation, route }) => {
     sale: "",
     images: [],
   });
-  useEffect(() => {
-    const getAll= async()=>{
-      try {
-      const res = await axiosClient.get("/hotels");
-      console.log(res)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getAll();
-  }, [])
-  useEffect(() => {
-    setDataHotel({ images: [] });
-    onValue(hotel, (snapshot) => {
-      const data = snapshot.val();
-      let number = [];
-      number.length = data.star;
-      for (let i = 0; i < number.length; i++) {
-        number[i] = "star";
-      }
 
-      setDataHotel({
-        hotelId: data.hotel,
-        name: data.name,
-        address: data.address,
-        price: route.params.price,
-        desc: data.desc,
-        star: number,
-        phone: data.phone,
-        sale: data.sale,
-        images: data.image.split(","),
-      });
-    });
+  const getHotelById = async (hotelId) => {
+    try {
+      const res = await hotelApi.getHotelById(hotelId);
+      if (!res.data.error) {
+        let number = [];
+        number.length = res.data.data.hotel_star;
+        for (let i = 0; i < number.length; i++) {
+          number[i] = "star";
+        }
+        setDataHotel({
+          name: res.data.data.hotel_name,
+          price: route.params.price,
+          sale: 0.5,
+          // images: res.data.data.hotel_slide,
+          images: [
+            "https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b",
+            "https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b",
+            "https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b",
+          ],
+          address: res.data.data.hotel_address,
+          phone: res.data.data.hotel_phone,
+          desc: res.data.data.hotel_desc,
+          star: number,
+        });
+      } else {
+        console.log(res.data.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getHotelById(route.params.hotelId);
   }, []);
 
   return (
@@ -82,7 +81,6 @@ const DetailHotelScreen = ({ navigation, route }) => {
       <ScrollView style={{ marginBottom: 80 }}>
         <View>
           <SliderBox
-            key={Math.random()}
             images={dataHotel.images}
             paginationBoxVerticalPadding={5}
             dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
@@ -108,14 +106,9 @@ const DetailHotelScreen = ({ navigation, route }) => {
             </View>
             <View style={{ marginLeft: 5 }}>
               <ViewRow1>
-                {dataHotel.star.map((e) => {
+                {dataHotel.star.map((e, i) => {
                   return (
-                    <Icon1
-                      key={Math.random(dataHotel.star.length)}
-                      name={e}
-                      size={15}
-                      color={GOLD_COLOR}
-                    />
+                    <Icon1 key={i} name={e} size={15} color={GOLD_COLOR} />
                   );
                 })}
               </ViewRow1>

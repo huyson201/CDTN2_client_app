@@ -148,19 +148,11 @@ const DetailRoomScreen = ({ navigation, route }) => {
           </ViewRow>
           <View style={styles.description}>
             <Text style={styles.title}>Dịch vụ phòng</Text>
-            {dataDetailRoom.services.map((e) => {
+            {dataDetailRoom.services.map((e, i) => {
               return (
-                <ViewRow
-                  key={Math.random(dataDetailRoom.services.length)}
-                  style={{ justifyContent: "flex-start" }}
-                >
-                  <EntypoIcon
-                    key={Math.random(dataDetailRoom.services.length)}
-                    name="dot-single"
-                  ></EntypoIcon>
-                  <Text key={Math.random(dataDetailRoom.services.length)}>
-                    {e}
-                  </Text>
+                <ViewRow style={{ justifyContent: "flex-start" }}>
+                  <EntypoIcon key={i} name="dot-single"></EntypoIcon>
+                  <Text>{e}</Text>
                 </ViewRow>
               );
             })}
