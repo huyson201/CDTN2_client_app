@@ -89,13 +89,13 @@ const DetailPriceModal = forwardRef((props, ref) => {
             <View>
               {props.sale != null && props.sale != "" ? (
                 <Text style={styles.priceSale}>
-                  VND {formatCurrency(props.sumPre, "VND")}
+                  {formatCurrency(props.sumPre, "VND")}
                 </Text>
               ) : (
                 <Text></Text>
               )}
               <Text style={styles.price}>
-                VND {formatCurrency(props.sum, "VND")}
+                {formatCurrency(props.sum, "VND")}
               </Text>
             </View>
             <Button

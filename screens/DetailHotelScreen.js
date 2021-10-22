@@ -27,6 +27,7 @@ import Utilities from "../src/components/hotel/Utilities";
 import { db } from "../cf_firebase/ConfigFireBase";
 import { ref, onValue } from "firebase/database";
 import { SliderBox } from "react-native-image-slider-box";
+import axiosClient from "../api/axiosClient";
 
 const DetailHotelScreen = ({ navigation, route }) => {
   const hotel = ref(db, "hotels/" + route.params.hotelId);
@@ -41,7 +42,17 @@ const DetailHotelScreen = ({ navigation, route }) => {
     sale: "",
     images: [],
   });
-
+  useEffect(() => {
+    const getAll= async()=>{
+      try {
+      const res = await axiosClient.get("/hotels");
+      console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getAll();
+  }, [])
   useEffect(() => {
     setDataHotel({ images: [] });
     onValue(hotel, (snapshot) => {

@@ -72,4 +72,5 @@ export const SIGNUP_SUCCESSFULLY = "Đăng kí thành công"
 export const SIGNOUT_SUCCESSFULLY = "Đăng xuất thành công"
 export const WRONG_PASSWORD = 'Nhập sai password'
 export const USER_NOT_FOUND = 'Không tìm thấy user'
+export const INVALID_EMAIL = 'Sai định dạng email'
 export const TOO_MANY_REQUEST = 'Tài khoản tạm thời bị vô hiệu hoá do nhiều lần đăng nhập không thành công. Vui lòng thử lại sau'

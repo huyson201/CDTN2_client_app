@@ -9,19 +9,24 @@ import {TextInput, Image} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {auth} from '../cf_firebase/ConfigFireBase';
 import {signOut} from '@firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfileScreen = function ({navigation}) {
   const [selectedValue, setSelectedValue] = useState('male');
   const handlePressEditProfile = () => {
     navigation.navigate('EditProfileScreen');
   };
- const handleToListRooms = () => {
+  const handleToListRooms = () => {
     navigation.navigate('My Ordered Room');
   };
-  
+
   const handleLogout = () => {
     signOut(auth).then(
-      ToastAndroid.show('Dang xuat thanh cong', ToastAndroid.SHORT),
+      AsyncStorage.removeItem('user').then(
+        ToastAndroid.show('Dang xuat thanh cong', ToastAndroid.SHORT),
+      ),
+
+      navigation.navigate('LoginScreen')
     );
   };
   return (
@@ -107,7 +112,7 @@ const EditProfileScreen = function ({navigation}) {
             title="Edit Information"
             buttonStyle={EditProfileStyles.editBtn}></Button>
           <Button
-           onPress={handleToListRooms}
+            onPress={handleToListRooms}
             title="My ordered Rooms"
             buttonStyle={EditProfileStyles.listRoomsBtn}></Button>
           <Button
