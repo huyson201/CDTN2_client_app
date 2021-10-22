@@ -1,0 +1,21 @@
+arguments=
+auto.sync=false
+build.scans.enabled=false
+connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
+connection.project.dir=
+eclipse.preferences.version=1
+gradle.user.home=
+<<<<<<< HEAD
+<<<<<<< HEAD
+java.home=C\:/Program Files/Java/jdk-14.0.1
+=======
+java.home=C\:/Program Files/Java/jdk-16.0.1
+>>>>>>> login
+=======
+java.home=C\:/Program Files/Java/jdk-16.0.1
+>>>>>>> 015d82d660da5f1257b230909aa9afdd635e28ef
+jvm.arguments=
+offline.mode=false
+override.workspace.settings=true
+show.console.view=true
+show.executions.view=true
