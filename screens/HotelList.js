@@ -8,45 +8,64 @@ import { db } from "../cf_firebase/ConfigFireBase";
 import { ref, onValue } from "firebase/database";
 import { xoaDau } from "../src/utilFunction";
 import { useSelector } from "react-redux";
+import axios from "axios"
 
 const HotelList = function ({ navigation }) {
   const [listData, setListData] = useState([]);
   const searchData = useSelector((state) => state.search);
   const starCountRef = ref(db, "hotels");
+
   // get data from firebase
   useEffect(() => {
     setListData([]);
-    let data = [];
+    // let data = [];
     let searchAddress = searchData.address;
+    let fromDate = searchData.date.receivedDate.replace('/', '-')
+    let toDate = searchData.date.payDate.replace('/', '-')
     let arrStar = searchData.filter.rankStars;
-    // let maxPrice = searchData.filter.maxPrice;
-    // let minPrice = searchData.filter.minPrice;
-    onValue(starCountRef, (snapshot) => {
-      data = snapshot.val();
-      data = Object.values(data);
-      data = filterAddress(data, searchAddress);
-      // data = filterStar(data, arrStar);
-      // data = filterPrice(data, maxPrice, minPrice);
-      setListData([...data]);
-    });
+    let maxPrice = searchData.filter.maxPrice;
+    let minPrice = searchData.filter.minPrice;
+    let { children, adults, rooms } = searchData.personsAndRooms
+
+    // onValue(starCountRef, (snapshot) => {
+    //   data = snapshot.val();
+    //   data = Object.values(data);
+    //   data = filterAddress(data, searchAddress);
+    //   data = filterStar(data, arrStar);
+    //   data = filterPrice(data, maxPrice, minPrice);
+    //   setListData([...data]);
+    // });
+
+    let query = `filter?address=${searchAddress}&from=${fromDate}T12:00:00&to=${toDate}T12:00:00&room=${rooms}&adult=${adults}`;
+    if (arrStar.length > 0) query += `&star=${arrStar}`
+    if (maxPrice && minPrice) query += `&min=${minPrice}&max=${maxPrice}`
+
+    async function filterData() {
+      try {
+        let res = await axios({
+          method: 'get',
+          url: "http://192.168.1.10:3000/" + query
+        })
+
+        let data = res.data.data
+        setListData([...data]);
+        console.log(res)
+        console.log(listData)
+      } catch (error) {
+        console.log(error.response)
+      }
+
+    }
+    filterData()
   }, []);
 
   //   render item in flat list
   const renderItem = function ({ item, index }) {
+    if (listData.length === 0) return
     let itemSale = null;
-    let prices = [];
+    let prices = item.rooms;
 
-    const rooms = ref(db, "hotels/" + item.hotel + "/rooms");
-    onValue(rooms, (snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        const room = childSnapshot.val();
-        prices.push({
-          price: room.price,
-        });
-      });
-    });
-
-    if (item.sale != "" && item.sale != null) {
+    if (item.hotel_sale && item.hotel_sale !== "") {
       itemSale = (
         <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }} key={item.priceSale}>
           {" "}
@@ -54,6 +73,7 @@ const HotelList = function ({ navigation }) {
         </Text>
       );
     }
+
     return (
       <ItemContainer
         activeOpacity={0.9}
@@ -70,48 +90,58 @@ const HotelList = function ({ navigation }) {
           {/* Hotel image */}
           <Image
             style={styles.hotelImage}
-            source={{ uri: item.image.split(",")[0] }}
+            source={{ uri: item.hotel_img }}
           />
           <ItemContent>
-            {/* Hotel name */}
-            <Text style={styles.headText}>{item.name}</Text>
-            {/* Star */}
-            <ViewRow>
-              <Icon name="star" size={15} color={GOLD_COLOR} />
-              <Icon name="star" size={15} color={GOLD_COLOR} />
-              <Icon name="star" size={15} />
-              <Icon name="star" size={15} />
-            </ViewRow>
-            {/* Address */}
-            <ViewRow>
-              <Icon
-                name="map-marker"
-                size={12}
-                color={DARK_GRAY}
-                style={{ marginTop: 8 }}
-              />
-              <Text style={styles.addressText}>{item.address}</Text>
-            </ViewRow>
-
-            {/* Hotel price */}
-            <Text style={styles.priceText}>
-              {itemSale != null ? `${VND} ${getMinPrice(prices)}` : ``}
-            </Text>
-            {/* Hotel price sale */}
-            <ViewRow>
-              {itemSale != null ? (
-                itemSale
-              ) : (
-                <Text
-                  style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}
-                >
-                  {" "}
-                  {VND} {getMinPrice(prices)}
+            <Column >
+              <View>
+                {/* Hotel name */}
+                <Text style={styles.headText}>{item.hotel_name}</Text>
+                {/* Star */}
+                <ViewRow>
+                  <Icon name="star" size={15} color={GOLD_COLOR} />
+                  <Icon name="star" size={15} color={GOLD_COLOR} />
+                  <Icon name="star" size={15} />
+                  <Icon name="star" size={15} />
+                </ViewRow>
+                {/* Address */}
+                <ViewRow>
+                  <Icon
+                    name="map-marker"
+                    size={12}
+                    color={DARK_GRAY}
+                    style={{ marginTop: 8 }}
+                  />
+                  <Text style={styles.addressText}>{item.hotel_address}</Text>
+                </ViewRow>
+                {/*  hotel desc*/}
+                <Text numberOfLines={3} ellipsizeMode='tail' style={styles.hotelDesc}>
+                  {item.hotel_desc}
                 </Text>
-              )}
-              <Text style={styles.contentText}>{UNIT}</Text>
-            </ViewRow>
-            <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
+              </View>
+              <View>
+                {/* Hotel price */}
+                <Text style={styles.priceText}>
+                  {itemSale != null ? `${VND} ${getMinPrice(prices)}` : ``}
+                </Text>
+
+                {/* Hotel price sale */}
+                <ViewRow>
+                  {itemSale != null ? (
+                    itemSale
+                  ) : (
+                    <Text
+                      style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}
+                    >
+                      {" "}
+                      {VND} {getMinPrice(prices)}
+                    </Text>
+                  )}
+                  <Text style={styles.contentText}>{UNIT}</Text>
+                </ViewRow>
+                <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
+              </View>
+            </Column>
           </ItemContent>
         </ViewRow>
       </ItemContainer>
@@ -130,54 +160,7 @@ const HotelList = function ({ navigation }) {
   );
 };
 
-const filterStar = (data, arrStars) => {
-  if (arrStars.length === 0) return data;
-  return data.filter((el) => {
-    if (arrStars.includes(el.star)) return el;
-  });
-};
 
-// filter Price
-
-function filterPrice(data, max, min) {
-  if (max == min && max == 10000000) {
-    let nData = data.filter((el) => {
-      let rooms = el.rooms;
-      for (let key in rooms) {
-        if (rooms[key].price >= max) return el;
-      }
-    });
-
-    return nData;
-  }
-
-  let nData = data.filter((el) => {
-    let rooms = el.rooms;
-    for (const key in rooms) {
-      if (rooms[key].price >= min && rooms[key].price <= max) return el;
-    }
-  });
-
-  return nData;
-}
-
-// filter function
-function filterAddress(data, searchAddress) {
-  let xoaDauAddress = xoaDau(searchAddress).toLowerCase();
-  xoaDauAddress = removePrefixAddress(xoaDauAddress);
-
-  let newData = data.filter((el) => {
-    let arrAddress = xoaDauAddress.split(",");
-    let address = xoaDau(el.address).toLowerCase();
-    for (let i = arrAddress.length - 1; i >= 0; i--) {
-      if (address.indexOf(arrAddress[i]) !== -1) {
-        return el;
-      }
-    }
-  });
-
-  return newData;
-}
 
 function removePrefixAddress(address) {
   let str = address.replace("xa", "");
@@ -191,10 +174,11 @@ function removePrefixAddress(address) {
 
 //lấy giá min giữa các room của hotel
 function getMinPrice(prices) {
-  let min = prices[0].price;
+
+  let min = prices[0].room_price;
   prices.forEach((e) => {
-    if (min >= e.price) {
-      min = e.price;
+    if (min >= e.room_price) {
+      min = e.room_price;
     }
   });
   return min;
@@ -211,8 +195,15 @@ const ItemContent = styled.View`
 `;
 const ViewRow = styled.View`
   flex-direction: row;
+  max-height: 200px;
+  padding-bottom: 10px;
 `;
 
+const Column = styled.View`
+  flex-direction:column;
+  height: 100%;
+  justify-content: space-between;
+`
 const styles = StyleSheet.create({
   hotelImage: {
     width: 120,
@@ -243,13 +234,17 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginTop: 5,
   },
+  hotelDesc: {
+    fontSize: 11,
+    color: DARK_GRAY,
+    marginLeft: 5,
+  },
   priceText: {
     fontSize: 11,
     color: DARK_GRAY,
     maxWidth: "90%",
     width: "100%",
     marginLeft: 5,
-    marginTop: 60,
     textDecorationLine: "line-through",
   },
 });

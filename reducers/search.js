@@ -6,7 +6,7 @@ let tomorrow = getTomorrow(nowDate)
 // console.log(nowDate)
 
 let initialState = {
-    address: "",
+    address: "Huyện Ninh Hải, Ninh Thuận",
     date: {
         numDate: 1,
         receivedDate: nowDate,
@@ -19,7 +19,7 @@ let initialState = {
     },
     filter: {
         maxPrice: "10000000",
-        minPrice: "",
+        minPrice: "0",
         rankStars: []
     }
 }
