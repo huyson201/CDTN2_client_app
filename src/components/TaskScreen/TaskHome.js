@@ -16,42 +16,13 @@ import {BLUE1} from '../../values/color';
 import TabBar from '../home/TabBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
-
+import TaskLogin from './TaskLogin';
+import {isJwtExpired} from 'jwt-check-expiration';
+import {useSelector} from 'react-redux';
 const TaskHome = () => {
-  // const [user, setUser] = useState();
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const jsonValue = await AsyncStorage.getItem('user');
-  //       console.log(jsonValue);
-  //       setUser(jsonValue);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-
-  //   };
-  //   getData();
-  // }, [user])
-
-  // console.log(user);
+ 
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
-        name="SplashScreen"
-        component={SplashScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignUpScreen"
-        component={SignUpScreen}
-        options={{ headerShown: false }}
-      />  */}
       <Stack.Screen
         name="HomeTab"
         component={TabBar}
