@@ -10,8 +10,15 @@ import {Picker} from '@react-native-picker/picker';
 import {auth} from '../cf_firebase/ConfigFireBase';
 import {signOut} from '@firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCurrentUser, setRememberMe} from '../action_creators/user';
+import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
+import userApi from '../api/userApi';
 
 const EditProfileScreen = function ({navigation}) {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.currentUser);
+  console.log(user);
   const [selectedValue, setSelectedValue] = useState('male');
   const handlePressEditProfile = () => {
     navigation.navigate('EditProfileScreen');
@@ -20,14 +27,18 @@ const EditProfileScreen = function ({navigation}) {
     navigation.navigate('My Ordered Room');
   };
 
-  const handleLogout = () => {
-    signOut(auth).then(
-      AsyncStorage.removeItem('user').then(
-        ToastAndroid.show('Dang xuat thanh cong', ToastAndroid.SHORT),
-      ),
-
-      navigation.navigate('LoginScreen')
-    );
+  const handleLogout = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      await userApi.logout(token);
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('refresh_token');
+      dispatch(setCurrentUser(null));
+      dispatch(setRememberMe(false));
+      ToastAndroid.show(SIGNOUT_SUCCESSFULLY, ToastAndroid.SHORT);
+    } catch (e) {
+      console.log(e)
+    }
   };
   return (
     <ScrollView>
@@ -55,7 +66,7 @@ const EditProfileScreen = function ({navigation}) {
             color="#05375a"></Icon>
           <TextInput
             editable={false}
-            defaultValue="Name of user"
+            defaultValue={user && user.user_name}
             placeholder="Type Your Name Here"
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
@@ -70,7 +81,7 @@ const EditProfileScreen = function ({navigation}) {
             color="#05375a"></Icon>
           <TextInput
             editable={false}
-            defaultValue="0123456789"
+            defaultValue={user &&  user.user_phone}
             placeholder="Type Your Phone Here"
             autoCapitalize="none"
             style={EditProfileStyles.textInput}></TextInput>
@@ -142,7 +153,7 @@ const Container = styled.View`
 const EditProfileStyles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFF'},
   header: {
-     backgroundColor: BLUE1,
+    backgroundColor: BLUE1,
     paddingTop: 10,
     paddingBottom: 25,
     color: '#fff',
@@ -153,7 +164,7 @@ const EditProfileStyles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
-    headerUserCicle: {
+  headerUserCicle: {
     display: 'flex',
     marginHorizontal: '33%',
     marginBottom: 10,
@@ -180,7 +191,7 @@ const EditProfileStyles = StyleSheet.create({
     marginLeft: 5,
   },
   textInput: {
-    color:'#000',
+    color: '#000',
   },
   box: {
     height: 40,
@@ -201,7 +212,7 @@ const EditProfileStyles = StyleSheet.create({
     //  Add Action Style
     paddingLeft: 20,
     // marginTop: 10,
-    marginVertical:10,
+    marginVertical: 10,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
@@ -219,7 +230,7 @@ const EditProfileStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bdc3c7',
     overflow: 'hidden',
-    marginTop:10,
+    marginTop: 10,
   },
   btn: {
     justifyContent: 'center',
