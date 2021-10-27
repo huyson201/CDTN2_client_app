@@ -70,4 +70,5 @@ export const DESSRIPTION_HOTEL = 'Lorem Ipsum is simply dummy text of the printi
 export const LOGIN_SUCCESSFULLY = "Đăng nhập thành công"
 export const SIGNUP_SUCCESSFULLY = "Đăng kí thành công"
 export const SIGNOUT_SUCCESSFULLY = "Đăng xuất thành công"
-export const EMAIL_EXISTED = "Email đã có người đăng kí"
+export const EMAIL_OR_PHONE_EXISTED = "Email hoặc số điện thoại đã có người đăng kí"
+export const PHONE_INVALID = "Số điện thoại không hợp lệ"

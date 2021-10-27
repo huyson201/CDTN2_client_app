@@ -36,7 +36,6 @@ const LoginScreen = ({navigation, route}) => {
   const handlePressSignUp = () => {
     navigation.navigate('SignUpScreen');
   };
-
   const updateSecureTextEntry = () => {
     setData({
       ...data,
@@ -51,7 +50,7 @@ const LoginScreen = ({navigation, route}) => {
   const handleLogin = async () => {
     setisLoading(true);
     try {
-      const res = await userApi.login(email, password);
+      const res = await userApi.login(emailUser? Object.values(emailUser) : email, password);
       if (!res.data.msg) {
         dispatch(setCurrentUser(res.data.data.user));
         dispatch(setRememberMe(true));

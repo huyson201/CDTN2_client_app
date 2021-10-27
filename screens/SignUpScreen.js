@@ -17,7 +17,7 @@ import {DEVICE_HEIGHT, DEVICE_WIDTH} from '../src/values/size';
 import {Button} from 'react-native-elements';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {EMAIL_EXISTED, SIGNUP_SUCCESSFULLY} from '../src/values/constants';
+import {EMAIL_OR_PHONE_EXISTED, PHONE_INVALID, SIGNUP_SUCCESSFULLY} from '../src/values/constants';
 import userApi from '../api/userApi';
 
 const validationSchema = Yup.object({
@@ -34,7 +34,7 @@ const validationSchema = Yup.object({
     [Yup.ref('password'), null],
     'Password does not match!',
   ),
-  phone: Yup.string().min(3, 'Invalid phone!').required('phone is required!'),
+  phone: Yup.string().min(10, 'Invalid phone!').required('phone is required!'),
 });
 
 const SignUpScreen = ({navigation}) => {
@@ -82,9 +82,11 @@ const SignUpScreen = ({navigation}) => {
         });
       } else {
         setLoading(false);
-        ToastAndroid.show(EMAIL_EXISTED, ToastAndroid.SHORT);
+        ToastAndroid.show(EMAIL_OR_PHONE_EXISTED, ToastAndroid.SHORT);
       }
     } catch (error) {
+      setLoading(false);
+      ToastAndroid.show(PHONE_INVALID, ToastAndroid.SHORT);
       console.log(error);
     }
   };
