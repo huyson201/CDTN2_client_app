@@ -115,6 +115,7 @@ const Invoice = (props) => {
     }
   };
 
+  
   return (
     <ScrollView style={{ backgroundColor: "rgba(0,0,0,.05)" }}>
       <MainBackground>
