@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
-import { xoaDau } from "../src/utilFunction";
-import { useSelector } from "react-redux";
-import Hotel from "../src/components/hotel/Hotel";
-import hotelApi from "../api/hotelApi";
+import React, {useState, useEffect} from 'react';
+import {View, FlatList} from 'react-native';
+import {xoaDau} from '../src/utilFunction';
+import {useSelector} from 'react-redux';
+import Hotel from '../src/components/hotel/Hotel';
+import hotelApi from '../api/hotelApi';
 
-const HotelList = function ({ navigation }) {
+const HotelList = function ({navigation}) {
   // get data from firebase
   const [listData, setListData] = useState([]);
-  const searchData = useSelector((state) => state.search);
+  const searchData = useSelector(state => state.search);
 
   async function getAll() {
     const res = await hotelApi.getAll();
@@ -20,23 +20,24 @@ const HotelList = function ({ navigation }) {
     let filterData = [];
     let data = getAll();
     let searchAddress = searchData.address;
-    data.then((res) => {
+    data.then(res => {
       filterData = res.rows;
       // filterData = Object.values(filterData);
-      // filterData = filterAddress(filterData, searchAddress);
+      // console.log("filterdata");
       // console.log(filterData);
-      setListData([...filterData]);
-      console.log(listData);
-    });
+      // filterData = filterAddress(filterData, searchAddress);
 
+      setListData([...filterData]);
+      // console.log(listData);
+    });
   }, []);
 
   return (
     <View>
       <FlatList
-        style={{ marginTop: 5 }}
+        style={{marginTop: 5}}
         data={listData}
-        renderItem={({ item, index }) => {
+        renderItem={({item, index}) => {
           return (
             <View>
               <Hotel
@@ -56,7 +57,7 @@ const HotelList = function ({ navigation }) {
 
 const filterStar = (data, arrStars) => {
   if (arrStars.length === 0) return data;
-  return data.filter((el) => {
+  return data.filter(el => {
     if (arrStars.includes(el.star)) return el;
   });
 };
@@ -65,7 +66,7 @@ const filterStar = (data, arrStars) => {
 
 function filterPrice(data, max, min) {
   if (max == min && max == 10000000) {
-    let nData = data.filter((el) => {
+    let nData = data.filter(el => {
       let rooms = el.rooms;
       for (let key in rooms) {
         if (rooms[key].price >= max) return el;
@@ -75,7 +76,7 @@ function filterPrice(data, max, min) {
     return nData;
   }
 
-  let nData = data.filter((el) => {
+  let nData = data.filter(el => {
     let rooms = el.rooms;
     for (const key in rooms) {
       if (rooms[key].price >= min && rooms[key].price <= max) return el;
@@ -90,25 +91,27 @@ function filterAddress(data, searchAddress) {
   let xoaDauAddress = xoaDau(searchAddress).toLowerCase();
   xoaDauAddress = removePrefixAddress(xoaDauAddress);
 
-  let newData = data.filter((el) => {
-    let arrAddress = xoaDauAddress.split(",");
-    let address = xoaDau(el.address).toLowerCase();
+  let newData = data.filter(el => {
+    let arrAddress = xoaDauAddress.split(',');
+    let address = xoaDau(el.hotel_address).toLowerCase();
+
+    console.log(arrAddress);
     for (let i = arrAddress.length - 1; i >= 0; i--) {
       if (address.indexOf(arrAddress[i]) !== -1) {
         return el;
       }
     }
   });
-
+  console.log(newData);
   return newData;
 }
 
 function removePrefixAddress(address) {
-  let str = address.replace("xa", "");
-  str = str.replace("huyen", "");
-  str = str.replace("tinh", "");
-  str = str.replace("thanh pho", "");
-  str = str.replace("duong", "");
+  let str = address.replace('xa', '');
+  str = str.replace('huyen', '');
+  str = str.replace('tinh', '');
+  str = str.replace('thanh pho', '');
+  str = str.replace('duong', '');
 
   return str;
 }

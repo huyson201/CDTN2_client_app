@@ -11,7 +11,8 @@ import styled from "styled-components";
 import { Button } from "react-native-elements";
 import { BLUE1, DARK_GRAY, ORANGE_LIGHT } from "../../values/color";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { formatCurrency } from "../../utilFunction";
+import { convertDateToVNDate, formatCurrency } from "../../utilFunction";
+import { useSelector } from "react-redux";
 const DetailPriceModal = forwardRef((props, ref) => {
   const [show, setShow] = useState(false);
   const close = () => {
@@ -22,13 +23,22 @@ const DetailPriceModal = forwardRef((props, ref) => {
       setShow(true);
     },
   }));
+
+  // date state
+  const date = useSelector((state) => state.search.date);
+  let dateForRoom = date.dateString;
+  let numberNight = date.numDate;
+  // number night
+  let receivedDate = convertDateToVNDate(date.receivedDate);
+  let payDate = convertDateToVNDate(date.payDate);
+
   const handlePressBooking = () => {
     props.navigation.navigate("Invoice", {
       id: props.id,
       data: props.data,
       hotelName: props.hotelName,
-      receivedDate: props.receivedDate,
-      payDate: props.payDate,
+      receivedDate: receivedDate,
+      payDate: payDate,
       taxes: props.taxes,
       sum: props.sum,
     });
@@ -48,7 +58,7 @@ const DetailPriceModal = forwardRef((props, ref) => {
       <Content>
         <ViewRow>
           <Text>Ngày</Text>
-          <DetailText>{props.date}</DetailText>
+          <DetailText>{dateForRoom}</DetailText>
         </ViewRow>
         <ViewRow style={{ marginBottom: 20 }}>
           <Text>Số phòng</Text>
@@ -61,8 +71,8 @@ const DetailPriceModal = forwardRef((props, ref) => {
           </DetailText>
         </ViewRow>
         <ViewRow>
-          <Text>Tổng giá tiền cho {props.numberNight} đêm</Text>
-          <DetailText>VND {props.data.price * props.numberNight}</DetailText>
+          <Text>Tổng giá tiền cho {numberNight} đêm</Text>
+          <DetailText>VND {props.data.price *numberNight}</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Thuế và phí</Text>
@@ -82,12 +92,12 @@ const DetailPriceModal = forwardRef((props, ref) => {
               name="chevron-up"
             ></Icon>
             <Text style={{ fontSize: 12, paddingBottom: 2, marginLeft: 3 }}>
-              {`Tổng giá tiền cho ${props.date} - ${props.numberNight} đêm - 1 phòng`}
+              {`Tổng giá tiền cho ${dateForRoom} - ${numberNight} đêm - 1 phòng`}
             </Text>
           </ViewRow>
           <ViewRow>
             <View>
-              {props.sale != null && props.sale != "" ? (
+              {props.data.sale != null && props.data.sale != "" ? (
                 <Text style={styles.priceSale}>
                   {formatCurrency(props.sumPre, "VND")}
                 </Text>

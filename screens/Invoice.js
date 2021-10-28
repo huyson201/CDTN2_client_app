@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -19,17 +19,45 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { formatCurrency } from "../src/utilFunction";
 import { Button } from "react-native-elements";
+import hotelApi from "../api/hotelApi";
 
 const Invoice = (props) => {
+  const [data, setData] = useState({
+    roomName: "",
+    beds: 0,
+    people: 0,
+    status: 0
+  })
+  
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
   let sumPriceRoom = (props.route.params.sum) - (props.route.params.taxes);
+
+  const getRoomById = async () => {
+    try {
+      if (props.route.params.id) {
+        const res = await hotelApi.getRoomById(props.route.params.id);
+        !res.data.error
+          ? setData({
+            roomName: res.data.data.room_name,
+            beds: res.data.data.room_beds,
+            people: res.data.data.room_num_people,
+            status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
+          })
+          : setData([{ message: 'Khong co du lieu phong' }]);
+      } else {
+        console.log("Khong co id phong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (showDetailPrice) {
     detailPrice = (
       <DetailPrice>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
-          <Text>(x1) {props.route.params.data.roomName}</Text>
+          <Text>(x1) {data.roomName}</Text>
           <Text>{formatCurrency(sumPriceRoom, "VND")}</Text>
         </RowView>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
@@ -47,6 +75,12 @@ const Invoice = (props) => {
   const handlePressConfirm = () => {
     ToastAndroid.show("xác nhận", ToastAndroid.SHORT);
   };
+
+  useEffect(() => {
+    getRoomById();
+  }, []);
+
+
   return (
     <ScrollView style={{ backgroundColor: "rgba(0,0,0,.05)" }}>
       <MainBackground>
@@ -99,14 +133,15 @@ const Invoice = (props) => {
             </View>
             <View style={styles.paddingDefault}>
               <Text style={styles.roomTitle}>
-                (2x) {props.route.params.data.roomName}
+                (2x) {data.roomName}
               </Text>
               <Text style={styles.roomInfo}>
-                1 giường (x{props.route.params.data.beds})
+                1 giường (x{data.beds})
               </Text>
               <Text style={styles.roomInfo}>
-                {props.route.params.data.adult +
-                  props.route.params.data.children}{" "}
+                {/* {props.route.params.data.people +
+                  props.route.params.data.children}{" "} */}
+                {data.people}
                 khách/phòng
               </Text>
             </View>
