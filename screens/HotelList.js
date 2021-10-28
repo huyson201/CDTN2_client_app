@@ -1,43 +1,36 @@
-import React, {useState, useEffect} from 'react';
-import {View, FlatList} from 'react-native';
-import {xoaDau} from '../src/utilFunction';
-import {useSelector} from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { View, FlatList } from 'react-native';
+import { xoaDau } from '../src/utilFunction';
+import { useSelector } from 'react-redux';
 import Hotel from '../src/components/hotel/Hotel';
 import hotelApi from '../api/hotelApi';
 
-const HotelList = function ({navigation}) {
+const HotelList = function ({ navigation }) {
   // get data from firebase
   const [listData, setListData] = useState([]);
   const searchData = useSelector(state => state.search);
 
-  async function getAll() {
+  const getAll = async () => {
+    let filterData = [];
+    let searchAddress = searchData.address;
+    // filterData = Object.values(filterData);
+    // filterData = filterAddress(filterData, searchAddress);
     const res = await hotelApi.getAll();
-    return res.data.data;
+    filterData = res.data.data.rows;
+    setListData([...filterData]);
   }
 
   // get data from firebase
   useEffect(() => {
-    let filterData = [];
-    let data = getAll();
-    let searchAddress = searchData.address;
-    data.then(res => {
-      filterData = res.rows;
-      // filterData = Object.values(filterData);
-      // console.log("filterdata");
-      // console.log(filterData);
-      // filterData = filterAddress(filterData, searchAddress);
-
-      setListData([...filterData]);
-      // console.log(listData);
-    });
+    getAll()
   }, []);
 
   return (
     <View>
       <FlatList
-        style={{marginTop: 5}}
+        style={{ marginTop: 5 }}
         data={listData}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return (
             <View>
               <Hotel

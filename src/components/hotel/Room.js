@@ -32,9 +32,6 @@ const Room = function ({
   // date state
   const date = useSelector((state) => state.search.date);
   let numberNight = date.numDate;
-  // number night
-  let receivedDate = convertDateToVNDate(date.receivedDate);
-  let payDate = convertDateToVNDate(date.payDate);
 
   const taxes = 50000;
   let sum = sumPrice(
@@ -71,8 +68,6 @@ const Room = function ({
       id: roomId,
       hotelId: hotelId,
       hotelName: hotelName,
-      receivedDate: receivedDate,
-      payDate: payDate,
       taxes: taxes,
       sum: sum,
     });
