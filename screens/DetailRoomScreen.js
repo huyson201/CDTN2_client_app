@@ -14,21 +14,15 @@ import { DEVICE_WIDTH, DEVICE_HEIGHT } from "../src/values/size";
 import { Button } from "react-native-elements";
 import { SliderBox } from "react-native-image-slider-box";
 import DetailPriceModal from "../src/components/hotel/DetailPriceModal";
-import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "firebase/database";
 import { useSelector } from "react-redux";
 import { convertDateToVNDate } from "../src/utilFunction";
+import hotelApi from "../api/hotelApi";
 
 const DetailRoomScreen = ({ navigation, route }) => {
-  const detailRoom = ref(
-    db,
-    "hotels/" + route.params.hotelId + "/rooms/" + route.params.id
-  );
-
   const [dataDetailRoom, setDataDetailRoom] = useState({
     roomName: "",
-    adult: 0,
-    children: 0,
+    people: 0,
+    // children: 0,
     price: 0,
     desc: "",
     beds: 0,
@@ -47,24 +41,39 @@ const DetailRoomScreen = ({ navigation, route }) => {
   let receivedDate = convertDateToVNDate(date.receivedDate);
   let payDate = convertDateToVNDate(date.payDate);
 
+  const getRoomById = async (roomId) => {
+    try {
+      if (roomId) {
+        const res = await hotelApi.getRoomById(roomId);
+        !res.data.error
+          ? setDataDetailRoom({
+            roomName: res.data.data.room_name,
+            price: res.data.data.room_price,
+            people: res.data.data.room_num_people,
+            desc: res.data.data.room_desc,
+            beds: res.data.data.room_beds,
+            area: res.data.data.room_area,
+            status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
+            // images: e.images.split(','),
+            sale: route.params.sale,
+            images: [
+              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+            ],
+            services: res.data.data.room_services ? res.data.data.room_services : ["Khong co dich vu uu dai nao khac"]
+          })
+          : setDataDetailRoom([{ message: 'Khong co du lieu phong' }]);
+      } else {
+        console.log("Khong co id phong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    setDataDetailRoom({ services: [], images: [] });
-    onValue(detailRoom, (snapshot) => {
-      const data = snapshot.val();
-      setDataDetailRoom({
-        roomName: data.name,
-        adult: data.adult,
-        children: data.children,
-        price: data.price,
-        desc: data.roomDesc,
-        beds: data.beds,
-        area: data.area,
-        status: data.status,
-        sale: route.params.sale,
-        images: data.images.split(","),
-        services: data.services.split(","),
-      });
-    });
+    getRoomById(route.params.id)
   }, []);
   const taxes = 50000;
   const bottomPopupRef = useRef();
@@ -79,10 +88,11 @@ const DetailRoomScreen = ({ navigation, route }) => {
   );
 
   let sumPre = dataDetailRoom.price * numberNight + taxes;
+
   const handleBooking = () => {
     navigation.navigate("Invoice", {
       id: route.params.id,
-      data: dataDetailRoom,
+      hotelId: route.params.hotelId,
       hotelName: route.params.hotelName,
       receivedDate: receivedDate,
       payDate: payDate,
@@ -112,7 +122,7 @@ const DetailRoomScreen = ({ navigation, route }) => {
                 <View style={{ marginLeft: 5 }}>
                   <Text style={styles.title}>Khách</Text>
                   <Text style={{ fontSize: 11 }}>
-                    {dataDetailRoom.adult + dataDetailRoom.children} người/1
+                    {dataDetailRoom.people} người/1
                     phòng
                   </Text>
                 </View>
@@ -202,14 +212,10 @@ const DetailRoomScreen = ({ navigation, route }) => {
         ref={bottomPopupRef}
         data={dataDetailRoom}
         id={route.params.id}
-        taxes={50000}
-        date={dateForRoom}
-        numberNight={numberNight}
+        taxes={taxes}
         sum={sum}
         sumPre={sumPre}
         hotelName={route.params.hotelName}
-        receivedDate={receivedDate}
-        payDate={payDate}
         navigation={navigation}
       ></DetailPriceModal>
     </View>

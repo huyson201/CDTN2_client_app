@@ -36,7 +36,8 @@ const App = () => {
   return (
     <View style={{flex: 1}}>
       <NavigationContainer>
-        {rememberMe == false ? <TaskLogin /> : <TaskHome />}
+      <TaskHome />
+        {/* {rememberMe == false ? <TaskLogin /> : <TaskHome />} */}
       </NavigationContainer>
     </View>
   );
