@@ -17,9 +17,13 @@ import {
   SUM_PRICE_SRT,
 } from "../src/values/constants";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { formatCurrency } from "../src/utilFunction";
+import { convertDateToVNDate, formatCurrency } from "../src/utilFunction";
 import { Button } from "react-native-elements";
 import hotelApi from "../api/hotelApi";
+import { useSelector } from "react-redux";
+import invoiceApi from "../api/invoiceApi";
+import { isJwtExpired } from 'jwt-check-expiration';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Invoice = (props) => {
   const [data, setData] = useState({
@@ -28,10 +32,17 @@ const Invoice = (props) => {
     people: 0,
     status: 0
   })
-  
+
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
   let sumPriceRoom = (props.route.params.sum) - (props.route.params.taxes);
+
+  const user = useSelector(state => state.user.currentUser);
+  // date state
+  const date = useSelector((state) => state.search.date);
+  // number night
+  let receivedDate = convertDateToVNDate(date.receivedDate);
+  let payDate = convertDateToVNDate(date.payDate);
 
   const getRoomById = async () => {
     try {
@@ -72,14 +83,37 @@ const Invoice = (props) => {
     setShowDetailPrice(!showDetailPrice);
   };
 
-  const handlePressConfirm = () => {
-    ToastAndroid.show("xác nhận", ToastAndroid.SHORT);
-  };
-
   useEffect(() => {
     getRoomById();
   }, []);
 
+  const handlePressConfirm = async () => {
+    try {
+      await AsyncStorage.getItem('token').then(value => {
+        if (value != null && isJwtExpired(value) == false) {
+          let jsonData = {
+            token: value,
+            price: props.route.params.sum,
+            hotelId: props.route.params.hotelId,
+            rDate: date.receivedDate,
+            pDate: date.payDate,
+            roomId: props.route.params.id,
+            roomQty: data.status,
+            status: "Chưa xác nhận"
+          }
+          invoiceApi.create(jsonData)
+            .then((res) => {
+              console.log(res.data.message);
+            }).catch(err => console.log(err))
+
+        } else if (value != null && isJwtExpired(value) == true) {
+          ToastAndroid.show("Token expired", ToastAndroid.SHORT);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ScrollView style={{ backgroundColor: "rgba(0,0,0,.05)" }}>
@@ -111,7 +145,7 @@ const Invoice = (props) => {
                   numberOfLines={1}
                   style={styles.receivedDate}
                 >
-                  {props.route.params.receivedDate} (14:00)
+                  {receivedDate} (14:00)
                 </Text>
               </RowView>
               <RowView style={styles.mTop}>
@@ -127,7 +161,7 @@ const Invoice = (props) => {
                   numberOfLines={1}
                   style={styles.receivedDate}
                 >
-                  {props.route.params.payDate} (12:00)
+                  {payDate} (12:00)
                 </Text>
               </RowView>
             </View>
@@ -165,9 +199,9 @@ const Invoice = (props) => {
       <InfoBox>
         <Text style={styles.textCap}>{CONTACT_INFO}</Text>
         <InvoiceBox style={{ ...styles.paddingDefault, ...styles.mTop }}>
-          <Text style={styles.textName}>Son</Text>
-          <Text style={styles.textInfo}>Email: huyson201@gmail.com</Text>
-          <Text style={styles.textInfo}>Phone: +84987458246</Text>
+          <Text style={styles.textName}>{user.user_name}</Text>
+          <Text style={styles.textInfo}>Email: {user.user_email}</Text>
+          <Text style={styles.textInfo}>Phone: {user.user_phone}</Text>
         </InvoiceBox>
       </InfoBox>
 

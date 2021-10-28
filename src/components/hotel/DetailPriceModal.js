@@ -28,17 +28,12 @@ const DetailPriceModal = forwardRef((props, ref) => {
   const date = useSelector((state) => state.search.date);
   let dateForRoom = date.dateString;
   let numberNight = date.numDate;
-  // number night
-  let receivedDate = convertDateToVNDate(date.receivedDate);
-  let payDate = convertDateToVNDate(date.payDate);
 
   const handlePressBooking = () => {
     props.navigation.navigate("Invoice", {
       id: props.id,
       data: props.data,
       hotelName: props.hotelName,
-      receivedDate: receivedDate,
-      payDate: payDate,
       taxes: props.taxes,
       sum: props.sum,
     });
@@ -72,7 +67,7 @@ const DetailPriceModal = forwardRef((props, ref) => {
         </ViewRow>
         <ViewRow>
           <Text>Tổng giá tiền cho {numberNight} đêm</Text>
-          <DetailText>VND {props.data.price *numberNight}</DetailText>
+          <DetailText>VND {props.data.price * numberNight}</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Thuế và phí</Text>

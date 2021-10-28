@@ -37,10 +37,6 @@ const DetailRoomScreen = ({ navigation, route }) => {
   const date = useSelector((state) => state.search.date);
   let dateForRoom = date.dateString;
   let numberNight = date.numDate;
-  // number night
-  let receivedDate = convertDateToVNDate(date.receivedDate);
-  let payDate = convertDateToVNDate(date.payDate);
-
   const getRoomById = async (roomId) => {
     try {
       if (roomId) {
@@ -94,8 +90,6 @@ const DetailRoomScreen = ({ navigation, route }) => {
       id: route.params.id,
       hotelId: route.params.hotelId,
       hotelName: route.params.hotelName,
-      receivedDate: receivedDate,
-      payDate: payDate,
       taxes: taxes,
       sum: sum,
     });
@@ -160,7 +154,7 @@ const DetailRoomScreen = ({ navigation, route }) => {
             <Text style={styles.title}>Dịch vụ phòng</Text>
             {dataDetailRoom.services.map((e, i) => {
               return (
-                <ViewRow style={{ justifyContent: "flex-start" }}>
+                <ViewRow key={i} style={{ justifyContent: "flex-start" }}>
                   <EntypoIcon key={i} name="dot-single"></EntypoIcon>
                   <Text>{e}</Text>
                 </ViewRow>
