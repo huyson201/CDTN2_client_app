@@ -1,6 +1,12 @@
-export const setUser = (user) => {
+export const setCurrentUser = (user) => {
     return {
-        type: "SET_USER",
+        type: "SET_CURRENT_USER",
         payload: user
+    }
+}
+export const setRememberMe = (value) => {
+    return {
+        type: "SET_REMEMBER_ME",
+        payload: value
     }
 }

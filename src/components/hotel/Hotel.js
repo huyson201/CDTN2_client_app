@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, Image } from "react-native";
-import styled from "styled-components";
-import { DARK_GRAY, WHITE, ORANGE, GOLD_COLOR } from "../../values/color";
-import { VND, UNIT, HOTEL_TEXT } from "../../values/constants";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import hotelApi from "../../../api/hotelApi";
+import React, {useEffect, useState} from 'react';
+import {Text, StyleSheet, Image} from 'react-native';
+import styled from 'styled-components';
+import {DARK_GRAY, WHITE, ORANGE, GOLD_COLOR} from '../../values/color';
+import {VND, UNIT, HOTEL_TEXT} from '../../values/constants';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import hotelApi from '../../../api/hotelApi';
 
-const Hotel = function ({
-  navigation,
-  hotelId,
-  sale,
-  priceSale,
-}) {
+const Hotel = function ({navigation, hotelId, sale, priceSale}) {
   const [hotel, setHotel] = useState({
-    hotelName: "",
+    hotelName: '',
     sale: 0.5,
     priceSale: 500000,
     images: [],
-    image: "",
-    address: "",
-    phone: "",
-    desc: "",
+    image: '',
+    address: '',
+    phone: '',
+    desc: '',
     star: 1,
   });
   let itemSale = null;
-  let prices = [500000, 6000000, 700000];
-
-  const getHotelById = async (hotelId) => {
+  const [prices, setPrices] = useState([]);
+  // let prices =[];
+  const getHotelById = async hotelId => {
     try {
       const res = await hotelApi.getHotelById(hotelId);
       if (!res.data.error) {
@@ -35,7 +30,7 @@ const Hotel = function ({
           sale: 0.5,
           priceSale: 500000,
           images: res.data.data.hotel_slide,
-          image: "",
+          image: '',
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
           desc: res.data.data.hotel_desc,
@@ -49,37 +44,40 @@ const Hotel = function ({
     }
   };
 
-  // const getAllRoomsByIdHotel = async (hotelId) => {
-  //   try {
-  //     const res = await hotelApi.getAllRoomsByIdHotel(hotelId);
-  //     if (!res.data.error) {
-  //       res.data.data.rooms.length !== 0
-  //         ? res.data.data.rooms.map((e) => {
-  //             prices.push(e.room_price);
-  //           })
-  //         : prices.push(0);
-  //     } else {
-  //       console.log(res.data.error);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const getAllRoomsByIdHotel = async hotelId => {
+    try {
+      const res = await hotelApi.getAllRoomsByIdHotel(hotelId);
+      setPrices([]);
+      let temp = [];
+      if (!res.data.error) {
+        res.data.data.length !== 0
+          ? res.data.data.map(e => {
+              temp.push(e.room_price);
+              setPrices([...temp]);
+            })
+          : setPrices([0]);
+        // console.log(temp);
+      } else {
+        console.log(res.data.error);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  // console.log(prices);
   // get data from firebase
   useEffect(() => {
-    prices = [];
     getHotelById(hotelId);
-    // getAllRoomsByIdHotel(hotelId);
+    getAllRoomsByIdHotel(hotelId);
   }, []);
 
-  if (sale != "" && sale != null) {
+  if (sale != '' && sale != null) {
     itemSale = (
       <Text
-        style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}
-        key={priceSale}
-      >
-        {" "}
+        style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}
+        key={priceSale}>
+        {' '}
         {VND} {getMinPrice(prices) - getMinPrice(prices) * sale}
       </Text>
     );
@@ -88,20 +86,19 @@ const Hotel = function ({
     <ItemContainer
       activeOpacity={0.9}
       onPress={() => {
-        navigation.navigate("DetailHotelScreen", {
+        navigation.navigate('DetailHotelScreen', {
           id: 1,
           hotelId: hotelId,
           price: getMinPrice(prices),
         });
-      }}
-    >
+      }}>
       <ViewRow>
         {/* Hotel image */}
         <Image
           style={styles.hotelImage}
           source={{
-            uri:
-              "https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b",
+            // uri:hotel.image
+            uri: 'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
           }}
         />
         <ItemContent>
@@ -120,7 +117,7 @@ const Hotel = function ({
               name="map-marker"
               size={12}
               color={DARK_GRAY}
-              style={{ marginTop: 8 }}
+              style={{marginTop: 8}}
             />
             <Text style={styles.addressText}>{hotel.address}</Text>
           </ViewRow>
@@ -134,9 +131,9 @@ const Hotel = function ({
             {itemSale != null ? (
               itemSale
             ) : (
-              <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}>
-                {" "}
-                {VND} {console.log(getMinPrice(prices))}
+              <Text style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}>
+                {' '}
+                {VND} {getMinPrice(prices)}
               </Text>
             )}
             <Text style={styles.contentText}>{UNIT}</Text>
@@ -153,7 +150,7 @@ function getMinPrice(prices) {
   let min = 0;
   if (prices.length >= 1) {
     min = prices[0];
-    prices.forEach((e) => {
+    prices.forEach(e => {
       if (min >= e) {
         min = e;
       }
@@ -188,32 +185,32 @@ const styles = StyleSheet.create({
   },
   headText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 5,
   },
   contentText: {
     fontSize: 11,
     color: DARK_GRAY,
-    maxWidth: "90%",
-    width: "100%",
+    maxWidth: '90%',
+    width: '100%',
     marginLeft: 5,
   },
   addressText: {
     fontSize: 11,
     color: DARK_GRAY,
-    maxWidth: "90%",
-    width: "100%",
+    maxWidth: '90%',
+    width: '100%',
     marginLeft: 5,
     marginTop: 5,
   },
   priceText: {
     fontSize: 11,
     color: DARK_GRAY,
-    maxWidth: "90%",
-    width: "100%",
+    maxWidth: '90%',
+    width: '100%',
     marginLeft: 5,
     marginTop: 60,
-    textDecorationLine: "line-through",
+    textDecorationLine: 'line-through',
   },
 });
 

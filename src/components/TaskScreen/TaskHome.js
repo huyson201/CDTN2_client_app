@@ -1,57 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import EditProfileScreen from '../../../screens/EditProfileScreen';
 import ProfileScreen from '../../../screens/ProfileScreen';
 import ListRoomsOrderedScreen from '../../../screens/ListRoomsOrderedScreen';
-
 import RoomListScreen from '../../../screens/RoomListScreen';
 import DetailRoomScreen from '../../../screens/DetailRoomScreen';
 import DetailHotelScreen from '../../../screens/DetailHotelScreen';
-import SignUpScreen from '../../../screens/SignUpScreen';
-import LoginScreen from '../../../screens/LoginScreen';
 import HotelList from '../../../screens/HotelList';
 import Invoice from '../../../screens/Invoice';
-import SplashScreen from '../../../screens/SplashScreen';
 import {BLUE1} from '../../values/color';
 import TabBar from '../home/TabBar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
 
 const TaskHome = () => {
-  // const [user, setUser] = useState();
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const jsonValue = await AsyncStorage.getItem('user');
-  //       console.log(jsonValue);
-  //       setUser(jsonValue);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-
-  //   };
-  //   getData();
-  // }, [user])
-
-  // console.log(user);
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
-        name="SplashScreen"
-        component={SplashScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignUpScreen"
-        component={SignUpScreen}
-        options={{ headerShown: false }}
-      />  */}
       <Stack.Screen
         name="HomeTab"
         component={TabBar}

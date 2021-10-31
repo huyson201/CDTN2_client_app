@@ -9,56 +9,32 @@ import {
   TextInput,
   TouchableOpacity,
   ToastAndroid,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import {BLUE1} from '../src/values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
-import {auth} from '../cf_firebase/ConfigFireBase';
-import {onAuthStateChanged, signInWithEmailAndPassword} from '@firebase/auth';
-import {
-  INVALID_EMAIL,
-  LOGIN_SUCCESSFULLY,
-  TOO_MANY_REQUEST,
-  USER_NOT_FOUND,
-  WRONG_PASSWORD,
-} from '../src/values/constants';
-import {db} from '../cf_firebase/ConfigFireBase';
-import {child, get, onValue, ref} from '@firebase/database';
-
-const LoginScreen = ({navigation}) => {
+import {LOGIN_SUCCESSFULLY} from '../src/values/constants';
+import userApi from '../api/userApi';
+import {useDispatch} from 'react-redux';
+import {setCurrentUser, setRememberMe} from '../action_creators/user';
+const LoginScreen = ({navigation, route}) => {
+  const dispatch = useDispatch();
   const emailInput = useRef();
   const passInput = useRef();
   const [data, setData] = useState({
-    email: '',
-    password: '',
     checkTextInputChange: false,
     secureTextEntry: true,
   });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setisLoading] = useState(false);
-  const textInputChange = val => {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        email: val,
-        checkTextInputChange: true,
-      });
-    } else {
-      setData({
-        ...data,
-        email: val,
-        checkTextInputChange: false,
-      });
-    }
-  };
+  const _isMouted = useRef(true);
+  const emailUser = route.params;
   const handlePressSignUp = () => {
     navigation.navigate('SignUpScreen');
-  };
-  const handlePressPassword = val => {
-    setData({
-      ...data,
-      password: val,
-    });
   };
   const updateSecureTextEntry = () => {
     setData({
@@ -66,178 +42,113 @@ const LoginScreen = ({navigation}) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-  const storeData = async (key, value) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      const after = await AsyncStorage.setItem(key, jsonValue);
-      setisLoading(false);
-      console.log(after);
-      navigation.navigate('HomeTab');
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+  useEffect(() => {
+    return () => {
+      _isMouted.current = false;
+    };
+  }, []);
   const handleLogin = async () => {
     setisLoading(true);
     try {
-      const res = await signInWithEmailAndPassword(
-        auth,
-        data['email'],
-        data['password'],
-      );
-      // const getUser = await get(child(ref(db), `users/${res.user.uid}`));
-      // const jsonValue = JSON.stringify(getUser);
-      // const storeData = await AsyncStorage.setItem('user', jsonValue);
-      // console.log(storeData);
-      // navigation.navigate('HomeTab');
-      if (res) {
-        // console.log(res);
+      const res = await userApi.login(emailUser? Object.values(emailUser) : email, password);
+      if (!res.data.msg) {
+        dispatch(setCurrentUser(res.data.data.user));
+        dispatch(setRememberMe(true));
+        await AsyncStorage.setItem('token', res.data.data.token);
+        await AsyncStorage.setItem('refresh_token', res.data.data.refreshToken);
+        if (_isMouted.current) {
+          setisLoading(false);
+        }
         ToastAndroid.show(LOGIN_SUCCESSFULLY, ToastAndroid.SHORT);
-        emailInput.current.clear();
-        passInput.current.clear();
+      } else {
         setisLoading(false);
-        navigation.navigate('HomeTab');
       }
     } catch (error) {
-      if (error.code == 'auth/wrong-password') {
-        ToastAndroid.show(WRONG_PASSWORD, ToastAndroid.SHORT);
-      } else if (error.code == 'auth/user-not-found') {
-        ToastAndroid.show(USER_NOT_FOUND, ToastAndroid.SHORT);
-      } else if (error.code == 'auth/invalid-email') {
-        ToastAndroid.show(INVALID_EMAIL, ToastAndroid.LONG);
-      } else {
-        ToastAndroid.show(TOO_MANY_REQUEST, ToastAndroid.LONG);
-      }
       console.log(error);
       setisLoading(false);
     }
-
-    // if (res) {
-
-    //   setisLoading(false);
-    // }
-
-    // await storeData('user', {name: 'Ngoc'});
-    // signInWithEmailAndPassword(auth, data['email'], data['password'])
-    //   .then(res => {
-    //     ToastAndroid.show(LOGIN_SUCCESSFULLY, ToastAndroid.SHORT);
-
-    //     // emailInput.current.clear();
-    //     // passInput.current.clear();
-    //     console.log(res.user.uid);
-
-    //     onValue(
-    //       ref(db, `users/${res.user.uid}`),
-    //       snapshot => {
-    //         console.log(snapshot.val());
-    //         setisLoading(false);
-    //         const jsonValue = JSON.stringify(snapshot.val());
-    //         AsyncStorage.setItem("user", jsonValue).then(val => {
-    //           setisLoading(false);
-    //           console.log(val);
-    //           navigation.navigate('HomeTab');
-    //         });
-    //         // const user = JSON.stringify(snapshot.val())
-    //         // console.log(user);
-    //         // const saveData = JSON.stringify(data);
-    //         //  storeData("user",snapshot.val());
-    //         // console.log(saveData);
-    //         // const t=  AsyncStorage.setItem("user",user)
-    //         // console.log(t);
-    //       },
-    //       {
-    //         onlyOnce: true,
-    //       },
-    //     );
-    //   })
-    //   .catch(err => {
-    //     if (err.code == 'auth/wrong-password') {
-    //       ToastAndroid.show(WRONG_PASSWORD, ToastAndroid.SHORT);
-    //     } else if (err.code == 'auth/user-not-found') {
-    //       ToastAndroid.show(USER_NOT_FOUND, ToastAndroid.SHORT);
-    //     } else {
-    //       ToastAndroid.show(TOO_MANY_REQUEST, ToastAndroid.LONG);
-    //     }
-    //   });
   };
 
   return (
-    <SafeAreaView style={loginStyles.wrapper}>
-      <View style={loginStyles.container}>
-        <View style={loginStyles.header}>
-          <ImageBackground
-            style={loginStyles.img}
-            source={require('../src/images/logo.png')}></ImageBackground>
-          <Text style={loginStyles.textLogo}>THE BOOKING</Text>
-        </View>
-        <View style={loginStyles.inner}>
-          <Text style={loginStyles.text_footer}>Email</Text>
-          <View style={loginStyles.action}>
-            <Icon
-              style={loginStyles.icon}
-              name="user-alt"
-              size={18}
-              backgroundColor="#05375a"
-              color="#05375a"></Icon>
-            <TextInput
-              ref={emailInput}
-              placeholder="Your Email"
-              autoCapitalize="none"
-              onChangeText={val => textInputChange(val)}
-              style={loginStyles.textInput}></TextInput>
-            {data.checkTextInputChange ? (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={loginStyles.wrapper}>
+        <View style={loginStyles.container}>
+          <View style={loginStyles.header}>
+            <ImageBackground
+              style={loginStyles.img}
+              source={require('../src/images/logo.png')}></ImageBackground>
+            <Text style={loginStyles.textLogo}>THE BOOKING</Text>
+          </View>
+          <View style={loginStyles.inner}>
+            <Text style={loginStyles.text_footer}>Email</Text>
+            <View style={loginStyles.action}>
+              <Icon
+                style={loginStyles.icon}
+                name="user-alt"
+                size={18}
+                backgroundColor="#05375a"
+                color="#05375a"></Icon>
+              <TextInput
+                ref={emailInput}
+                placeholder="Your Email"
+                autoCapitalize="none"
+                defaultValue={emailUser ? `${Object.values(emailUser)}` : email}
+                onChangeText={val => setEmail(val)}
+                style={loginStyles.textInput}></TextInput>
+              {/* {data.checkTextInputChange ? (
               <Icon
                 style={loginStyles.icon}
                 name="check"
                 size={18}
                 color="#05375a"></Icon>
-            ) : null}
+            ) : null} */}
+            </View>
+            <Text style={loginStyles.text_footer}>Password</Text>
+            <View style={loginStyles.action}>
+              <Icon
+                style={loginStyles.icon}
+                name="key"
+                size={18}
+                color="#05375a"></Icon>
+              <TextInput
+                ref={passInput}
+                placeholder="Your Password"
+                secureTextEntry={data.secureTextEntry ? true : false}
+                autoCapitalize="none"
+                style={loginStyles.textInput}
+                defaultValue={password}
+                onChangeText={val => setPassword(val)}></TextInput>
+              <TouchableOpacity onPress={updateSecureTextEntry}>
+                {data.secureTextEntry ? (
+                  <Icon
+                    style={loginStyles.icon}
+                    name="eye-slash"
+                    size={18}
+                    color="#05375a"></Icon>
+                ) : (
+                  <Icon
+                    style={loginStyles.icon}
+                    name="eye"
+                    size={18}
+                    color="#05375a"></Icon>
+                )}
+              </TouchableOpacity>
+            </View>
+            <Button
+              title={'LOGIN'}
+              buttonStyle={loginStyles.buttonStyle}
+              onPress={handleLogin}
+              loading={isLoading}></Button>
           </View>
-          <Text style={loginStyles.text_footer}>Password</Text>
-          <View style={loginStyles.action}>
-            <Icon
-              style={loginStyles.icon}
-              name="key"
-              size={18}
-              color="#05375a"></Icon>
-            <TextInput
-              ref={passInput}
-              placeholder="Your Password"
-              secureTextEntry={data.secureTextEntry ? true : false}
-              autoCapitalize="none"
-              style={loginStyles.textInput}
-              onChangeText={val => handlePressPassword(val)}></TextInput>
-            <TouchableOpacity onPress={updateSecureTextEntry}>
-              {data.secureTextEntry ? (
-                <Icon
-                  style={loginStyles.icon}
-                  name="eye-slash"
-                  size={18}
-                  color="#05375a"></Icon>
-              ) : (
-                <Icon
-                  style={loginStyles.icon}
-                  name="eye"
-                  size={18}
-                  color="#05375a"></Icon>
-              )}
+          <View style={loginStyles.footer}>
+            <Text>Don't have an Account ? </Text>
+            <TouchableOpacity onPress={handlePressSignUp}>
+              <Text style={{color: BLUE1}}>Sign Up</Text>
             </TouchableOpacity>
           </View>
-          <Button
-            title={'LOGIN'}
-            buttonStyle={loginStyles.buttonStyle}
-            onPress={handleLogin}
-            loading={isLoading}></Button>
         </View>
-        <View style={loginStyles.footer}>
-          <Text>Don't have an Account ? </Text>
-          <TouchableOpacity onPress={handlePressSignUp}>
-            <Text style={{color: BLUE1}}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 const loginStyles = StyleSheet.create({

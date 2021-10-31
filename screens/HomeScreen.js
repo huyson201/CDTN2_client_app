@@ -44,9 +44,6 @@ const HomeScreen = function ({navigation}) {
   const address = useSelector(state => state.search.address);
   // date state
   const date = useSelector(state => state.search.date);
- 
-
-  
   // number night
   let receivedDate = convertDateToVNDate(date.receivedDate);
   // console.log(receivedDate.split(",")[1].split(" "));

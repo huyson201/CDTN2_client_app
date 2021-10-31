@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -17,19 +17,58 @@ import {
   SUM_PRICE_SRT,
 } from "../src/values/constants";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { formatCurrency } from "../src/utilFunction";
+import { convertDateToVNDate, formatCurrency } from "../src/utilFunction";
 import { Button } from "react-native-elements";
+import hotelApi from "../api/hotelApi";
+import { useSelector } from "react-redux";
+import invoiceApi from "../api/invoiceApi";
+import { isJwtExpired } from 'jwt-check-expiration';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Invoice = (props) => {
+  const [data, setData] = useState({
+    roomName: "",
+    beds: 0,
+    people: 0,
+    status: 0
+  })
+
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
   let sumPriceRoom = (props.route.params.sum) - (props.route.params.taxes);
+
+  const user = useSelector(state => state.user.currentUser);
+  // date state
+  const date = useSelector((state) => state.search.date);
+  // number night
+  let receivedDate = convertDateToVNDate(date.receivedDate);
+  let payDate = convertDateToVNDate(date.payDate);
+
+  const getRoomById = async () => {
+    try {
+      if (props.route.params.id) {
+        const res = await hotelApi.getRoomById(props.route.params.id);
+        !res.data.error
+          ? setData({
+            roomName: res.data.data.room_name,
+            beds: res.data.data.room_beds,
+            people: res.data.data.room_num_people,
+            status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
+          })
+          : setData([{ message: 'Khong co du lieu phong' }]);
+      } else {
+        console.log("Khong co id phong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (showDetailPrice) {
     detailPrice = (
       <DetailPrice>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
-          <Text>(x1) {props.route.params.data.roomName}</Text>
+          <Text>(x1) {data.roomName}</Text>
           <Text>{formatCurrency(sumPriceRoom, "VND")}</Text>
         </RowView>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
@@ -44,9 +83,38 @@ const Invoice = (props) => {
     setShowDetailPrice(!showDetailPrice);
   };
 
-  const handlePressConfirm = () => {
-    ToastAndroid.show("xác nhận", ToastAndroid.SHORT);
+  useEffect(() => {
+    getRoomById();
+  }, []);
+
+  const handlePressConfirm = async () => {
+    try {
+      await AsyncStorage.getItem('token').then(value => {
+        if (value != null && isJwtExpired(value) == false) {
+          let jsonData = {
+            token: value,
+            price: props.route.params.sum,
+            hotelId: props.route.params.hotelId,
+            rDate: date.receivedDate,
+            pDate: date.payDate,
+            roomId: props.route.params.id,
+            roomQty: data.status,
+            status: "Chưa xác nhận"
+          }
+          invoiceApi.create(jsonData)
+            .then((res) => {
+              console.log(res.data.message);
+            }).catch(err => console.log(err))
+
+        } else if (value != null && isJwtExpired(value) == true) {
+          ToastAndroid.show("Token expired", ToastAndroid.SHORT);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <ScrollView style={{ backgroundColor: "rgba(0,0,0,.05)" }}>
       <MainBackground>
@@ -77,7 +145,7 @@ const Invoice = (props) => {
                   numberOfLines={1}
                   style={styles.receivedDate}
                 >
-                  {props.route.params.receivedDate} (14:00)
+                  {receivedDate} (14:00)
                 </Text>
               </RowView>
               <RowView style={styles.mTop}>
@@ -93,20 +161,21 @@ const Invoice = (props) => {
                   numberOfLines={1}
                   style={styles.receivedDate}
                 >
-                  {props.route.params.payDate} (12:00)
+                  {payDate} (12:00)
                 </Text>
               </RowView>
             </View>
             <View style={styles.paddingDefault}>
               <Text style={styles.roomTitle}>
-                (2x) {props.route.params.data.roomName}
+                (2x) {data.roomName}
               </Text>
               <Text style={styles.roomInfo}>
-                1 giường (x{props.route.params.data.beds})
+                1 giường (x{data.beds})
               </Text>
               <Text style={styles.roomInfo}>
-                {props.route.params.data.adult +
-                  props.route.params.data.children}{" "}
+                {/* {props.route.params.data.people +
+                  props.route.params.data.children}{" "} */}
+                {data.people}
                 khách/phòng
               </Text>
             </View>
@@ -130,9 +199,9 @@ const Invoice = (props) => {
       <InfoBox>
         <Text style={styles.textCap}>{CONTACT_INFO}</Text>
         <InvoiceBox style={{ ...styles.paddingDefault, ...styles.mTop }}>
-          <Text style={styles.textName}>Son</Text>
-          <Text style={styles.textInfo}>Email: huyson201@gmail.com</Text>
-          <Text style={styles.textInfo}>Phone: +84987458246</Text>
+          <Text style={styles.textName}>{user.user_name}</Text>
+          <Text style={styles.textInfo}>Email: {user.user_email}</Text>
+          <Text style={styles.textInfo}>Phone: {user.user_phone}</Text>
         </InvoiceBox>
       </InfoBox>
 
