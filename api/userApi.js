@@ -19,7 +19,7 @@ const userApi = {
   },
   logout: token => {
     const url = '/logout';
-    const action = axiosClient.post(
+    return axiosClient.post(
       url,
       {},
       {
@@ -28,8 +28,6 @@ const userApi = {
         },
       },
     );
-    console.log(action);
-    return action;
   },
 };
 export default userApi;

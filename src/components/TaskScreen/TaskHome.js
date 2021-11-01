@@ -1,26 +1,18 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import EditProfileScreen from '../../../screens/EditProfileScreen';
 import ProfileScreen from '../../../screens/ProfileScreen';
 import ListRoomsOrderedScreen from '../../../screens/ListRoomsOrderedScreen';
-
 import RoomListScreen from '../../../screens/RoomListScreen';
 import DetailRoomScreen from '../../../screens/DetailRoomScreen';
 import DetailHotelScreen from '../../../screens/DetailHotelScreen';
-import SignUpScreen from '../../../screens/SignUpScreen';
-import LoginScreen from '../../../screens/LoginScreen';
 import HotelList from '../../../screens/HotelList';
 import Invoice from '../../../screens/Invoice';
-import SplashScreen from '../../../screens/SplashScreen';
 import {BLUE1} from '../../values/color';
 import TabBar from '../home/TabBar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
-import TaskLogin from './TaskLogin';
-import {isJwtExpired} from 'jwt-check-expiration';
-import {useSelector} from 'react-redux';
+
 const TaskHome = () => {
- 
   return (
     <Stack.Navigator>
       <Stack.Screen
