@@ -7,6 +7,7 @@ import { BLUE1, DARK_GRAY, LIGHT_GRAY } from "../../values/color";
 import { CALENDAR_TEXT, CONTACT_INFO, DETAIL_PRICE, SUM_PRICE_SRT } from "../../values/constants";
 const DetailInvoice = () => {
     const [showDetailPrice, setShowDetailPrice] = useState(false)
+    const [activeState, setActiveState] = useState(0)
 
     let detailPrice = null
     if (showDetailPrice) {
@@ -78,20 +79,27 @@ const DetailInvoice = () => {
             </View>
             <View>
                 <Text style={{ ...styles.textCap, marginLeft: 0, marginTop: 8 }}>Trạng thái</Text>
-                <RowView style={{ marginTop: 15, justifyContent: "space-between", width: "100%", alignItems: "center" }}>
+                <RowView style={{ marginTop: 32, justifyContent: "space-between", width: "100%", alignItems: "center" }}>
                     <StatusItem>
-                        <Circle><Text>1</Text></Circle>
-                        <Text>Xác nhận</Text>
+                        <Circle style={activeState === 0 ? styles.borderActive : styles.borderNormal}>
+                            <Text style={activeState === 0 ? styles.colorActive : styles.colorNormal}>0</Text>
+                        </Circle>
+                        <Text style={activeState === 0 ? styles.statusActive : styles.statusText}>Đang xử lí</Text>
                     </StatusItem>
                     <Line />
                     <StatusItem>
-                        <Circle><Text>2</Text></Circle>
-                        <Text>Đặt cọc</Text>
+                        <Circle style={activeState === 1 ? styles.borderActive : styles.borderNormal}><Text style={activeState === 1 ? styles.colorActive : styles.colorNormal}>1</Text></Circle>
+                        <Text style={activeState === 1 ? styles.statusActive : styles.statusText}>Xác nhận</Text>
                     </StatusItem>
                     <Line />
                     <StatusItem>
-                        <Circle><Text>3</Text></Circle>
-                        <Text>Nhận Phòng</Text>
+                        <Circle style={activeState === 2 ? styles.borderActive : styles.borderNormal}><Text style={activeState === 2 ? styles.colorActive : styles.colorNormal}>2</Text></Circle>
+                        <Text style={activeState === 2 ? styles.statusActive : styles.statusText}>Đặt cọc</Text>
+                    </StatusItem>
+                    <Line />
+                    <StatusItem>
+                        <Circle style={activeState === 3 ? styles.borderActive : styles.borderNormal}><Text style={activeState === 3 ? styles.colorActive : styles.colorNormal}>3</Text></Circle>
+                        <Text style={activeState === 3 ? styles.statusActive : styles.statusText}>Nhận Phòng</Text>
                     </StatusItem>
                 </RowView>
 
@@ -103,12 +111,13 @@ const DetailInvoice = () => {
 const StatusItem = styled.View`
     justify-content: center;
     align-items: center;
+    position: relative;
 `
 const Line = styled.View`
-    width: 20%;
+    width: 8%;
     height: 2px;
     background-color: ${DARK_GRAY};
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 `
 const Circle = styled.View`
     width: 30px;
@@ -175,6 +184,29 @@ const styles = StyleSheet.create({
     priceStyle: {
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    statusText: {
+        marginTop: 8,
+        fontSize: 13
+    },
+    statusActive: {
+        marginTop: 8,
+        fontSize: 13,
+        color: "green",
+        fontWeight: "bold"
+    },
+    colorNormal: {
+        color: "black"
+    },
+    colorActive: {
+        color: "green",
+        fontWeight: "bold"
+    },
+    borderNormal: {
+        borderColor: DARK_GRAY
+    },
+    borderActive: {
+        borderColor: "green"
     }
 })
 export default DetailInvoice;

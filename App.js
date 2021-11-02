@@ -2,6 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import 'react-native-gesture-handler';
 import TaskHome from './src/components/TaskScreen/TaskHome';
+import DetailInvoice from './src/components/invoices/DetailInvoice';
 import {View} from 'react-native';
 import {isJwtExpired} from 'jwt-check-expiration';
 import AsyncStorage from '@react-native-async-storage/async-storage';
