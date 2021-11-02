@@ -13,6 +13,9 @@ import jwtDecode from 'jwt-decode';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from './screens/SplashScreen';
 const Stack = createNativeStackNavigator();
+import HotelList from './screens/HotelList';
+const Tab = createBottomTabNavigator();
+
 const App = () => {
   const dispatch = useDispatch();
   const rememberMe = useSelector(state => state.user.isRemembered);

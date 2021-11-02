@@ -10,24 +10,23 @@ let tomorrow = getTomorrow(nowDate);
 // console.log(nowDate)
 
 let initialState = {
-  address: "",
-  date: {
-    numDate: 1,
-    receivedDate: nowDate,
-    payDate: tomorrow,
-    dateString: convertDateToStringForForRoom(nowDate, tomorrow),
-  },
-  personsAndRooms: {
-    rooms: 1,
-    adults: 1,
-    children: 0,
-  },
-  filter: {
-    maxPrice: "10000000",
-    minPrice: "",
-    rankStars: [],
-  },
-};
+    address: "Huyện Ninh Hải, Ninh Thuận",
+    date: {
+        numDate: 1,
+        receivedDate: nowDate,
+        payDate: tomorrow,
+    },
+    personsAndRooms: {
+        rooms: 1,
+        adults: 1,
+        children: 0
+    },
+    filter: {
+        maxPrice: "10000000",
+        minPrice: "0",
+        rankStars: []
+    }
+}
 const searchReducer = function (state = initialState, action) {
   switch (action.type) {
     case "SET_ADDRESS":
