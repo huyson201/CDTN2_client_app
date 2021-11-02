@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, StyleSheet, Image } from 'react-native';
 import styled from 'styled-components';
-import {DARK_GRAY, WHITE, ORANGE, GOLD_COLOR} from '../../values/color';
-import {VND, UNIT, HOTEL_TEXT} from '../../values/constants';
+import { DARK_GRAY, WHITE, ORANGE, GOLD_COLOR } from '../../values/color';
+import { VND, UNIT, HOTEL_TEXT } from '../../values/constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import hotelApi from '../../../api/hotelApi';
 
-const Hotel = function ({navigation, hotelId, sale, priceSale}) {
+const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
   const [hotel, setHotel] = useState({
     hotelName: '',
     sale: 0.5,
@@ -30,7 +30,7 @@ const Hotel = function ({navigation, hotelId, sale, priceSale}) {
           sale: 0.5,
           priceSale: 500000,
           images: res.data.data.hotel_slide,
-          image: '',
+          image: res.data.data.hotel_img,
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
           desc: res.data.data.hotel_desc,
@@ -52,9 +52,9 @@ const Hotel = function ({navigation, hotelId, sale, priceSale}) {
       if (!res.data.error) {
         res.data.data.length !== 0
           ? res.data.data.map(e => {
-              temp.push(e.room_price);
-              setPrices([...temp]);
-            })
+            temp.push(e.room_price);
+            setPrices([...temp]);
+          })
           : setPrices([0]);
         // console.log(temp);
       } else {
@@ -75,7 +75,7 @@ const Hotel = function ({navigation, hotelId, sale, priceSale}) {
   if (sale != '' && sale != null) {
     itemSale = (
       <Text
-        style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}
+        style={{ fontSize: 13, fontWeight: 'bold', color: ORANGE }}
         key={priceSale}>
         {' '}
         {VND} {getMinPrice(prices) - getMinPrice(prices) * sale}
@@ -97,8 +97,8 @@ const Hotel = function ({navigation, hotelId, sale, priceSale}) {
         <Image
           style={styles.hotelImage}
           source={{
-            // uri:hotel.image
-            uri: 'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
+            uri: hotel.image
+            // uri: 'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
           }}
         />
         <ItemContent>
@@ -117,7 +117,7 @@ const Hotel = function ({navigation, hotelId, sale, priceSale}) {
               name="map-marker"
               size={12}
               color={DARK_GRAY}
-              style={{marginTop: 8}}
+              style={{ marginTop: 8 }}
             />
             <Text style={styles.addressText}>{hotel.address}</Text>
           </ViewRow>
@@ -131,7 +131,7 @@ const Hotel = function ({navigation, hotelId, sale, priceSale}) {
             {itemSale != null ? (
               itemSale
             ) : (
-              <Text style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}>
+              <Text style={{ fontSize: 13, fontWeight: 'bold', color: ORANGE }}>
                 {' '}
                 {VND} {getMinPrice(prices)}
               </Text>

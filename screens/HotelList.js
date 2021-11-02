@@ -11,13 +11,22 @@ const HotelList = function ({ navigation }) {
   const searchData = useSelector(state => state.search);
 
   const getAll = async () => {
-    let filterData = [];
-    let searchAddress = searchData.address;
-    // filterData = Object.values(filterData);
-    // filterData = filterAddress(filterData, searchAddress);
-    const res = await hotelApi.getAll();
-    filterData = res.data.data.rows;
-    setListData([...filterData]);
+    try {
+      let filterData = [];
+      let searchAddress = searchData.address;
+      // filterData = Object.values(filterData);
+      // filterData = filterAddress(filterData, searchAddress);
+      const res = await hotelApi.getAll();
+      console.log(res.data);
+      if (res.data.data) {
+        filterData = res.data.data.rows;
+        setListData([...filterData]);
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   // get data from firebase
