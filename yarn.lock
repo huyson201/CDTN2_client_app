@@ -6359,6 +6359,11 @@
     "prop-types" "^15.7.2"
     "qs" "~6.9.1"
 
+"react-native-image-picker@^4.1.2":
+  "integrity" "sha512-e4frAekSJkOgEmL9UOLukGhjtPwHSD7qSf3Rmwk+850ofxKqZFfAIfWc9MO3UmCb6G7oB6PkckyTOGOXybrN5A=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-4.1.2.tgz"
+  "version" "4.1.2"
+
 "react-native-image-slider-box@^1.1.8":
   "integrity" "sha512-LqyNhAHaUFxC+z6SQGMIwgyor/6ZT47nnUQoYZLscU5i1KbsxuMhc+u2UCpd5qfJENEZFB9EVOaRC+aa+p8Zwg=="
   "resolved" "https://registry.npmjs.org/react-native-image-slider-box/-/react-native-image-slider-box-1.1.8.tgz"

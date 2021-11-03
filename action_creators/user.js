@@ -10,3 +10,9 @@ export const setRememberMe = (value) => {
         payload: value
     }
 }
+export const setToken = (value) => {
+    return {
+        type: "SET_TOKEN",
+        payload: value
+    }
+}

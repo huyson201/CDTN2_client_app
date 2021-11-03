@@ -50,13 +50,8 @@ const DetailRoomScreen = ({ navigation, route }) => {
             beds: res.data.data.room_beds,
             area: res.data.data.room_area,
             status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
-            // images: e.images.split(','),
+            images: res.data.data.room_imgs.split(','),
             sale: route.params.sale,
-            images: [
-              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-              'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            ],
             services: res.data.data.room_services ? res.data.data.room_services : ["Khong co dich vu uu dai nao khac"]
           })
           : setDataDetailRoom([{ message: 'Khong co du lieu phong' }]);

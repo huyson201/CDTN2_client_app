@@ -11,11 +11,9 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
     hotelName: '',
     sale: 0.5,
     priceSale: 500000,
-    images: [],
-    image: '',
+    image: null,
     address: '',
     phone: '',
-    desc: '',
     star: 1,
   });
   let itemSale = null;
@@ -29,11 +27,9 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
           hotelName: res.data.data.hotel_name,
           sale: 0.5,
           priceSale: 500000,
-          images: res.data.data.hotel_slide,
           image: res.data.data.hotel_img,
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
-          desc: res.data.data.hotel_desc,
           star: res.data.data.hotel_star,
         });
       } else {
@@ -65,7 +61,6 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
     }
   };
 
-  // console.log(prices);
   // get data from firebase
   useEffect(() => {
     getHotelById(hotelId);
@@ -83,6 +78,7 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
     );
   }
   return (
+    
     <ItemContainer
       activeOpacity={0.9}
       onPress={() => {
@@ -98,7 +94,6 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
           style={styles.hotelImage}
           source={{
             uri: hotel.image
-            // uri: 'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
           }}
         />
         <ItemContent>

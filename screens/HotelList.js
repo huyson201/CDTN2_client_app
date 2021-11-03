@@ -8,7 +8,8 @@ import { db } from "../cf_firebase/ConfigFireBase";
 import { ref, onValue } from "firebase/database";
 import { xoaDau } from "../src/utilFunction";
 import { useSelector } from "react-redux";
-import axios from "axios"
+import hotelApi from "../api/hotelApi";
+import Hotel from "../src/components/hotel/Hotel"
 
 const HotelList = function ({ navigation }) {
   const [listData, setListData] = useState([]);
@@ -20,37 +21,27 @@ const HotelList = function ({ navigation }) {
     setListData([]);
     // let data = [];
     let searchAddress = searchData.address;
-    let fromDate = searchData.date.receivedDate.replace('/', '-')
-    let toDate = searchData.date.payDate.replace('/', '-')
+    let fromDate = searchData.date.receivedDate.replace(/\//g, '-')
+    let toDate = searchData.date.payDate.replace(/\//g, '-')
     let arrStar = searchData.filter.rankStars;
     let maxPrice = searchData.filter.maxPrice;
     let minPrice = searchData.filter.minPrice;
     let { children, adults, rooms } = searchData.personsAndRooms
 
-    // onValue(starCountRef, (snapshot) => {
-    //   data = snapshot.val();
-    //   data = Object.values(data);
-    //   data = filterAddress(data, searchAddress);
-    //   data = filterStar(data, arrStar);
-    //   data = filterPrice(data, maxPrice, minPrice);
-    //   setListData([...data]);
-    // });
+    console.log(arrStar, "date ne");
 
     let query = `filter?address=${searchAddress}&from=${fromDate}T12:00:00&to=${toDate}T12:00:00&room=${rooms}&adult=${adults}`;
     if (arrStar.length > 0) query += `&star=${arrStar}`
     if (maxPrice && minPrice) query += `&min=${minPrice}&max=${maxPrice}`
 
+    console.log(query);
+
     async function filterData() {
       try {
-        let res = await axios({
-          method: 'get',
-          url: "http://192.168.1.10:3000/" + query
-        })
-
+        let res = await hotelApi.getAll(query)
         let data = res.data.data
         setListData([...data]);
-        console.log(res)
-        console.log(listData)
+        console.log(res.data)
       } catch (error) {
         console.log(error.response)
       }
@@ -58,6 +49,7 @@ const HotelList = function ({ navigation }) {
     }
     filterData()
   }, []);
+  console.log(listData)
 
   //   render item in flat list
   const renderItem = function ({ item, index }) {
@@ -147,7 +139,7 @@ const HotelList = function ({ navigation }) {
       </ItemContainer>
     );
   };
-
+  console.log(listData, "list data");
   return (
     <View>
       <FlatList

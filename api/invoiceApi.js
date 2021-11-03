@@ -2,6 +2,7 @@ import axiosClient from "./axiosClient";
 
 const invoiceApi = {
     create: (Object) => {
+        console.log(Object,"jsondata");
         const url = '/invoices';
         return axiosClient.post(url, {
             price: Object.price,

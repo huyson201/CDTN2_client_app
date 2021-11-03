@@ -20,10 +20,13 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { convertDateToVNDate, formatCurrency } from "../src/utilFunction";
 import { Button } from "react-native-elements";
 import hotelApi from "../api/hotelApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import invoiceApi from "../api/invoiceApi";
 import { isJwtExpired } from 'jwt-check-expiration';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import userApi from "../api/userApi";
+import jwtDecode from "jwt-decode";
+import { setCurrentUser, setToken } from "../action_creators/user";
 
 const Invoice = (props) => {
   const [data, setData] = useState({
@@ -32,17 +35,51 @@ const Invoice = (props) => {
     people: 0,
     status: 0
   })
-
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
   let sumPriceRoom = (props.route.params.sum) - (props.route.params.taxes);
-
-  const user = useSelector(state => state.user.currentUser);
+  const { currentUser, token } = useSelector(state => state.user);
+  const dispatch = useDispatch()
   // date state
   const date = useSelector((state) => state.search.date);
   // number night
   let receivedDate = convertDateToVNDate(date.receivedDate);
   let payDate = convertDateToVNDate(date.payDate);
+
+  const getUser = async (token) => {
+    if (token && isJwtExpired(token) === false) {
+      const userId = jwtDecode(token)
+      console.log(userId.user_uuid, "userid");
+      try {
+        const res = await userApi.getUserById(token, userId.user_uuid)
+        console.log(res.data);
+        if (res.data.data) {
+          dispatch(setCurrentUser(res.data.data))
+          console.log(res.data.data);
+        }
+      } catch (error) {
+        console.log(error, "error luc get user");
+      }
+    } else {
+      refresh()
+    }
+  }
+  
+  const refresh = async () => {
+    try {
+      await AsyncStorage.getItem('refresh_token').then(value => {
+        if (value != null && isJwtExpired(value) == false) {
+          userApi.refreshToken(value).then(res => {
+            console.log("da refresh thanh cong");
+            dispatch(setToken(res.data.token))
+            setTokenLocal(res.data.token)
+          }).catch(error => console.log(error))
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getRoomById = async () => {
     try {
@@ -79,37 +116,46 @@ const Invoice = (props) => {
     );
   }
 
+  const setTokenLocal = async (token) => {
+    try {
+      await AsyncStorage.setItem('token', token).then(value => {
+        console.log(value, "token");
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
   const handlePressShowDetailPrice = () => {
     setShowDetailPrice(!showDetailPrice);
   };
 
   useEffect(() => {
+    getUser(token)
     getRoomById();
-  }, []);
+  }, [token]);
 
   const handlePressConfirm = async () => {
     try {
-      await AsyncStorage.getItem('token').then(value => {
-        if (value != null && isJwtExpired(value) == false) {
-          let jsonData = {
-            token: value,
-            price: props.route.params.sum,
-            hotelId: props.route.params.hotelId,
-            rDate: date.receivedDate,
-            pDate: date.payDate,
-            roomId: props.route.params.id,
-            roomQty: data.status,
-            status: "Chưa xác nhận"
-          }
-          invoiceApi.create(jsonData)
-            .then((res) => {
-              console.log(res.data.message);
-            }).catch(err => console.log(err))
-
-        } else if (value != null && isJwtExpired(value) == true) {
-          ToastAndroid.show("Token expired", ToastAndroid.SHORT);
+      if (token && isJwtExpired(token) == false) {
+        let jsonData = {
+          token: token,
+          price: props.route.params.sum,
+          hotelId: props.route.params.hotelId,
+          rDate: date.receivedDate,
+          pDate: date.payDate,
+          roomId: props.route.params.id,
+          roomQty: data.status,
+          status: "Chưa xác nhận"
         }
-      });
+        invoiceApi.create(jsonData)
+          .then((res) => {
+            console.log(res.data.message);
+          }).catch(err => console.log(err))
+      } else if (token != null && isJwtExpired(token) == true) {
+        refresh()
+      }
     } catch (error) {
       console.log(error);
     }
@@ -199,9 +245,9 @@ const Invoice = (props) => {
       <InfoBox>
         <Text style={styles.textCap}>{CONTACT_INFO}</Text>
         <InvoiceBox style={{ ...styles.paddingDefault, ...styles.mTop }}>
-          <Text style={styles.textName}>{user.user_name}</Text>
-          <Text style={styles.textInfo}>Email: {user.user_email}</Text>
-          <Text style={styles.textInfo}>Phone: {user.user_phone}</Text>
+          <Text style={styles.textName}>{currentUser.user_name}</Text>
+          <Text style={styles.textInfo}>Email: {currentUser.user_email}</Text>
+          <Text style={styles.textInfo}>Phone: {currentUser.user_phone}</Text>
         </InvoiceBox>
       </InfoBox>
 

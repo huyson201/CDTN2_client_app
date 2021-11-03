@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import styled from 'styled-components';
-import {DEVICE_WIDTH} from '../src/values/size';
+import { DEVICE_WIDTH } from '../src/values/size';
 import {
   BLUE1,
   BLUE2,
@@ -17,17 +17,17 @@ import {
   ORANGE,
   LIGHT_GRAY,
 } from '../src/values/color';
-import {VND, CHECK, CONTENT} from '../src/values/constants';
+import { VND, CHECK, CONTENT } from '../src/values/constants';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Feather';
 import Icon4 from 'react-native-vector-icons/Octicons';
 import Comment from '../src/components/hotel/Comment';
 import Utilities from '../src/components/hotel/Utilities';
-import {SliderBox} from 'react-native-image-slider-box';
+import { SliderBox } from 'react-native-image-slider-box';
 import hotelApi from '../api/hotelApi';
 
-const DetailHotelScreen = ({navigation, route}) => {
+const DetailHotelScreen = ({ navigation, route }) => {
   const [dataHotel, setDataHotel] = useState({
     name: '',
     address: '',
@@ -52,12 +52,7 @@ const DetailHotelScreen = ({navigation, route}) => {
           name: res.data.data.hotel_name,
           price: route.params.price,
           sale: 0.5,
-          // images: res.data.data.hotel_slide,
-          images: [
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-          ],
+          images: res.data.data.hotel_slide.split(','),
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
           desc: res.data.data.hotel_desc,
@@ -71,22 +66,24 @@ const DetailHotelScreen = ({navigation, route}) => {
     }
   };
 
+  console.log(dataHotel.images);
+
   useEffect(() => {
     getHotelById(route.params.hotelId);
   }, []);
 
   return (
     <View>
-      <ScrollView style={{marginBottom: 80}}>
+      <ScrollView style={{ marginBottom: 80 }}>
         <View>
           <SliderBox
-            images={dataHotel.images}
+            images={dataHotel.images !== null && dataHotel.images ? dataHotel.images : null}
             paginationBoxVerticalPadding={5}
-            dotStyle={{width: 7, height: 7, marginHorizontal: -5}}
+            dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
             imageLoadingColor={'#fff'}
           />
         </View>
-        <View style={{paddingHorizontal: 20, paddingTop: 10}}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
           {/* Hotel name */}
           <ViewRow>
             <Text style={styles.headText}>{dataHotel.name}</Text>
@@ -102,7 +99,7 @@ const DetailHotelScreen = ({navigation, route}) => {
             <View style={styles.borderBox}>
               <Text style={styles.borderBoxText}>Khách sạn</Text>
             </View>
-            <View style={{marginLeft: 5}}>
+            <View style={{ marginLeft: 5 }}>
               <ViewRow1>
                 {dataHotel.star.map((e, i) => {
                   return (
@@ -118,7 +115,7 @@ const DetailHotelScreen = ({navigation, route}) => {
               name="map-pin"
               size={15}
               color={DARK_GRAY}
-              style={{marginTop: 5}}
+              style={{ marginTop: 5 }}
             />
             {/* {HOTEL_ADDRESS} */}
             <Text style={styles.addressText}>{dataHotel.address}</Text>
@@ -135,9 +132,9 @@ const DetailHotelScreen = ({navigation, route}) => {
               name="checklist"
               size={15}
               color={BLUE1}
-              style={{marginTop: 5}}
+              style={{ marginTop: 5 }}
             />
-            <Text style={{fontSize: 12, marginLeft: 2}}>{CHECK}</Text>
+            <Text style={{ fontSize: 12, marginLeft: 2 }}>{CHECK}</Text>
             <TouchableOpacity>
               <Text
                 style={{
@@ -158,17 +155,17 @@ const DetailHotelScreen = ({navigation, route}) => {
         {/* Giờ nhận phòng/trả phòng */}
         <View style={styles.borderBottom}>
           <Text style={styles.headText}>Giờ nhận phòng/trả phòng</Text>
-          <ViewRow style={{marginTop: 15}}>
+          <ViewRow style={{ marginTop: 15 }}>
             <Text>Giờ nhận phòng</Text>
-            <Text style={{fontWeight: 'bold'}}>từ 14:00</Text>
+            <Text style={{ fontWeight: 'bold' }}>từ 14:00</Text>
           </ViewRow>
-          <ViewRow style={{marginTop: 10}}>
+          <ViewRow style={{ marginTop: 10 }}>
             <Text>Giờ trả phòng</Text>
-            <Text style={{fontWeight: 'bold'}}>trước 12:00</Text>
+            <Text style={{ fontWeight: 'bold' }}>trước 12:00</Text>
           </ViewRow>
         </View>
 
-        <View style={{paddingHorizontal: 20, paddingTop: 10}}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
           <Text style={styles.headText}>Mô tả</Text>
           {/* {DESSRIPTION_HOTEL} */}
           <Text
@@ -177,12 +174,12 @@ const DetailHotelScreen = ({navigation, route}) => {
             numberOfLines={1}>
             {dataHotel.desc}
           </Text>
-          <View style={{alignItems: 'center', marginTop: 20, marginBottom: 20}}>
+          <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
             <TouchableOpacity
               onPress={() => {
                 alert('xem tat ca');
               }}>
-              <Text style={{fontSize: 13, color: BLUE2, fontWeight: 'bold'}}>
+              <Text style={{ fontSize: 13, color: BLUE2, fontWeight: 'bold' }}>
                 XEM CHI TIẾT
               </Text>
             </TouchableOpacity>
@@ -191,19 +188,19 @@ const DetailHotelScreen = ({navigation, route}) => {
       </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
-        <View style={{paddingHorizontal: 20, paddingTop: 10}}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
           <Text style={styles.contentText}>Giá/phòng/đêm từ</Text>
-          <Text style={{fontSize: 15, fontWeight: 'bold', color: ORANGE}}>
+          <Text style={{ fontSize: 15, fontWeight: 'bold', color: ORANGE }}>
             {VND}{' '}
             {dataHotel.sale != null && dataHotel.sale != ''
               ? dataHotel.price - dataHotel.price * dataHotel.sale
               : dataHotel.price}
           </Text>
-          <Text style={{fontSize: 11, fontWeight: 'bold', color: DARK_GRAY}}>
+          <Text style={{ fontSize: 11, fontWeight: 'bold', color: DARK_GRAY }}>
             Giá cuối cùng
           </Text>
         </View>
-        <View style={{paddingHorizontal: 20, paddingTop: 20}}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -215,7 +212,7 @@ const DetailHotelScreen = ({navigation, route}) => {
                 sale: dataHotel.sale,
               });
             }}>
-            <Text style={{color: '#fff', fontWeight: 'bold'}}>Chọn Phòng</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Chọn Phòng</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -1,25 +1,21 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, ScrollView, Text, ToastAndroid} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, Text, ToastAndroid } from 'react-native';
 import styled from 'styled-components';
-
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {BLUE1} from '../src/values/color';
-import {Button} from 'react-native-elements';
-import {TextInput, Image} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {auth} from '../cf_firebase/ConfigFireBase';
-import {signOut} from '@firebase/auth';
+import Icon1 from 'react-native-vector-icons/Entypo'
+import { BLUE1 } from '../src/values/color';
+import { Button } from 'react-native-elements';
+import { TextInput, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
-import {setCurrentUser, setRememberMe} from '../action_creators/user';
-import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentUser, setRememberMe, setToken } from '../action_creators/user';
+import { SIGNOUT_SUCCESSFULLY } from '../src/values/constants';
 import userApi from '../api/userApi';
 
-const EditProfileScreen = function ({navigation}) {
+const EditProfileScreen = function ({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.currentUser);
   console.log(user);
-  const [selectedValue, setSelectedValue] = useState('male');
   const handlePressEditProfile = () => {
     navigation.navigate('EditProfileScreen');
   };
@@ -35,6 +31,7 @@ const EditProfileScreen = function ({navigation}) {
       await AsyncStorage.removeItem('refresh_token');
       dispatch(setCurrentUser(null));
       dispatch(setRememberMe(false));
+      dispatch(setToken(null));
       ToastAndroid.show(SIGNOUT_SUCCESSFULLY, ToastAndroid.SHORT);
     } catch (e) {
       console.log(e)
@@ -43,95 +40,81 @@ const EditProfileScreen = function ({navigation}) {
   return (
     <ScrollView>
       {/* HEADER */}
-      <View style={EditProfileStyles.header}>
-        {/* <Title style={EditProfileStyles.headerText}>USER INFORMATION</Title> */}
-        <View style={EditProfileStyles.headerUserCicle}>
-          <View>
-            <Image
-              style={EditProfileStyles.userImg}
-              source={require('../src/images/detail_hotel_2.jpeg')}
-            />
+      {user !== null ?
+        <>
+          <View style={EditProfileStyles.header}>
+            <View style={EditProfileStyles.headerUserCicle}>
+                <Image
+                  style={EditProfileStyles.userImg}
+                  source={
+                    user.user_img !== null ? { uri: user.user_img } : { uri: `https://ui-avatars.com/api/?name=${user.user_name}&size=256` }}
+                />
+            </View>
           </View>
-        </View>
-      </View>
-      <Container>
-        {/* EDIT BASIC INFORMATION */}
-        <Text style={EditProfileStyles.textTitle}>Full Name</Text>
-        <View style={EditProfileStyles.action}>
-          <Icon
-            style={EditProfileStyles.icon}
-            name="user-alt"
-            size={18}
-            backgroundColor="#05375a"
-            color="#05375a"></Icon>
-          <TextInput
-            editable={false}
-            defaultValue={user && user.user_name}
-            placeholder="Type Your Name Here"
-            autoCapitalize="none"
-            style={EditProfileStyles.textInput}></TextInput>
-        </View>
-        <Text style={EditProfileStyles.textTitle}>Phone</Text>
-        <View style={EditProfileStyles.action}>
-          <Icon
-            style={EditProfileStyles.icon}
-            name="phone-alt"
-            size={18}
-            backgroundColor="#05375a"
-            color="#05375a"></Icon>
-          <TextInput
-            editable={false}
-            defaultValue={user &&  user.user_phone}
-            placeholder="Type Your Phone Here"
-            autoCapitalize="none"
-            style={EditProfileStyles.textInput}></TextInput>
-        </View>
-        {/* IDENTIFIER  */}
-        <Text style={EditProfileStyles.textTitle}>Identifier</Text>
-        <View style={EditProfileStyles.action}>
-          <Icon
-            style={EditProfileStyles.icon}
-            name="check"
-            size={18}
-            backgroundColor="#05375a"
-            color="#05375a"></Icon>
-          <TextInput
-            editable={false}
-            defaultValue="01236655488"
-            placeholder="Type Your Identifier Here"
-            autoCapitalize="none"
-            style={EditProfileStyles.textInput}></TextInput>
-        </View>
-        {/* PICKER TO SELECT GENDER */}
-        <Text style={EditProfileStyles.textTitle}>Gender</Text>
-        <View style={EditProfileStyles.genderPicker}>
-          <Picker
-            enabled={false}
-            selectedValue={selectedValue}
-            style={{backgroundColor: '#ade5ff'}}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedValue(itemValue)
-            }>
-            <Picker.Item label="Male" value="male" />
-            <Picker.Item label="Female" value="female" />
-            <Picker.Item label="Other" value="other" />
-          </Picker>
-        </View>
-        <View Style={EditProfileStyles.btn}>
-          <Button
-            onPress={handlePressEditProfile}
-            title="Edit Information"
-            buttonStyle={EditProfileStyles.editBtn}></Button>
-          <Button
-            onPress={handleToListRooms}
-            title="My ordered Rooms"
-            buttonStyle={EditProfileStyles.listRoomsBtn}></Button>
-          <Button
-            onPress={handleLogout}
-            title="Logout"
-            buttonStyle={EditProfileStyles.LogoutBtn}></Button>
-        </View>
-      </Container>
+          <Container>
+            {/* EDIT BASIC INFORMATION */}
+            <Text style={EditProfileStyles.textTitle}>Full Name</Text>
+            <View style={EditProfileStyles.action}>
+              <Icon
+                style={EditProfileStyles.icon}
+                name="user-alt"
+                size={18}
+                backgroundColor="#05375a"
+                color="#05375a"></Icon>
+              <TextInput
+                editable={false}
+                defaultValue={user && user.user_name}
+                placeholder="Type Your Name Here"
+                autoCapitalize="none"
+                style={EditProfileStyles.textInput}></TextInput>
+            </View>
+            <Text style={EditProfileStyles.textTitle}>Phone</Text>
+            <View style={EditProfileStyles.action}>
+              <Icon
+                style={EditProfileStyles.icon}
+                name="phone-alt"
+                size={18}
+                backgroundColor="#05375a"
+                color="#05375a"></Icon>
+              <TextInput
+                editable={false}
+                defaultValue={user && user.user_phone}
+                placeholder="Type Your Phone Here"
+                autoCapitalize="none"
+                style={EditProfileStyles.textInput}></TextInput>
+            </View>
+            {/* Email  */}
+            <Text style={EditProfileStyles.textTitle}>Email</Text>
+            <View style={EditProfileStyles.action}>
+              <Icon1
+                style={EditProfileStyles.icon}
+                name="mail"
+                size={18}
+                backgroundColor="#05375a"
+                color="#05375a" />
+              <TextInput
+                editable={false}
+                defaultValue={user && user.user_email}
+                autoCapitalize="none"
+                style={EditProfileStyles.textInput}></TextInput>
+            </View>
+            <View Style={EditProfileStyles.btn}>
+              <Button
+                onPress={handlePressEditProfile}
+                title="Edit Information"
+                buttonStyle={EditProfileStyles.editBtn} />
+              <Button
+                onPress={handleToListRooms}
+                title="My ordered Rooms"
+                buttonStyle={EditProfileStyles.listRoomsBtn} />
+              <Button
+                onPress={handleLogout}
+                title="Logout"
+                buttonStyle={EditProfileStyles.LogoutBtn} />
+            </View>
+          </Container>
+        </>
+        : <Text></Text>}
     </ScrollView>
   );
 };
@@ -144,14 +127,8 @@ const Container = styled.View`
   width: 100%;
 `;
 
-// const ViewRow = styled.View`
-//   width: 100%;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-items: center;
-// `;
 const EditProfileStyles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#FFF'},
+  container: { flex: 1, backgroundColor: '#FFF' },
   header: {
     backgroundColor: BLUE1,
     paddingTop: 10,
@@ -176,8 +153,8 @@ const EditProfileStyles = StyleSheet.create({
     borderBottomRightRadius: 50,
   },
   userImg: {
-    maxWidth: 120,
-    maxHeight: 120,
+    width: 120,
+    height: 120,
     borderRadius: 60,
     resizeMode: 'cover',
   },

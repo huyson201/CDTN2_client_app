@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 const hotelApi = {
-  getAll: () => {
-    const url = "/hotels";
+  getAll: (query) => {
+    const url = `/${query}`;
     return axiosClient.get(url);
   },
   getHotelById: (id) => {
