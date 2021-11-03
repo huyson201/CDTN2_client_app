@@ -20,7 +20,7 @@ const Room = function ({
   children,
   navigation,
 }) {
-  const [state, setState] = useState(0);
+  const [state, setState] = useState();
   const [roomData, setRoomData] = useState({
     roomName: '',
     price: 0,
@@ -50,12 +50,7 @@ const Room = function ({
           price: res.data.data.room_price,
           people: res.data.data.room_num_people,
           status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
-          // images: e.images.split(','),
-          images: [
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-          ],
+          images: res.data.data.room_imgs.split(','),
         })
         : setRoomData([{ message: 'Khong co du lieu phong' }]);
     } else {
@@ -85,82 +80,87 @@ const Room = function ({
 
   return (
     <View style={[styles.view, styles.textOption]} onLayout={layoutWidth}>
-      <SliderBox
-        images={roomData.images}
-        style={styles.image}
-        parentWidth={state.width}
-        paginationBoxVerticalPadding={5}
-        dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
-        imageLoadingColor={'#fff'}
-      // onCurrentImagePressed={(index)}
-      // ImageComponentStyle={{ width: "97%", resizeMode: "stretch" }}
-      />
+      {state && roomData.images !== null ?
+        <>
+          <SliderBox
+            images={roomData.images}
+            style={styles.image}
+            parentWidth={state.width}
+            paginationBoxVerticalPadding={5}
+            dotStyle={{ width: 7, height: 7, marginHorizontal: -5 }}
+            imageLoadingColor={'#fff'}
+          />
 
-      <ViewRow>
-        <View>
-          <Text style={styles.textName}>{roomData.roomName}</Text>
-          <Text style={styles.textContent}>
-            <Icon1 name="money" size={14} color="#05375a">
-              {' '}
-            </Icon1>{' '}
-            {sale != null && sale != '' ? roomData.price - roomData.price * sale : roomData.price}
-            <Feather style={{ paddingTop: 10 }} name="dollar-sign" size={14}>
-              {' '}
-            </Feather>
-            /đêm
-          </Text>
-          <Text style={styles.textContent}>
-            <Ionicon name="people" size={15} color="#05375a">
-              {' '}
-            </Ionicon>
-            {roomData.people} người lớn {children} trẻ em
-          </Text>
+          <ViewRow>
+            <View>
+              <Text style={styles.textName}>{roomData.roomName}</Text>
+              <Text style={styles.textContent}>
+                <Icon1 name="money" size={14} color="#05375a">
+                  {' '}
+                </Icon1>{' '}
+                {sale != null && sale != '' ? roomData.price - roomData.price * sale : roomData.price}
+                <Feather style={{ paddingTop: 10 }} name="dollar-sign" size={14}>
+                  {' '}
+                </Feather>
+                /đêm
+              </Text>
+              <Text style={styles.textContent}>
+                <Ionicon name="people" size={15} color="#05375a">
+                  {' '}
+                </Ionicon>
+                {roomData.people} người lớn {children} trẻ em
+              </Text>
 
-          {roomData.status >= 1 ? (
-            <Text style={styles.textContent}>
-              <Icon name="check" size={14} color="#05375a">
-                {' '}
-              </Icon>
-              Còn {roomData.status} phòng
-            </Text>
-          ) : (
-            <Text style={styles.textContent}>
-              {' '}
-              <Octicons name="x" size={16} color="#05375a">
-                {' '}
-              </Octicons>{' '}
-              Hết phòng
-            </Text>
-          )}
-        </View>
-        <View>
-          <TouchableOpacity activeOpacity={0.8}>
-            <Button
-              title={'Chọn'}
-              color={ORANGE_LIGHT}
-              onPress={handleBooking}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('DetailRoomScreen', {
-                id: roomId,
-                hotelId: hotelId,
-                hotelName: hotelName,
-                sale: sale,
-              });
-            }}>
-            <Text style={styles.textDetail}>
-              Xem chi tiết{' '}
-              <Icon1
-                name="angle-double-right"
-                size={15}
-                color={BLUE2}
-                style={styles.iconDetail}></Icon1>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ViewRow>
+              {roomData.status >= 1 ? (
+                <Text style={styles.textContent}>
+                  <Icon name="check" size={14} color="#05375a">
+                    {' '}
+                  </Icon>
+                  Còn {roomData.status} phòng
+                </Text>
+              ) : (
+                <Text style={styles.textContent}>
+                  {' '}
+                  <Octicons name="x" size={16} color="#05375a">
+                    {' '}
+                  </Octicons>{' '}
+                  Hết phòng
+                </Text>
+              )}
+            </View>
+            <View>
+              <TouchableOpacity activeOpacity={0.8}>
+                <Button
+                  title={'Chọn'}
+                  color={ORANGE_LIGHT}
+                  onPress={handleBooking}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('DetailRoomScreen', {
+                    id: roomId,
+                    hotelId: hotelId,
+                    hotelName: hotelName,
+                    sale: sale,
+                  });
+                }}>
+                <Text style={styles.textDetail}>
+                  Xem chi tiết{' '}
+                  <Icon1
+                    name="angle-double-right"
+                    size={15}
+                    color={BLUE2}
+                    style={styles.iconDetail}></Icon1>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ViewRow>
+        </>
+        : <Text></Text>}
+
+
+
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
@@ -12,15 +12,15 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Button} from 'react-native-elements';
-import {BLUE1} from '../src/values/color';
+import { Button } from 'react-native-elements';
+import { BLUE1 } from '../src/values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
-import {LOGIN_SUCCESSFULLY} from '../src/values/constants';
+import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../src/values/size';
+import { LOGIN_SUCCESSFULLY } from '../src/values/constants';
 import userApi from '../api/userApi';
-import {useDispatch} from 'react-redux';
-import {setCurrentUser, setRememberMe} from '../action_creators/user';
-const LoginScreen = ({navigation, route}) => {
+import { useDispatch } from 'react-redux';
+import { setCurrentUser, setRememberMe } from '../action_creators/user';
+const LoginScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const emailInput = useRef();
   const passInput = useRef();
@@ -50,7 +50,8 @@ const LoginScreen = ({navigation, route}) => {
   const handleLogin = async () => {
     setisLoading(true);
     try {
-      const res = await userApi.login(emailUser? Object.values(emailUser) : email, password);
+      const res = await userApi.login(emailUser ? Object.values(emailUser) : email, password);
+      console.log(res.data.data);
       if (!res.data.msg) {
         dispatch(setCurrentUser(res.data.data.user));
         dispatch(setRememberMe(true));
@@ -143,7 +144,7 @@ const LoginScreen = ({navigation, route}) => {
           <View style={loginStyles.footer}>
             <Text>Don't have an Account ? </Text>
             <TouchableOpacity onPress={handlePressSignUp}>
-              <Text style={{color: BLUE1}}>Sign Up</Text>
+              <Text style={{ color: BLUE1 }}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>

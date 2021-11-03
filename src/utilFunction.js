@@ -15,9 +15,14 @@ export const convertDateToVNDate = (date) => {
 };
 
 export const getDateFormatString = (date) => {
-  let strDate = `${date.getFullYear()}/${
-    date.getMonth() + 1
-  }/${date.getDate()}`;
+  let day = ""
+  if (date.getDate() < 10) {
+    day = `0${date.getDate()}`
+  }
+
+  let strDate = `${date.getFullYear()}/${date.getMonth() + 1
+    }/${day}`;
+  console.log(day, "getDate");
   return strDate;
 };
 

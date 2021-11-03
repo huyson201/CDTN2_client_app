@@ -22,6 +22,8 @@ target 'CDTN2_client_app' do
 
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'CDTN2_client_appTests' do
     inherit! :complete
     # Pods for testing
