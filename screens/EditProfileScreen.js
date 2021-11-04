@@ -28,12 +28,14 @@ const EditProfileScreen = function ({ navigation }) {
   };
 
   const handlePressEditUserProfile = async () => {
+    console.log('file', file)
     let formData = new FormData();
     formData.append("user_name", user_name)
     formData.append("user_phone", user_phone)
 
     if (file) {
       formData.append("avatar", file)
+      console.log('from data', formData)
     }
 
     try {
@@ -69,10 +71,10 @@ const EditProfileScreen = function ({ navigation }) {
         alert(response.customButton);
       } else {
         const source = { uri: response.uri };
-        console.log(response, "URI");
-        console.log(source, "source");
+
+        console.log(response)
         setFile({
-          url: response.assets[0].uri,
+          uri: response.assets[0].uri,
           type: response.assets[0].type,
           name: response.assets[0].fileName
         });
