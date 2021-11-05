@@ -137,8 +137,8 @@ const Invoice = (props) => {
           token: token,
           price: props.route.params.sum,
           hotelId: props.route.params.hotelId,
-          rDate: `${date.receivedDate}T12:00:00`,
-          pDate: `${date.payDate}T12:00:00`,
+          rDate: `${date.receivedDate.replace(/\//g, '-')}T12:00:00`,
+          pDate: `${date.payDate.replace(/\//g, '-')}T12:00:00`,
           roomId: props.route.params.id,
           roomQty: data.status,
           status: "Chưa xác nhận"
@@ -147,7 +147,6 @@ const Invoice = (props) => {
         if (res.data.data) {
           ToastAndroid.show("Đặt phòng thành công", ToastAndroid.SHORT)
         }
-        console.log(res, "create Invoice");
       } else if (token != null && isJwtExpired(token) == true) {
         refresh()
       }
