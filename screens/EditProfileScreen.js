@@ -9,26 +9,25 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1 } from '../src/values/color';
+import { BLUE1, BLUE2 } from '../src/values/color';
 import { Button } from 'react-native-elements';
 import { TextInput, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import userApi from '../api/userApi';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { setCurrentUser } from '../action_creators/user';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { setCurrentUser, setCheckPickerImage } from '../action_creators/user';
+import DialogEditImage from '../src/components/user/DialogEditImage';
 
 const EditProfileScreen = function ({ navigation }) {
-  const { currentUser, token } = useSelector(state => state.user)
+  const { currentUser, token, checkPickerImage, file } = useSelector(state => state.user)
   const [user_name, setUserName] = useState(currentUser.user_name)
   const [user_phone, setUserPhone] = useState(currentUser.user_phone)
-  const [file, setFile] = useState()
   const dispatch = useDispatch()
   const handlePressUserProfile = () => {
     navigation.goBack();
   };
 
   const handlePressEditUserProfile = async () => {
-    console.log('file', file)
     let formData = new FormData();
     formData.append("user_name", user_name)
     formData.append("user_phone", user_phone)
@@ -49,136 +48,82 @@ const EditProfileScreen = function ({ navigation }) {
       console.log(error, "error update");
     }
   }
-
-  const chooseImage = () => {
-    let options = {
-      title: 'Select Image',
-      customButtons: [
-        { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        const source = { uri: response.uri };
-
-        console.log(response)
-        setFile({
-          uri: response.assets[0].uri,
-          type: response.assets[0].type,
-          name: response.assets[0].fileName
-        });
-      }
-    });
-  };
-
+  const uploadImage = () => {
+    dispatch(setCheckPickerImage(true))
+  }
   const renderFileData = () => {
     if (file) {
-      return <Image style={EditProfileStyles.userImg} source={{ uri: file.url }}
+      return <Image style={EditProfileStyles.userImg} source={{ uri: file.uri }}
       />
     } else {
-      return <Text>dhfkjashdfkjasdkfj</Text>
+      return <Image
+        style={EditProfileStyles.userImg}
+        source={
+          currentUser.user_img !== null ? { uri: currentUser.user_img } : { uri: `https://ui-avatars.com/api/?name=${currentUser.user_name}&size=256` }}
+      />
     }
   }
 
   return (
-    <ScrollView>
-      {/* HEADER */}
-      <View style={EditProfileStyles.header}>
-        <View style={EditProfileStyles.headerUserCicle}>
-          <Image
-            style={EditProfileStyles.userImg}
-            source={
-              currentUser.user_img !== null ? { uri: currentUser.user_img } : { uri: `https://ui-avatars.com/api/?name=${currentUser.user_name}&size=256` }}
-          />
-          {/* <Icon name="camera" style={{fontSize:20,color:"#ffff",textAlign:"right"}}/> */}
-        </View>
-      </View>
-      <Container>
-        {/* EDIT BASIC INFORMATION */}
-        <Text style={EditProfileStyles.textTitle}>Full Name</Text>
-        <View style={EditProfileStyles.action}>
-          <Icon
-            style={EditProfileStyles.icon}
-            name="user-alt"
-            size={18}
-            backgroundColor="#05375a"
-            color="#05375a"></Icon>
-          <TextInput
-            defaultValue={currentUser ? currentUser.user_name : ""}
-            autoCapitalize="none"
-            style={EditProfileStyles.textInput}
-            onChangeText={(val) => val ? setUserName(val) : ""}></TextInput>
-        </View>
-
-        <Text style={EditProfileStyles.textTitle}>Phone</Text>
-        <View style={EditProfileStyles.action}>
-          <Icon
-            style={EditProfileStyles.icon}
-            name="phone-alt"
-            size={18}
-            backgroundColor="#05375a"
-            color="#05375a"></Icon>
-          <TextInput
-            defaultValue={currentUser ? currentUser.user_phone : ""}
-            autoCapitalize="none"
-            style={EditProfileStyles.textInput}
-            onChangeText={(val) => val ? setUserPhone(val) : ""}
-          ></TextInput>
-        </View>
-
-        <View>
-          <TouchableOpacity onPress={chooseImage} >
-            <Text>Choose File</Text>
+    <>
+      <DialogEditImage visible={checkPickerImage} />
+      <ScrollView>
+        {/* HEADER */}
+        <View style={EditProfileStyles.header}>
+          <View style={EditProfileStyles.headerUserCicle}>
             {renderFileData()}
-          </TouchableOpacity>
-
-          {/* <TouchableOpacity onPress={launchCamera}  >
-            <Text>Directly Launch Camera</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={launchImageLibrary}  >
-            <Text >Directly Launch Image Library</Text>
-          </TouchableOpacity> */}
+            <Icon onPress={uploadImage} name="camera" style={{ fontSize: 25, position: 'absolute', right: -12, bottom: -12, color: { BLUE2 } }} />
+          </View>
         </View>
-
-        <View style={EditProfileStyles.btn}>
-          <Button onPress={handlePressEditUserProfile} title="EDIT" buttonStyle={EditProfileStyles.okBtn}></Button>
-          <Button
-            title="Cancel"
-            onPress={handlePressUserProfile}
-            buttonStyle={EditProfileStyles.cancelBtn}></Button>
-        </View>
-      </Container>
-    </ScrollView>
+        <Container>
+          {/* EDIT BASIC INFORMATION */}
+          <Text style={EditProfileStyles.textTitle}>Full Name</Text>
+          <View style={EditProfileStyles.action}>
+            <Icon
+              style={EditProfileStyles.icon}
+              name="user-alt"
+              size={18}
+              backgroundColor="#05375a"
+              color="#05375a"></Icon>
+            <TextInput
+              defaultValue={currentUser ? currentUser.user_name : ""}
+              autoCapitalize="none"
+              style={EditProfileStyles.textInput}
+              onChangeText={(val) => val ? setUserName(val) : ""}></TextInput>
+          </View>
+          <Text style={EditProfileStyles.textTitle}>Phone</Text>
+          <View style={EditProfileStyles.action}>
+            <Icon
+              style={EditProfileStyles.icon}
+              name="phone-alt"
+              size={18}
+              backgroundColor="#05375a"
+              color="#05375a"></Icon>
+            <TextInput
+              defaultValue={currentUser ? currentUser.user_phone : ""}
+              autoCapitalize="none"
+              style={EditProfileStyles.textInput}
+              onChangeText={(val) => val ? setUserPhone(val) : ""}
+            ></TextInput>
+          </View>
+          <View style={EditProfileStyles.btn}>
+            <Button onPress={handlePressEditUserProfile} title="EDIT" buttonStyle={EditProfileStyles.okBtn}></Button>
+            <Button
+              title="Cancel"
+              onPress={handlePressUserProfile}
+              buttonStyle={EditProfileStyles.cancelBtn}></Button>
+          </View>
+        </Container>
+      </ScrollView>
+    </>
   );
 };
-
-const Title = styled.Text`
-  color: #fff;
-`;
 
 const Container = styled.View`
   padding: 0 15px;
   width: 100%;
 `;
 
-const ViewRow = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
 const EditProfileStyles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF' },
   header: {
@@ -190,7 +135,9 @@ const EditProfileStyles = StyleSheet.create({
     borderBottomRightRadius: 15,
   },
   headerUserCicle: {
-    display: 'flex',
+    // display: 'flex',
+    position: 'relative',
+    paddingBottom: 50,
     marginHorizontal: '33%',
     marginBottom: 10,
     height: 100,

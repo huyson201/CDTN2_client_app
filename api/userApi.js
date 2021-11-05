@@ -43,16 +43,13 @@ const userApi = {
     })
   },
   update: (token, id, formData) => {
-     for (var value of formData._parts) {
-      console.log(value,"value");
-    }
     const url = `/users/${id}`
-    return axiosClient.patch(url,
-      formData
-      ,
+    return axiosClient.patch(
+      url,
+      formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": `multipart/form-data`,
           Authorization: `Bearer ${token}`
         }
       })

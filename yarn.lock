@@ -1592,6 +1592,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz"
   "version" "1.1.0"
 
+"@react-native-community/netinfo@^6.0.5":
+  "integrity" "sha512-pCkQiRFRE8fAmLNVeNwtQbAR/tjVbpSL1Oc9sWSA5tVuH3w4t9eOuqt+7wuY5ntvlWbC29tbYyqeUHfAa6cKww=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/netinfo/-/netinfo-6.0.5.tgz"
+  "version" "6.0.5"
+
 "@react-native-picker/picker@^2.1.0":
   "integrity" "sha512-iJ/QaDrBMBaW6cFuQyR3DXzcn2h7c5O7mGgmNLCBQHTTtLNBZR+Sxogy6YleFPeToNdysG5mTTkXqBmlWHMQqg=="
   "resolved" "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.1.0.tgz"
@@ -6325,6 +6330,11 @@
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
 
+"react-native-dialog@^9.2.0":
+  "integrity" "sha512-VXdfo+bAi9ER7+w4aKOWypw8K97C2orvnfnxX4Lup/U8iQB/635V00hgfHEE3s0XScQHftXxm34Fa4iIIjojQA=="
+  "resolved" "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-9.2.0.tgz"
+  "version" "9.2.0"
+
 "react-native-elements@^3.4.2":
   "integrity" "sha512-m0eAWOn7JuR1wNTNY0WHuaqst4LI/gFE4N5Bbyfsc4DiryWsMST7aAg5w/Gos4IexWIzhLKCIkPxthND1m/8Xg=="
   "resolved" "https://registry.npmjs.org/react-native-elements/-/react-native-elements-3.4.2.tgz"
@@ -6431,7 +6441,7 @@
   dependencies:
     "moment" "^2.22.0"
 
-"react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.51", "react-native@>= 0.59", "react-native@>=0.57", "react-native@>=0.65.0-rc.0 || 0.0.0-*", "react-native@0.65.1":
+"react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.51", "react-native@>= 0.59", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.63.0", "react-native@>=0.65.0-rc.0 || 0.0.0-*", "react-native@0.65.1":
   "integrity" "sha512-0UOVSnlssweQZjuaUtzViCifE/4tXm8oRbxwakopc8GavPu9vLulde145GOw6QVYiOy4iL50f+2XXRdX9NmMeQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.65.1.tgz"
   "version" "0.65.1"

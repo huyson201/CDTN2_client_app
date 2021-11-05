@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EditProfileScreen from '../../../screens/EditProfileScreen';
 import ProfileScreen from '../../../screens/ProfileScreen';
 import ListRoomsOrderedScreen from '../../../screens/ListRoomsOrderedScreen';
@@ -8,7 +8,7 @@ import DetailRoomScreen from '../../../screens/DetailRoomScreen';
 import DetailHotelScreen from '../../../screens/DetailHotelScreen';
 import HotelList from '../../../screens/HotelList';
 import Invoice from '../../../screens/Invoice';
-import {BLUE1} from '../../values/color';
+import { BLUE1 } from '../../values/color';
 import TabBar from '../home/TabBar';
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +18,7 @@ const TaskHome = () => {
       <Stack.Screen
         name="HomeTab"
         component={TabBar}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ListHotels"
@@ -27,7 +27,7 @@ const TaskHome = () => {
           headerShown: true,
           title: 'Kết quả tìm kiếm',
           headerTintColor: '#fff',
-          headerStyle: {backgroundColor: BLUE1},
+          headerStyle: { backgroundColor: BLUE1 },
         }}
       />
       <Stack.Screen
@@ -44,24 +44,24 @@ const TaskHome = () => {
       <Stack.Screen
         name="RoomListScreen"
         component={RoomListScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="DetailRoomScreen"
         component={DetailRoomScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Invoice"
         component={Invoice}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
           headerShown: true,
-          headerStyle: {backgroundColor: BLUE1},
+          headerStyle: { backgroundColor: BLUE1 },
           headerTintColor: '#fff',
         }}
       />
@@ -70,7 +70,8 @@ const TaskHome = () => {
         component={EditProfileScreen}
         options={{
           headerShown: true,
-          headerStyle: {backgroundColor: BLUE1},
+          // headerTitle: false,
+          headerStyle: { backgroundColor: BLUE1 },
           headerTintColor: '#fff',
         }}
       />
@@ -79,7 +80,7 @@ const TaskHome = () => {
         component={ListRoomsOrderedScreen}
         options={{
           headerShown: true,
-          headerStyle: {backgroundColor: BLUE1},
+          headerStyle: { backgroundColor: BLUE1 },
           headerTintColor: '#fff',
         }}
       />
