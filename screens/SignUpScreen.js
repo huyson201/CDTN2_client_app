@@ -66,7 +66,6 @@ const SignUpScreen = ({navigation}) => {
   const handleSignUp = async (values, formikActions) => {
     setLoading(true);
     try {
-      console.log(123);
       const res = await userApi.signUp(
         values.fullname,
         values.email,
