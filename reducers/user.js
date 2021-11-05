@@ -1,7 +1,9 @@
 let initialState = {
   currentUser: null,
   isRemembered: false,
-  token: null
+  token: null,
+  checkPickerImage: false,
+  file: null
 };
 const userReducer = function (state = initialState, action) {
   switch (action.type) {
@@ -16,6 +18,12 @@ const userReducer = function (state = initialState, action) {
       return state;
     case 'SET_TOKEN':
       state = { ...state, token: action.payload };
+      return state;
+    case 'SET_IMAGE':
+      state = { ...state, checkPickerImage: action.payload };
+      return state;
+    case 'SET_FILE':
+      state = { ...state, file: action.payload };
       return state;
     default:
       return state;

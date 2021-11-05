@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation, route }) => {
     setisLoading(true);
     try {
       const res = await userApi.login(emailUser ? Object.values(emailUser) : email, password);
-      console.log(res.data.data);
+      console.log(res.data);
       if (!res.data.msg) {
         dispatch(setCurrentUser(res.data.data.user));
         dispatch(setRememberMe(true));

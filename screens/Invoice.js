@@ -47,24 +47,21 @@ const Invoice = (props) => {
   let payDate = convertDateToVNDate(date.payDate);
 
   const getUser = async (token) => {
-    if (token && isJwtExpired(token) === false) {
-      const userId = jwtDecode(token)
-      console.log(userId.user_uuid, "userid");
-      try {
+    try {
+      if (token && isJwtExpired(token) === false) {
+        const userId = jwtDecode(token)
         const res = await userApi.getUserById(token, userId.user_uuid)
-        console.log(res.data);
         if (res.data.data) {
           dispatch(setCurrentUser(res.data.data))
-          console.log(res.data.data);
         }
-      } catch (error) {
-        console.log(error, "error luc get user");
+      } else {
+        refresh()
       }
-    } else {
-      refresh()
+    } catch (error) {
+      console.log(error, "error luc get user");
     }
   }
-  
+
   const refresh = async () => {
     try {
       await AsyncStorage.getItem('refresh_token').then(value => {
@@ -118,14 +115,11 @@ const Invoice = (props) => {
 
   const setTokenLocal = async (token) => {
     try {
-      await AsyncStorage.setItem('token', token).then(value => {
-        console.log(value, "token");
-      })
+      await AsyncStorage.setItem('token', token)
     } catch (error) {
       console.log(error);
     }
   }
-
 
   const handlePressShowDetailPrice = () => {
     setShowDetailPrice(!showDetailPrice);
@@ -134,25 +128,26 @@ const Invoice = (props) => {
   useEffect(() => {
     getUser(token)
     getRoomById();
-  }, [token]);
+  }, []);
 
   const handlePressConfirm = async () => {
     try {
       if (token && isJwtExpired(token) == false) {
-        let jsonData = {
+        const jsonData = {
           token: token,
           price: props.route.params.sum,
           hotelId: props.route.params.hotelId,
-          rDate: date.receivedDate,
-          pDate: date.payDate,
+          rDate: `${date.receivedDate}T12:00:00`,
+          pDate: `${date.payDate}T12:00:00`,
           roomId: props.route.params.id,
           roomQty: data.status,
           status: "Chưa xác nhận"
         }
-        invoiceApi.create(jsonData)
-          .then((res) => {
-            console.log(res.data.message);
-          }).catch(err => console.log(err))
+        const res = await invoiceApi.create(jsonData)
+        if (res.data.data) {
+          ToastAndroid.show("Đặt phòng thành công", ToastAndroid.SHORT)
+        }
+        console.log(res, "create Invoice");
       } else if (token != null && isJwtExpired(token) == true) {
         refresh()
       }

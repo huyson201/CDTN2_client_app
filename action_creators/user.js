@@ -16,3 +16,15 @@ export const setToken = (value) => {
         payload: value
     }
 }
+export const setCheckPickerImage = (value) => {
+    return {
+        type: "SET_IMAGE",
+        payload: value
+    }
+}
+export const setFile = (value) => {
+    return {
+        type: "SET_FILE",
+        payload: value
+    }
+}

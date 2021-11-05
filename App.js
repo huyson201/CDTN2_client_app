@@ -14,6 +14,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from './screens/SplashScreen';
 const Stack = createNativeStackNavigator();
 import userApi from './api/userApi';
+import NetInfo from "@react-native-community/netinfo";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -50,16 +51,18 @@ const App = () => {
   }
 
   useEffect(() => {
+    NetInfo.fetch().then(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    });
     const getData = async () => {
       try {
-        console.log(123);
         const refresh_token = await AsyncStorage.getItem('refresh_token');
         if (refresh_token != null && isJwtExpired(refresh_token) == false) {
           refresh(refresh_token)
           getUser(token)
           dispatch(setRememberMe(true));
-
-          console.log(jwtDecode(token));
+          console.log(token);
         } else if (
           refresh_token != null &&
           isJwtExpired(refresh_token) == true
@@ -71,8 +74,8 @@ const App = () => {
       } catch (error) {
         console.log(error);
       }
-    };
 
+    };
     getData();
   }, [token]);
   //set loading
