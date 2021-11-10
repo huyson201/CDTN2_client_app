@@ -5,12 +5,10 @@ import {
 } from "../src/utilFunction";
 
 let now = new Date();
-let nowDate = getDateFormatString(now);
+let nowDate = getDateFormatString(now)
 let tomorrow = getTomorrow(nowDate);
-// console.log(nowDate)
-
 let initialState = {
-    address: "ninh",
+    address: "ninh hai, ninh thuan",
     date: {
         numDate: 1,
         receivedDate: nowDate,

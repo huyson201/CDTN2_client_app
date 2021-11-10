@@ -19,7 +19,7 @@ import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../src/values/size';
 import { LOGIN_SUCCESSFULLY } from '../src/values/constants';
 import userApi from '../api/userApi';
 import { useDispatch } from 'react-redux';
-import { setCurrentUser, setRememberMe } from '../action_creators/user';
+import { setCurrentUser, setRememberMe, setToken } from '../action_creators/user';
 const LoginScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const emailInput = useRef();
@@ -55,6 +55,7 @@ const LoginScreen = ({ navigation, route }) => {
       if (!res.data.msg) {
         dispatch(setCurrentUser(res.data.data.user));
         dispatch(setRememberMe(true));
+        dispatch(setToken(res.data.data.token))
         await AsyncStorage.setItem('token', res.data.data.token);
         await AsyncStorage.setItem('refresh_token', res.data.data.refreshToken);
         if (_isMouted.current) {

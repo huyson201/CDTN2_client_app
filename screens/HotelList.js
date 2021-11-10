@@ -20,7 +20,7 @@ const HotelList = function ({ navigation }) {
   useEffect(() => {
     setListData([]);
     // let data = [];
-    let searchAddress = searchData.address;
+    let searchAddress = removePrefixAddress(searchData.address).trim();
     let fromDate = searchData.date.receivedDate.replace(/\//g, '-')
     let toDate = searchData.date.payDate.replace(/\//g, '-')
     let arrStar = searchData.filter.rankStars;
@@ -28,12 +28,9 @@ const HotelList = function ({ navigation }) {
     let minPrice = searchData.filter.minPrice;
     let { children, adults, rooms } = searchData.personsAndRooms
 
-    console.log(arrStar, "date ne");
-
     let query = `filter?address=${searchAddress}&from=${fromDate}T12:00:00&to=${toDate}T12:00:00&room=${rooms}&adult=${adults}`;
     if (arrStar.length > 0) query += `&star=${arrStar}`
     if (maxPrice && minPrice) query += `&min=${minPrice}&max=${maxPrice}`
-
     console.log(query);
 
     async function filterData() {
@@ -165,12 +162,10 @@ const HotelList = function ({ navigation }) {
 
 
 function removePrefixAddress(address) {
-  let str = address.replace('xa', '');
+  let str = xoaDau(address)
   str = str.replace('huyen', '');
   str = str.replace('tinh', '');
   str = str.replace('thanh pho', '');
-  str = str.replace('duong', '');
-
   return str;
 }
 

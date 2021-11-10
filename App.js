@@ -78,6 +78,7 @@ const App = () => {
     };
     getData();
   }, [token]);
+  
   //set loading
   useEffect(() => {
     setTimeout(() => {

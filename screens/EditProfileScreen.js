@@ -15,7 +15,7 @@ import { TextInput, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import userApi from '../api/userApi';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { setCurrentUser, setCheckPickerImage } from '../action_creators/user';
+import { setCurrentUser, setCheckPickerImage, setFile } from '../action_creators/user';
 import DialogEditImage from '../src/components/user/DialogEditImage';
 
 const EditProfileScreen = function ({ navigation }) {
@@ -37,12 +37,16 @@ const EditProfileScreen = function ({ navigation }) {
       console.log('from data', formData)
     }
 
+    console.log(currentUser.user_uuid);
+    console.log("token", token);
+    console.log("form", formData);
     try {
       const res = await userApi.update(token, currentUser.user_uuid, formData)
       if (res.data.data) {
-        dispatch(setCurrentUser(res.data.data))
-        // console.log(res.data.data, "data update");
         ToastAndroid.show("Cập nhật thành công", ToastAndroid.SHORT)
+        dispatch(setCurrentUser(res.data.data))
+        dispatch(setFile(null));
+        // console.log(res.data.data, "data update");
       }
     } catch (error) {
       console.log(error, "error update");
