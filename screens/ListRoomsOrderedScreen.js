@@ -9,87 +9,91 @@ import {
   TextInput,
   Picker,
   Image,
+  StatusBar,
+  FlatList,
 } from 'react-native';
+// import { DARK_GRAY, WHITE, ORANGE, GOLD_COLOR } from "../src/values/color";
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {BLUE1, DARK_GRAY, MAP_MARKER} from '../src/values/color';
+import {BLUE1, DARK_GRAY, MAP_MARKER, GOLD_COLOR} from '../src/values/color';
 import {SEARCH_ICON_SIZE, SEARCH_TEXT_SIZE} from '../src/values/size';
 import {Button} from 'react-native-elements';
 import History from '../src/components/home/History';
 import About from '../src/components/home/About';
+// User Med Import
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCurrentUser, setRememberMe, setToken} from '../action_creators/user';
+import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
+import userApi from '../api/userApi';
+// Invoice Med import
+import invoiceApi from './../api/invoiceApi';
 
-const printRating = star => {
-  var rating = [];
-  for (let i = 0; i < star; i++) {
-    rating.push(
-      <Icon
-        name="star"
-        size={25}
-        backgroundColor="#cfc021"
-        color="#cfc021"></Icon>,
-    );
-  }
-  return rating;
-};
 const ListRoomsOrderedScreen = function ({navigation}) {
-   
+  // User
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.currentUser);
+  console.log(user);
+  const handlePressEditProfile = () => {
+    navigation.navigate('EditProfileScreen');
+  };
+  const handleToListRooms = () => {
+    navigation.navigate('My Ordered Room');
+  };
+
+  //Get DATA
+  // const [dataSource1, setDataSouce1] = useState([]);
+
   const [dataSource, setDataSouce] = useState([]);
   useEffect(() => {
     getData();
   }, []);
   // MODIFY DATASOUCE HERE
-  const getData = () => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(responseJson => {
-        setDataSouce(responseJson);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  const getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      console.log(token);
+      const res = await invoiceApi.getInvoiceByUser(user.user_uuid, token);
+      console.log('test', res.data.data);
+      setDataSouce(res.data.data);
+    } catch (e) {
+      console.log(e);
+    }
   };
-   const handlePressUserProfile = () => {
+  const data = dataSource;
+  console.log('JsonDATA', dataSource);
+
+  // const [dataSource, setDataSouce] = useState([]);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+  // MODIFY DATASOUCE HERE
+  // const getData = () => {
+  //   fetch(getDataURL)
+  //     .then(response => response.json())
+  //     .then(responseJson => {
+  //       setDataSouce(responseJson);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //     });
+  // };
+  const handlePressUserProfile = () => {
     navigation.goBack();
   };
-  // MODIFY ITEMSVIEW HERE
-  const ItemView = (item, index) => {
-    return (
-      <TouchableOpacity 
-      onPress={handlePressUserProfile}
-      key={index} style={ListRoomsOrderedStyle.listItemStyle}>
-        {/* <Text style={ListRoomsOrderedStyle.itemFont_id} numberOfLines={1}>
-          No.{item.id}
-        </Text> */}
-        <View style={ListRoomsOrderedStyle.itemBody}>
-          <Image
-            style={ListRoomsOrderedStyle.itemBoDyImg}
-            source={require('../src/images/detail_hotel_2.jpeg')}
-          />
-        
-          <View style={ListRoomsOrderedStyle.itemBoDyText}>
-            <Text
-              style={ListRoomsOrderedStyle.itemFont_HotelName}
-              numberOfLines={1}>
-              {item.username}
-            </Text>
-            <Text
-              style={ListRoomsOrderedStyle.itemFont_HotelStar}
-              numberOfLines={1}>
-              {printRating(item.id)}
-            </Text>
-             <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
-              Total: {item.id} $
-            </Text>
-            <Text 
-
-            numberOfLines={1}>
-             Address:  {item.address.suite}, {item.address.city}
-            </Text>
-          </View>
-        </View>
-        <ItemSeparatorView />
-      </TouchableOpacity>
-    );
+  // PRINT RATING
+  const printRating = star => {
+    var rating = [];
+    for (let i = 0; i < 5; i++) {
+      rating.push(
+        <Icon
+          name="star"
+          size={25}
+          backgroundColor={GOLD_COLOR}
+          color="#cfc021"></Icon>,
+      );
+    }
+    return rating;
   };
   // MODIFY cái cây màu đen nằm giữa các ITEMS
   const ItemSeparatorView = () => {
@@ -97,30 +101,76 @@ const ListRoomsOrderedScreen = function ({navigation}) {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        {/* HEADER */}
-        <View style={ListRoomsOrderedStyle.header}>
-          <View style={ListRoomsOrderedStyle.headerUserCicle}>
-            <View>
-              <Image
-                style={ListRoomsOrderedStyle.userImg}
-                source={require('../src/images/list.png')}
-              />
-            </View>
+    <View>
+      {/* MODIFY HEADER */}
+      <View style={ListRoomsOrderedStyle.header}>
+        <View style={ListRoomsOrderedStyle.headerUserCicle}>
+          <View>
+            <Image
+              style={ListRoomsOrderedStyle.userImg}
+              source={require('../src/images/list.png')}
+            />
           </View>
         </View>
-        <Container>
-          {/* <View style={ListRoomsOrderedStyle.headerListItemStyle}>
-            <Text style={ListRoomsOrderedStyle.textTitle}>ID                         Properties</Text>
-          </View> */}
-          <ItemSeparatorView />
-          <ScrollView>{dataSource.map(ItemView)}</ScrollView>
-        </Container>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+      <FlatList
+        style={{marginTop: 5}}
+        data={data}
+        renderItem={({item, index}) => {
+          return (
+            // MODIFY ITEMSVIEW HERE
+            <TouchableOpacity
+              onPress={handlePressUserProfile}
+              key={index}
+              style={ListRoomsOrderedStyle.listItemStyle}>
+              <View style={ListRoomsOrderedStyle.itemBody}>
+                <Image
+                  style={ListRoomsOrderedStyle.itemBoDyImg}
+                  source={require('../src/images/detail_hotel_2.jpeg')}
+                />
+                <View style={ListRoomsOrderedStyle.itemBoDyText}>
+                  <Text
+                    style={ListRoomsOrderedStyle.itemFont_HotelName}
+                    numberOfLines={1}>
+                    Hotel Number: {item.hotel_id}
+                  </Text>
+                  <Text
+                    style={ListRoomsOrderedStyle.itemFont_HotelStar}
+                    numberOfLines={1}>
+                    {printRating(item.id)}
+                  </Text>
+                  <Text
+                    style={ListRoomsOrderedStyle.itemFont}
+                    numberOfLines={1}>
+                    Total: {item.price} Đ
+                  </Text>
+                  <Text numberOfLines={1}>Status: {item.status}</Text>
+                </View>
+              </View>
+              <ItemSeparatorView />
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
 
 const Title = styled.Text`
   color: #fff;
@@ -175,11 +225,7 @@ const ListRoomsOrderedStyle = StyleSheet.create({
     borderRadius: 20,
   },
   listItemStyle: {
-    // backgroundColor: '#c9efff',
-    // borderWidth: 1,
     borderRadius: 10,
-    // padding: 10,
-    // marginTop: 10,
   },
   itemBody: {
     flexDirection: 'row',
