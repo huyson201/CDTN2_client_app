@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import userApi from '../api/userApi';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { setCurrentUser, setCheckPickerImage, setFile } from '../action_creators/user';
-import DialogEditImage from '../src/components/user/DialogEditImage';
+import DialogEditImage from './../src/components/user/DialogEditImage';
 
 const EditProfileScreen = function ({ navigation }) {
   const { currentUser, token, checkPickerImage, file } = useSelector(state => state.user)

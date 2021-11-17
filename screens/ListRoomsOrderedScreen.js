@@ -26,6 +26,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setCurrentUser, setRememberMe, setToken} from '../action_creators/user';
 import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
 import userApi from '../api/userApi';
+import hotelApi from './../api/hotelApi';
 // Invoice Med import
 import invoiceApi from './../api/invoiceApi';
 
@@ -40,13 +41,28 @@ const ListRoomsOrderedScreen = function ({navigation}) {
   const handleToListRooms = () => {
     navigation.navigate('My Ordered Room');
   };
-
+  const getHotelNameById = async hotelId => {
+    try {
+      const res = await hotelApi.getHotelById(hotelId);
+      if (!res.data.error) {
+        setDataHotel({
+          name: res.data.data.hotel_name,
+        });
+        console.log(res.data.data.hotel_name);
+      } else {
+        console.log(res.data.error);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   //Get DATA
   // const [dataSource1, setDataSouce1] = useState([]);
 
   const [dataSource, setDataSouce] = useState([]);
   useEffect(() => {
     getData();
+    // getHotelNameById(hotelID);
   }, []);
   // MODIFY DATASOUCE HERE
   const getData = async () => {
@@ -54,30 +70,13 @@ const ListRoomsOrderedScreen = function ({navigation}) {
       const token = await AsyncStorage.getItem('token');
       console.log(token);
       const res = await invoiceApi.getInvoiceByUser(user.user_uuid, token);
-      console.log('test', res.data.data);
+      // console.log('test', res.data.data);
       setDataSouce(res.data.data);
     } catch (e) {
       console.log(e);
     }
   };
   const data = dataSource;
-  console.log('JsonDATA', dataSource);
-
-  // const [dataSource, setDataSouce] = useState([]);
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-  // MODIFY DATASOUCE HERE
-  // const getData = () => {
-  //   fetch(getDataURL)
-  //     .then(response => response.json())
-  //     .then(responseJson => {
-  //       setDataSouce(responseJson);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // };
   const handlePressUserProfile = () => {
     navigation.goBack();
   };
@@ -95,24 +94,16 @@ const ListRoomsOrderedScreen = function ({navigation}) {
     }
     return rating;
   };
+  const getCreateDate = dateIn => {
+    const result = new Date(dateIn);
+    return result.getDate() + '/' + result.getMonth();
+  };
   // MODIFY cái cây màu đen nằm giữa các ITEMS
   const ItemSeparatorView = () => {
     return <View style={ListRoomsOrderedStyle.ItemSeparatorView} />;
   };
-
   return (
     <View>
-      {/* MODIFY HEADER */}
-      <View style={ListRoomsOrderedStyle.header}>
-        <View style={ListRoomsOrderedStyle.headerUserCicle}>
-          <View>
-            <Image
-              style={ListRoomsOrderedStyle.userImg}
-              source={require('../src/images/list.png')}
-            />
-          </View>
-        </View>
-      </View>
       <FlatList
         style={{marginTop: 5}}
         data={data}
@@ -124,27 +115,50 @@ const ListRoomsOrderedScreen = function ({navigation}) {
               key={index}
               style={ListRoomsOrderedStyle.listItemStyle}>
               <View style={ListRoomsOrderedStyle.itemBody}>
-                <Image
-                  style={ListRoomsOrderedStyle.itemBoDyImg}
-                  source={require('../src/images/detail_hotel_2.jpeg')}
-                />
                 <View style={ListRoomsOrderedStyle.itemBoDyText}>
                   <Text
                     style={ListRoomsOrderedStyle.itemFont_HotelName}
                     numberOfLines={1}>
-                    Hotel Number: {item.hotel_id}
-                  </Text>
-                  <Text
-                    style={ListRoomsOrderedStyle.itemFont_HotelStar}
-                    numberOfLines={1}>
-                    {printRating(item.id)}
+                    Khách sạn: {item.hotel_id}
                   </Text>
                   <Text
                     style={ListRoomsOrderedStyle.itemFont}
                     numberOfLines={1}>
-                    Total: {item.price} Đ
+                    Phòng số: {item.room_id}
                   </Text>
-                  <Text numberOfLines={1}>Status: {item.status}</Text>
+                  <Text
+                    style={[ListRoomsOrderedStyle.itemFont]}
+                    numberOfLines={2}>
+                    {/* {printRating(item.id)} */}
+                    Ngày Đặt Phòng:{' '}
+                    <Text style={{color: '#7523b8'}}>
+                      {' '}
+                      {getCreateDate(item.p_date)}
+                    </Text>
+                  </Text>
+                  <Text
+                    style={[ListRoomsOrderedStyle.itemFont]}
+                    numberOfLines={1}>
+                    Chi phí:<Text style={{color: 'green'}}> {item.price}Đ</Text>
+                  </Text>
+                  <Text
+                    style={[ListRoomsOrderedStyle.itemFont]}
+                    numberOfLines={1}>
+                    Trạng thái đơn:{' '}
+                    <Text
+                      style={
+                        item.status === 'Đang đặt cọc'
+                          ? {color: '#b8ae23'}
+                          : item.status === 'Chưa xác nhận'
+                          ? {color: 'red'}
+                          : item.status === 'Đặt cọc'
+                          ? {color: 'green'}
+                          : {color: 'green'}
+                      }>
+                      {' '}
+                      {item.status}
+                    </Text>
+                  </Text>
                 </View>
               </View>
               <ItemSeparatorView />
@@ -199,31 +213,6 @@ const ListRoomsOrderedStyle = StyleSheet.create({
     fontSize: 20,
     marginLeft: 20,
   },
-  headerUserCicle: {
-    display: 'flex',
-    marginHorizontal: '33%',
-    marginBottom: 10,
-    height: 100,
-    width: 100,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-  },
-  userImg: {
-    maxWidth: 120,
-    maxHeight: 120,
-    borderRadius: 60,
-    resizeMode: 'cover',
-  },
-  headerListItemStyle: {
-    backgroundColor: '#cfcfcf',
-    borderWidth: 2,
-    borderColor: '#f96700',
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 20,
-  },
   listItemStyle: {
     borderRadius: 10,
   },
@@ -235,13 +224,11 @@ const ListRoomsOrderedStyle = StyleSheet.create({
   itemBoDyText: {
     flex: 2,
     flexDirection: 'column',
-    // marginLeft: 'auto',
-    // marginRight: 'auto',
-    // marginBottom: 0,
     marginTop: '5%',
     justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
+    // alignItems: 'center',
+    paddingHorizontal: 20,
+    // alignContent: 'center',
   },
   itemBoDyImg: {
     flex: 1,
@@ -282,12 +269,9 @@ const ListRoomsOrderedStyle = StyleSheet.create({
     color: '#fff',
   },
   itemFont: {
-    padding: 10,
+    fontWeight: 'bold',
+    paddingVertical: 5,
     fontSize: 20,
-  },
-  toPropertiesItemBtn: {
-    height: 35,
-    borderRadius: 50,
   },
 });
 
