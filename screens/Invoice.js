@@ -26,9 +26,12 @@ import { isJwtExpired } from 'jwt-check-expiration';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userApi from "../api/userApi";
 import jwtDecode from "jwt-decode";
+import { useToast } from "react-native-toast-notifications";
 import { setCurrentUser, setToken } from "../action_creators/user";
 
-const Invoice = (props) => {
+
+const Invoice = ({route, navigation}) => {
+  const toast = useToast();
   const [data, setData] = useState({
     roomName: "",
     beds: 0,
@@ -37,7 +40,7 @@ const Invoice = (props) => {
   })
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
-  let sumPriceRoom = (props.route.params.sum) - (props.route.params.taxes);
+  let sumPriceRoom = (route.params.sum) - (route.params.taxes);
   const { currentUser, token } = useSelector(state => state.user);
   const dispatch = useDispatch()
   // date state
@@ -80,8 +83,8 @@ const Invoice = (props) => {
 
   const getRoomById = async () => {
     try {
-      if (props.route.params.id) {
-        const res = await hotelApi.getRoomById(props.route.params.id);
+      if (route.params.id) {
+        const res = await hotelApi.getRoomById(route.params.id);
         !res.data.error
           ? setData({
             roomName: res.data.data.room_name,
@@ -107,7 +110,7 @@ const Invoice = (props) => {
         </RowView>
         <RowView style={{ ...styles.space, paddingTop: 15, paddingBottom: 15 }}>
           <Text>Phí khách sạn</Text>
-          <Text>{formatCurrency(props.route.params.taxes, "VND")}</Text>
+          <Text>{formatCurrency(route.params.taxes, "VND")}</Text>
         </RowView>
       </DetailPrice>
     );
@@ -135,17 +138,24 @@ const Invoice = (props) => {
       if (token && isJwtExpired(token) == false) {
         const jsonData = {
           token: token,
-          price: props.route.params.sum,
-          hotelId: props.route.params.hotelId,
+          price: route.params.sum,
+          hotelId: route.params.hotelId,
           rDate: `${date.receivedDate.replace(/\//g, '-')}T12:00:00`,
           pDate: `${date.payDate.replace(/\//g, '-')}T12:00:00`,
-          roomId: props.route.params.id,
+          roomId: route.params.id,
           roomQty: data.status,
-          status: "Chưa xác nhận"
+          status: 0
         }
         const res = await invoiceApi.create(jsonData)
         if (res.data.data) {
-          ToastAndroid.show("Đặt phòng thành công", ToastAndroid.SHORT)
+          navigation.navigate('My Ordered Room');
+          toast.show("Đặt phòng thành công", {
+            type: "success",
+            placement: "top",
+            duration: 5000,
+            offset: 50,
+            animationType: "slide-in",
+          })
         }
       } else if (token != null && isJwtExpired(token) == true) {
         refresh()
@@ -154,7 +164,6 @@ const Invoice = (props) => {
       console.log(error);
     }
   };
-
   return (
     <ScrollView style={{ backgroundColor: "rgba(0,0,0,.05)" }}>
       <MainBackground>
@@ -168,7 +177,7 @@ const Invoice = (props) => {
                 numberOfLines={1}
                 style={styles.textCap}
               >
-                {props.route.params.hotelName}
+                {route.params.hotelName}
               </Text>
             </RowView>
             <View style={styles.dateBox}>
@@ -213,8 +222,8 @@ const Invoice = (props) => {
                 1 giường (x{data.beds})
               </Text>
               <Text style={styles.roomInfo}>
-                {/* {props.route.params.data.people +
-                  props.route.params.data.children}{" "} */}
+                {/* {route.params.data.people +
+                  route.params.data.children}{" "} */}
                 {data.people}
                 khách/phòng
               </Text>
@@ -266,7 +275,7 @@ const Invoice = (props) => {
               <Text style={styles.sumPriceString}>{SUM_PRICE_SRT}</Text>
             </RowView>
             <Text style={styles.priceStyle}>
-              {formatCurrency(props.route.params.sum, "VND")}
+              {formatCurrency(route.params.sum, "VND")}
             </Text>
           </RowView>
         </TouchableNativeFeedback>

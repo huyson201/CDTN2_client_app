@@ -8,22 +8,23 @@ let now = new Date();
 let nowDate = getDateFormatString(now)
 let tomorrow = getTomorrow(nowDate);
 let initialState = {
-    address: "ninh hai, ninh thuan",
-    date: {
-        numDate: 1,
-        receivedDate: nowDate,
-        payDate: tomorrow,
-    },
-    personsAndRooms: {
-        rooms: 1,
-        adults: 1,
-        children: 0
-    },
-    filter: {
-        maxPrice: "10000000",
-        minPrice: "0",
-        rankStars: []
-    }
+  address: "ninh hai, ninh thuan",
+  date: {
+    numDate: 1,
+    receivedDate: nowDate,
+    payDate: tomorrow,
+    dateString: convertDateToStringForForRoom(nowDate, tomorrow)
+  },
+  personsAndRooms: {
+    rooms: 1,
+    adults: 1,
+    children: 0
+  },
+  filter: {
+    maxPrice: "10000000",
+    minPrice: "0",
+    rankStars: []
+  }
 }
 const searchReducer = function (state = initialState, action) {
   switch (action.type) {

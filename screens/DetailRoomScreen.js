@@ -22,7 +22,6 @@ const DetailRoomScreen = ({ navigation, route }) => {
   const [dataDetailRoom, setDataDetailRoom] = useState({
     roomName: "",
     people: 0,
-    // children: 0,
     price: 0,
     desc: "",
     beds: 0,
@@ -50,7 +49,7 @@ const DetailRoomScreen = ({ navigation, route }) => {
             beds: res.data.data.room_beds,
             area: res.data.data.room_area,
             status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
-            images: res.data.data.room_imgs.split(','),
+            images: res.data.data.room_imgs?res.data.data.room_imgs.split(','):[],
             sale: route.params.sale,
             services: res.data.data.room_services ? res.data.data.room_services : ["Khong co dich vu uu dai nao khac"]
           })

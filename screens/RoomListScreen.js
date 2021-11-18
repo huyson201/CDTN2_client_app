@@ -15,7 +15,6 @@ const RoomListScreen = function ({ navigation, route }) {
     price: '',
     people: 0,
     children: 0,
-    status: 0,
     sale: 0,
     images: [],
   };
@@ -49,7 +48,6 @@ const RoomListScreen = function ({ navigation, route }) {
   useEffect(() => {
     getAllRoomsByIdHotel(route.params.hotelId);
   }, []);
-
   const [iconBookmarkState, setIconBookmarkState] = useState({ check: false });
   const [iconHeartState, setIconHeartState] = useState({ check: false });
 

@@ -2,7 +2,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import TaskHome from './src/components/TaskScreen/TaskHome';
-import DetailInvoice from './src/components/invoices/DetailInvoice';
 import { View } from 'react-native';
 import { isJwtExpired } from 'jwt-check-expiration';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +14,10 @@ import SplashScreen from './screens/SplashScreen';
 const Stack = createNativeStackNavigator();
 import userApi from './api/userApi';
 import NetInfo from "@react-native-community/netinfo";
+import { ToastProvider } from 'react-native-toast-notifications'
+import { BLUE2 } from './src/values/color';
+import SuccessIcon from 'react-native-vector-icons/FontAwesome'
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -78,7 +81,7 @@ const App = () => {
     };
     getData();
   }, [token]);
-  
+
   //set loading
   useEffect(() => {
     setTimeout(() => {
@@ -87,21 +90,29 @@ const App = () => {
   }, []);
   return (
     <View style={{ flex: 1 }}>
-      <NavigationContainer>
-        {firstLoading ? (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="SplashScreen"
-              component={SplashScreen}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        ) : rememberMe === true && currentUser !== null ? (
-          <TaskHome />
-        ) : (
-          <TaskLogin />
-        )}
-      </NavigationContainer>
+      <ToastProvider
+        // successColor={BLUE2}
+        successIcon={<SuccessIcon />}
+        textStyle={{ fontSize: 20,paddingHorizontal:10,paddingVertical:7 }}
+        // dangerIcon={<DangerIcon />}
+        // warningIcon={<WarningIcon />}
+      >
+        <NavigationContainer>
+          {firstLoading ? (
+            <Stack.Navigator>
+              <Stack.Screen
+                name="SplashScreen"
+                component={SplashScreen}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          ) : rememberMe === true && currentUser !== null ? (
+            <TaskHome />
+          ) : (
+            <TaskLogin />
+          )}
+        </NavigationContainer>
+      </ToastProvider>
     </View>
   );
 };

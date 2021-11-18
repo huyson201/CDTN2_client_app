@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, StyleSheet, FlatList, Image } from "react-native";
 import styled from "styled-components";
-import { DARK_GRAY, WHITE, ORANGE, GOLD_COLOR } from "../src/values/color";
-import { VND, UNIT, HOTEL_TEXT } from "../src/values/constants";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { db } from "../cf_firebase/ConfigFireBase";
-import { ref, onValue } from "firebase/database";
+import { DARK_GRAY, WHITE, GOLD_COLOR } from "../src/values/color";
 import { xoaDau } from "../src/utilFunction";
 import { useSelector } from "react-redux";
 import hotelApi from "../api/hotelApi";
@@ -14,19 +10,17 @@ import Hotel from "../src/components/hotel/Hotel"
 const HotelList = function ({ navigation }) {
   const [listData, setListData] = useState([]);
   const searchData = useSelector((state) => state.search);
-  const starCountRef = ref(db, "hotels");
 
   // get data from firebase
   useEffect(() => {
     setListData([]);
-    // let data = [];
     let searchAddress = removePrefixAddress(searchData.address).trim();
     let fromDate = searchData.date.receivedDate.replace(/\//g, '-')
     let toDate = searchData.date.payDate.replace(/\//g, '-')
     let arrStar = searchData.filter.rankStars;
     let maxPrice = searchData.filter.maxPrice;
     let minPrice = searchData.filter.minPrice;
-    let { children, adults, rooms } = searchData.personsAndRooms
+    let {adults, rooms } = searchData.personsAndRooms
 
     let query = `filter?address=${searchAddress}&from=${fromDate}T12:00:00&to=${toDate}T12:00:00&room=${rooms}&adult=${adults}`;
     if (arrStar.length > 0) query += `&star=${arrStar}`
@@ -46,97 +40,7 @@ const HotelList = function ({ navigation }) {
     }
     filterData()
   }, []);
-  console.log(listData)
 
-  //   render item in flat list
-  const renderItem = function ({ item, index }) {
-    if (listData.length === 0) return
-    let itemSale = null;
-    let prices = item.rooms;
-
-    if (item.hotel_sale && item.hotel_sale !== "") {
-      itemSale = (
-        <Text style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }} key={item.priceSale}>
-          {" "}
-          {VND} {getMinPrice(prices) - getMinPrice(prices) * item.sale}
-        </Text>
-      );
-    }
-
-    return (
-      <ItemContainer
-        activeOpacity={0.9}
-        key={item.id}
-        onPress={() => {
-          navigation.navigate("DetailHotelScreen", {
-            id: 1,
-            hotelId: item.hotel,
-            price: getMinPrice(prices),
-          });
-        }}
-      >
-        <ViewRow>
-          {/* Hotel image */}
-          <Image
-            style={styles.hotelImage}
-            source={{ uri: item.hotel_img }}
-          />
-          <ItemContent>
-            <Column >
-              <View>
-                {/* Hotel name */}
-                <Text style={styles.headText}>{item.hotel_name}</Text>
-                {/* Star */}
-                <ViewRow>
-                  <Icon name="star" size={15} color={GOLD_COLOR} />
-                  <Icon name="star" size={15} color={GOLD_COLOR} />
-                  <Icon name="star" size={15} />
-                  <Icon name="star" size={15} />
-                </ViewRow>
-                {/* Address */}
-                <ViewRow>
-                  <Icon
-                    name="map-marker"
-                    size={12}
-                    color={DARK_GRAY}
-                    style={{ marginTop: 8 }}
-                  />
-                  <Text style={styles.addressText}>{item.hotel_address}</Text>
-                </ViewRow>
-                {/*  hotel desc*/}
-                <Text numberOfLines={3} ellipsizeMode='tail' style={styles.hotelDesc}>
-                  {item.hotel_desc}
-                </Text>
-              </View>
-              <View>
-                {/* Hotel price */}
-                <Text style={styles.priceText}>
-                  {itemSale != null ? `${VND} ${getMinPrice(prices)}` : ``}
-                </Text>
-
-                {/* Hotel price sale */}
-                <ViewRow>
-                  {itemSale != null ? (
-                    itemSale
-                  ) : (
-                    <Text
-                      style={{ fontSize: 13, fontWeight: "bold", color: ORANGE }}
-                    >
-                      {" "}
-                      {VND} {getMinPrice(prices)}
-                    </Text>
-                  )}
-                  <Text style={styles.contentText}>{UNIT}</Text>
-                </ViewRow>
-                <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
-              </View>
-            </Column>
-          </ItemContent>
-        </ViewRow>
-      </ItemContainer>
-    );
-  };
-  console.log(listData, "list data");
   return (
     <View>
       <FlatList
@@ -163,6 +67,7 @@ const HotelList = function ({ navigation }) {
 
 function removePrefixAddress(address) {
   let str = xoaDau(address)
+  str = str.replace('xa', '');
   str = str.replace('huyen', '');
   str = str.replace('tinh', '');
   str = str.replace('thanh pho', '');
