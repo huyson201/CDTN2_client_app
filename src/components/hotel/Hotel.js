@@ -14,15 +14,20 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
     image: null,
     address: '',
     phone: '',
-    star: 1,
+    star: [],
   });
   let itemSale = null;
   const [prices, setPrices] = useState([]);
-  // let prices =[];
+
   const getHotelById = async hotelId => {
     try {
       const res = await hotelApi.getHotelById(hotelId);
       if (!res.data.error) {
+        let number = [];
+        number.length = res.data.data.hotel_star;
+        for (let i = 0; i < number.length; i++) {
+          number[i] = 'star';
+        }
         setHotel({
           hotelName: res.data.data.hotel_name,
           sale: 0.5,
@@ -30,7 +35,7 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
           image: res.data.data.hotel_img,
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
-          star: res.data.data.hotel_star,
+          star: number,
         });
       } else {
         console.log(res.data.error);
@@ -52,7 +57,6 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
             setPrices([...temp]);
           })
           : setPrices([0]);
-        // console.log(temp);
       } else {
         console.log(res.data.error);
       }
@@ -78,7 +82,6 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
     );
   }
   return (
-    
     <ItemContainer
       activeOpacity={0.9}
       onPress={() => {
@@ -101,10 +104,11 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
           <Text style={styles.headText}>{hotel.hotelName}</Text>
           {/* Star */}
           <ViewRow>
-            <Icon name="star" size={15} color={GOLD_COLOR} />
-            <Icon name="star" size={15} color={GOLD_COLOR} />
-            <Icon name="star" size={15} />
-            <Icon name="star" size={15} />
+            {hotel.star.map((e, i) => {
+              return (
+                <Icon key={i} name={e} size={15} color={GOLD_COLOR} />
+              );
+            })}
           </ViewRow>
           {/* Address */}
           <ViewRow>
@@ -151,7 +155,6 @@ function getMinPrice(prices) {
       }
     });
   }
-
   return min;
 }
 
@@ -167,7 +170,6 @@ const ItemContent = styled.View`
 const ViewRow = styled.View`
   flex-direction: row;
 `;
-
 const styles = StyleSheet.create({
   hotelImage: {
     width: 120,

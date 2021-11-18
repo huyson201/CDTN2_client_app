@@ -50,7 +50,7 @@ const Room = function ({
           price: res.data.data.room_price,
           people: res.data.data.room_num_people,
           status: res.data.data.room_quantity ? res.data.data.room_quantity : 0,
-          images: res.data.data.room_imgs.split(','),
+          images: res.data.data.room_imgs ? res.data.data.room_imgs.split(',') : [],
         })
         : setRoomData([{ message: 'Khong co du lieu phong' }]);
     } else {
@@ -91,9 +91,9 @@ const Room = function ({
             imageLoadingColor={'#fff'}
           />
 
+          <Text style={styles.textName} numberOfLines={1}>{roomData.roomName}</Text>
           <ViewRow>
             <View>
-              <Text style={styles.textName}>{roomData.roomName}</Text>
               <Text style={styles.textContent}>
                 <Icon1 name="money" size={14} color="#05375a">
                   {' '}
@@ -156,6 +156,8 @@ const Room = function ({
               </TouchableOpacity>
             </View>
           </ViewRow>
+
+
         </>
         : <Text></Text>}
 
@@ -198,6 +200,7 @@ const styles = StyleSheet.create({
   textName: {
     fontSize: 15,
     fontWeight: 'bold',
+    paddingLeft:10
   },
   image: {
     flex: 1,

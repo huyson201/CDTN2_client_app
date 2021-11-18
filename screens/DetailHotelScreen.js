@@ -38,11 +38,12 @@ const DetailHotelScreen = ({ navigation, route }) => {
     sale: '',
     images: [],
   });
+  const [services, setServices] = useState(null)
 
   const getHotelById = async hotelId => {
     try {
       const res = await hotelApi.getHotelById(hotelId);
-      if (!res.data.error) {
+      if (res.data.data) {
         let number = [];
         number.length = res.data.data.hotel_star;
         for (let i = 0; i < number.length; i++) {
@@ -52,24 +53,32 @@ const DetailHotelScreen = ({ navigation, route }) => {
           name: res.data.data.hotel_name,
           price: route.params.price,
           sale: 0.5,
-          images: res.data.data.hotel_slide.split(','),
+          images: res.data.data.hotel_slide?res.data.data.hotel_slide.split(','):[],
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
           desc: res.data.data.hotel_desc,
           star: number,
         });
-      } else {
-        console.log(res.data.error);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(dataHotel.images);
+  const getServiceById = async hotelId => {
+    try {
+      const res = await hotelApi.getServiceById(hotelId)
+      if (res.data.data) {
+        setServices(res.data.data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     getHotelById(route.params.hotelId);
+    getServiceById(route.params.hotelId)
   }, []);
 
   return (
@@ -151,7 +160,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
         {/* Comment */}
         <Comment />
         {/* Tiện nghi chung */}
-        <Utilities />
+        <Utilities services={services} />
         {/* Giờ nhận phòng/trả phòng */}
         <View style={styles.borderBottom}>
           <Text style={styles.headText}>Giờ nhận phòng/trả phòng</Text>
@@ -205,7 +214,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
             style={styles.button}
             onPress={() => {
               navigation.navigate('RoomListScreen', {
-                id: 'h1',
+                id: route.params.hotelId,
                 hotelId: route.params.hotelId,
                 hotelName: dataHotel.name,
                 hotelAddress: dataHotel.address,
