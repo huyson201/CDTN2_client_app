@@ -16,7 +16,8 @@ for (let i = 0; i < 3; i++) {
         userName: USERNAME,
     });
 }
-const Comment = function () {
+
+const Comment = function ({ navigation, hotelId }) {
     const renderItem = function ({ item }) {
         return (
             <ItemContainer activeOpacity={0.5} underlayColor="#d3d3d3">
@@ -32,6 +33,11 @@ const Comment = function () {
             </ItemContainer>
         );
     };
+    const handleClickShowAll = () => {
+        navigation.navigate('ListRatingScreen', {
+            hotelId: hotelId
+        })
+    }
     return (
         <View>
             <View style={styles.hisHeader}>
@@ -48,7 +54,7 @@ const Comment = function () {
             />
 
             <View style={styles.borderBottom}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleClickShowAll}>
                     <Text style={{ fontSize: 12, color: BLUE2, fontWeight: 'bold' }}>XEM TOÀN BỘ ĐÁNH GIÁ</Text>
                 </TouchableOpacity>
             </View>

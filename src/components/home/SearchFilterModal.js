@@ -8,7 +8,6 @@ import { BLUE1, DARK_GRAY, GOLD_COLOR } from "../../values/color";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Button } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux"
-import NumberFormat from "react-number-format";
 import { formatCurrency } from "../../utilFunction";
 import { setFilter } from "../../../action_creators/search";
 const maxPrice = 10000000;

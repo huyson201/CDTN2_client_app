@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import styled from 'styled-components';
 import { DEVICE_WIDTH } from '../src/values/size';
@@ -26,8 +27,13 @@ import Comment from '../src/components/hotel/Comment';
 import Utilities from '../src/components/hotel/Utilities';
 import { SliderBox } from 'react-native-image-slider-box';
 import hotelApi from '../api/hotelApi';
+import ratingApi from '../api/rateApi';
+import { useSelector } from 'react-redux';
+import RatingItem from '../src/components/rate/RatingItem';
+
 
 const DetailHotelScreen = ({ navigation, route }) => {
+  const { user_uuid } = useSelector((state) => state.user.currentUser)
   const [dataHotel, setDataHotel] = useState({
     name: '',
     address: '',
@@ -38,6 +44,8 @@ const DetailHotelScreen = ({ navigation, route }) => {
     sale: '',
     images: [],
   });
+
+  const [userRate, setUserRate] = useState()
   const [services, setServices] = useState(null)
 
   const getHotelById = async hotelId => {
@@ -53,7 +61,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
           name: res.data.data.hotel_name,
           price: route.params.price,
           sale: 0.5,
-          images: res.data.data.hotel_slide?res.data.data.hotel_slide.split(','):[],
+          images: res.data.data.hotel_slide ? res.data.data.hotel_slide.split(',') : [],
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
           desc: res.data.data.hotel_desc,
@@ -76,11 +84,62 @@ const DetailHotelScreen = ({ navigation, route }) => {
     }
   }
 
+  const getRatingOfUser = async () => {
+    if (user_uuid) {
+      try {
+        const res = await ratingApi.getByUserAndHotel(user_uuid, route.params.hotelId)
+        if (res.data.data) {
+          setUserRate(res.data.data.rows[0])
+          // console.log(res.data.data)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
   useEffect(() => {
     getHotelById(route.params.hotelId);
     getServiceById(route.params.hotelId)
   }, []);
 
+  useEffect(() => {
+    // getRatingOfUser()
+    const unsubscribe = navigation.addListener('focus', getRatingOfUser);
+    return unsubscribe
+  }, [navigation])
+
+  const handleRatingClick = () => {
+    navigation.navigate('RatingScreen', {
+      hotelId: route.params.hotelId,
+      hotelName: dataHotel.name
+    })
+  }
+  const handleUpdateRatingClick = () => {
+    navigation.navigate('RatingScreen', {
+      hotelId: route.params.hotelId,
+      hotelName: dataHotel.name,
+      rate: userRate
+    })
+  }
+
+  const userRatingView = useMemo(() => {
+    if (!userRate || typeof userRate !== 'object') return (
+      <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+        <Text style={styles.ratingTitle}>Xếp hạng khách sạn này</Text>
+        <Text style={styles.ratingHint}>Cho nguời khác biết suy nghĩ của bạn</Text>
+        <TouchableOpacity onPress={handleRatingClick}><Text style={styles.ratingLink}>Viết bài viết đánh giá</Text></TouchableOpacity>
+      </View>
+    )
+
+    return (
+      <View>
+        <Text style={styles.ratingTitle}>Đánh giá của bạn</Text>
+        <RatingItem rateValue={userRate} />
+        <TouchableOpacity onPress={handleUpdateRatingClick}><Text style={styles.ratingLink}>Chỉnh sữa bài đánh giá của bạn</Text></TouchableOpacity>
+      </View>
+    )
+  }, [userRate])
   return (
     <View>
       <ScrollView style={{ marginBottom: 80 }}>
@@ -157,8 +216,13 @@ const DetailHotelScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </ViewRow1>
         </View>
+        {/* rating */}
+        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+          {userRatingView}
+        </View>
+
         {/* Comment */}
-        <Comment />
+        <Comment navigation={navigation} />
         {/* Tiện nghi chung */}
         <Utilities services={services} />
         {/* Giờ nhận phòng/trả phòng */}
@@ -244,6 +308,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     marginTop: 8,
+  },
+  ratingTitle: {
+    fontSize: 18
+  },
+  ratingHint: {
+    fontSize: 13,
+    color: 'rgba(0,0,0,.6)'
+  },
+  ratingLink: {
+    color: BLUE1,
+    fontWeight: 'bold',
+    marginTop: 12
   },
   borderBox: {
     borderWidth: 1,
