@@ -19,6 +19,12 @@ const hotelApi = {
   getServiceById: (id) => {
     const url = `/hotels/${id}/services`
     return axiosClient.get(url)
+  },
+  getRates: (id, params = {}) => {
+    const url = `/hotels/${id}/rates`
+    return axiosClient.get(url, {
+      params: params
+    })
   }
 };
 export default hotelApi;
