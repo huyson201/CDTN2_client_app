@@ -6,17 +6,14 @@ import { getDateFormatString } from '../../utilFunction'
 
 
 const RatingItem = ({ rateValue }) => {
-    const { currentUser } = useSelector((state) => state.user)
+    const { currentUser } = rateValue.user_info ? rateValue.user_info : useSelector((state) => state.user)
     const [data, setData] = useState({ ...rateValue })
 
     useEffect(() => {
         setData({ ...rateValue })
-        console.log('rate item ---------------------')
-        console.log(rateValue)
     }, [rateValue])
 
     const ratingBar = useMemo(() => {
-        console.log('user memo rating bar')
         return (<Rating size={12} defaultValue={data.rate_star} readOnly key={data.rate_star} />)
     }, [data])
 
@@ -26,22 +23,21 @@ const RatingItem = ({ rateValue }) => {
             <View style={styles.comment}><Text>{data.rate_comment}</Text></View>
         )
     }, [data])
+
+    const userImg = useMemo(() => {
+        return (currentUser && currentUser.user_img) ? currentUser.user_img : `https://ui-avatars.com/api/?name=${(currentUser && currentUser.user_name) ? currentUser.user_name : 'NaN'}&size=256`
+    }, [currentUser])
+    console.log(userImg)
     return (
         <View style={{ marginTop: 12 }}>
             <View style={styles.col} >
                 <View>
                     <Image
                         style={styles.imgStyle}
-                        source={
-                            currentUser.user_img !== null
-                                ? { uri: currentUser.user_img }
-                                : {
-                                    uri: `https://ui-avatars.com/api/?name=${currentUser.user_name}&size=256`,
-                                }
-                        }
+                        source={{ uri: userImg }}
                     />
                 </View>
-                <Text style={styles.textUserName}>{currentUser.user_name}</Text>
+                <Text style={styles.textUserName}>{(currentUser && currentUser.user_name) ? currentUser.user_name : 'NaN'}</Text>
             </View>
             <View style={{ ...styles.col, ...styles.rate }}>
                 <View style={{ width: 100 }}>

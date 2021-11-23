@@ -125,7 +125,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
 
   const userRatingView = useMemo(() => {
     if (!userRate || typeof userRate !== 'object') return (
-      <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+      <View style={{ paddingTop: 10 }}>
         <Text style={styles.ratingTitle}>Xếp hạng khách sạn này</Text>
         <Text style={styles.ratingHint}>Cho nguời khác biết suy nghĩ của bạn</Text>
         <TouchableOpacity onPress={handleRatingClick}><Text style={styles.ratingLink}>Viết bài viết đánh giá</Text></TouchableOpacity>
@@ -222,7 +222,7 @@ const DetailHotelScreen = ({ navigation, route }) => {
         </View>
 
         {/* Comment */}
-        <Comment navigation={navigation} />
+        <Comment navigation={navigation} hotelName={dataHotel.name} hotelId={route.params.hotelId} />
         {/* Tiện nghi chung */}
         <Utilities services={services} />
         {/* Giờ nhận phòng/trả phòng */}
