@@ -25,9 +25,9 @@ const Comment = function ({ navigation, hotelId, hotelName, }) {
 
     const renderItem = function ({ item }) {
         let userInfo = item.user_info
+        console.log(userInfo);
         let userName = userInfo !== null ? userInfo.user_name : 'NaN'
         // let userImage = userInfo !== null && userInfo.user_img ? userInfo.user_img : `https://ui-avatars.com/api/?name=${userName}&size=256`
-        console.log(userInfo)
         return (
             <ItemContainer>
                 <ItemContent>
