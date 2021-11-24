@@ -10,6 +10,8 @@ import HotelList from '../../../screens/HotelList';
 import Invoice from '../../../screens/Invoice';
 import { BLUE1 } from '../../values/color';
 import TabBar from '../home/TabBar';
+import RatingScreen from '../../../screens/RatingScreen'
+import ListRatingScreen from '../../../screens/ListRatingScreen'
 const Stack = createNativeStackNavigator();
 
 const TaskHome = () => {
@@ -30,6 +32,7 @@ const TaskHome = () => {
           headerStyle: { backgroundColor: BLUE1 },
         }}
       />
+
       <Stack.Screen
         name="DetailHotelScreen"
         component={DetailHotelScreen}
@@ -41,6 +44,31 @@ const TaskHome = () => {
           headerShadowVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="RatingScreen"
+        component={RatingScreen}
+        options={{
+          headerShown: false,
+          headerTransparent: true,
+          headerTitle: '',
+          headerTintColor: '#fff',
+          headerShadowVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="ListRatingScreen"
+        component={ListRatingScreen}
+        options={{
+          headerShown: false,
+          headerTransparent: true,
+          headerTitle: '',
+          headerTintColor: '#fff',
+          headerShadowVisible: false,
+        }}
+      />
+
       <Stack.Screen
         name="RoomListScreen"
         component={RoomListScreen}
