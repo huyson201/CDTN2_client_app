@@ -7,6 +7,7 @@ import { setFile, setCheckPickerImage } from "../../../action_creators/user";
 
 const DialogEditImage = () => {
     const { checkPickerImage } = useSelector(state => state.user)
+    // console.log(checkPickerImage);
     const dispatch = useDispatch()
     const options = {
         title: 'Select Avatar',
@@ -89,7 +90,6 @@ const styles = StyleSheet.create({
     container: {
         position: "relative",
         width: '100%',
-
     },
     btn: {
         width: 300,

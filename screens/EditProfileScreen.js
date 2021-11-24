@@ -55,6 +55,7 @@ const EditProfileScreen = function ({ navigation }) {
   const uploadImage = () => {
     dispatch(setCheckPickerImage(true))
   }
+
   const renderFileData = () => {
     if (file) {
       return <Image style={EditProfileStyles.userImg} source={{ uri: file.uri }}
@@ -74,10 +75,12 @@ const EditProfileScreen = function ({ navigation }) {
       <ScrollView>
         {/* HEADER */}
         <View style={EditProfileStyles.header}>
-          <View style={EditProfileStyles.headerUserCicle}>
-            {renderFileData()}
-            <Icon onPress={uploadImage} name="camera" style={{ fontSize: 25, position: 'absolute', right: -12, bottom: -12, color: { BLUE2 } }} />
-          </View>
+          <TouchableOpacity activeOpacity={0.9} onPress={uploadImage}>
+            <View style={EditProfileStyles.headerUserCicle}>
+              {renderFileData()}
+              <Icon name="camera" style={{ fontSize: 25, position: 'absolute', right: -12, bottom: -12, color: { BLUE2 }, zIndex: 999 }} />
+            </View>
+          </TouchableOpacity>
         </View>
         <Container>
           {/* EDIT BASIC INFORMATION */}
@@ -111,7 +114,7 @@ const EditProfileScreen = function ({ navigation }) {
             ></TextInput>
           </View>
           <View style={EditProfileStyles.btn}>
-            <Button onPress={handlePressEditUserProfile} title="EDIT" buttonStyle={EditProfileStyles.okBtn}></Button>
+            <Button onPress={handlePressEditUserProfile} title="UPDATE" buttonStyle={EditProfileStyles.okBtn}></Button>
             <Button
               title="Cancel"
               onPress={handlePressUserProfile}
