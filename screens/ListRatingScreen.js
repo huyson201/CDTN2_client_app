@@ -53,7 +53,7 @@ const ListRatingScreen = ({ route, navigation }) => {
                 <FlatList
                     data={listRates}
                     renderItem={({ item }) => {
-                        console.log(item.user_info)
+                        // console.log(item.user_info)
                         return (<View style={{ marginTop: 8 }}>
                             <RatingItem rateValue={item} />
                             <View style={styles.separator} />
