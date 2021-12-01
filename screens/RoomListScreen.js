@@ -143,17 +143,6 @@ const RoomListScreen = function ({navigation, route}) {
   );
 };
 
-function getOrderd(arr, room_id, itemData) {
-  arr.map(el => {
-    if (el.room_id === room_id) {
-      itemData = {
-        room_id: room_id,
-        ordered: el.ordered,
-      };
-    }
-  });
-  return itemData;
-}
 
 const ViewRow = styled.View`
   width: 100%;

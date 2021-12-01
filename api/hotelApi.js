@@ -26,9 +26,9 @@ const hotelApi = {
       params: params,
     });
   },
-  getOrderedByRoomId: id => {
+  getOrderedByRoomId: (id, r_date, p_date) => {
     const url = `/rooms/ordered/${id}`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {from: r_date, to: p_date});
   },
 };
 export default hotelApi;
