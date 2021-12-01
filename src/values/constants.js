@@ -77,7 +77,7 @@ export const PHONE_INVALID = "Số điện thoại không hợp lệ"
 export const WAIT_COMFIRM = 'Chưa xác nhận';
 export const NOT_DEPOSIT = 'Chưa đặt cọc';
 export const DEPOSITED = 'Chưa thanh toán';
-export const RECEIVED = 'Đã nhận phòng';
+export const RECEIVED = 'Đã thanh toán';
 export const CANCELED = 'Đã hủy';
 export const DONE = 'Hoàn thành';
 

@@ -18,7 +18,7 @@ let initialState = {
   personsAndRooms: {
     rooms: 1,
     adults: 1,
-    children: 0
+    // children: 0
   },
   filter: {
     maxPrice: "10000000",

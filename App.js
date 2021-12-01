@@ -92,7 +92,7 @@ const App = () => {
     <View style={{ flex: 1 }}>
       <ToastProvider
         // successColor={BLUE2}
-        successIcon={<SuccessIcon />}
+        // successIcon={<SuccessIcon />}
         textStyle={{ fontSize: 20,paddingHorizontal:10,paddingVertical:7 }}
         // dangerIcon={<DangerIcon />}
         // warningIcon={<WarningIcon />}

@@ -1,30 +1,34 @@
-import axiosClient from "./axiosClient";
+import axiosClient from './axiosClient';
 const hotelApi = {
-  getAll: (query) => {
+  getAll: query => {
     const url = `/${query}`;
     return axiosClient.get(url);
   },
-  getHotelById: (id) => {
+  getHotelById: id => {
     const url = `/hotels/${id}`;
     return axiosClient.get(url);
   },
-  getAllRoomsByIdHotel: (idHotel) => {
+  getAllRoomsByIdHotel: idHotel => {
     const url = `/hotels/${idHotel}/rooms`;
     return axiosClient.get(url);
   },
-  getRoomById: (id) => {
+  getRoomById: id => {
     const url = `/rooms/${id}`;
     return axiosClient.get(url);
   },
-  getServiceById: (id) => {
-    const url = `/hotels/${id}/services`
-    return axiosClient.get(url)
+  getServiceById: id => {
+    const url = `/hotels/${id}/services`;
+    return axiosClient.get(url);
   },
   getRates: (id, params = {}) => {
-    const url = `/hotels/${id}/rates`
+    const url = `/hotels/${id}/rates`;
     return axiosClient.get(url, {
-      params: params
-    })
-  }
+      params: params,
+    });
+  },
+  getOrderedByRoomId: id => {
+    const url = `/rooms/ordered/${id}`;
+    return axiosClient.get(url);
+  },
 };
 export default hotelApi;
