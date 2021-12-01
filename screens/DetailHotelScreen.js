@@ -41,7 +41,6 @@ const DetailHotelScreen = ({navigation, route}) => {
     desc: '',
     star: [],
     phone: '',
-    sale: '',
     images: [],
   });
 
@@ -60,7 +59,6 @@ const DetailHotelScreen = ({navigation, route}) => {
         setDataHotel({
           name: res.data.data.hotel_name,
           price: route.params.price,
-          sale: 0.5,
           images: res.data.data.hotel_slide
             ? res.data.data.hotel_slide.split(',')
             : [],
@@ -286,10 +284,7 @@ const DetailHotelScreen = ({navigation, route}) => {
         <View style={{paddingHorizontal: 20, paddingTop: 10}}>
           <Text style={styles.contentText}>Giá/phòng/đêm từ</Text>
           <Text style={{fontSize: 15, fontWeight: 'bold', color: ORANGE}}>
-            {VND}{' '}
-            {dataHotel.sale != null && dataHotel.sale != ''
-              ? dataHotel.price - dataHotel.price * dataHotel.sale
-              : dataHotel.price}
+            {VND} {dataHotel.price}
           </Text>
           <Text style={{fontSize: 11, fontWeight: 'bold', color: DARK_GRAY}}>
             Giá cuối cùng
@@ -304,7 +299,6 @@ const DetailHotelScreen = ({navigation, route}) => {
                 hotelId: route.params.hotelId,
                 hotelName: dataHotel.name,
                 hotelAddress: dataHotel.address,
-                sale: dataHotel.sale,
               });
             }}>
             <Text style={{color: '#fff', fontWeight: 'bold'}}>Chọn Phòng</Text>

@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Text, StyleSheet, Image} from 'react-native';
 import styled from 'styled-components';
-import { DARK_GRAY, WHITE, ORANGE, GOLD_COLOR } from '../../values/color';
-import { VND, UNIT, HOTEL_TEXT } from '../../values/constants';
+import {DARK_GRAY, WHITE, ORANGE, GOLD_COLOR} from '../../values/color';
+import {VND, UNIT, HOTEL_TEXT} from '../../values/constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import hotelApi from '../../../api/hotelApi';
 
-const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
+const Hotel = function ({navigation, hotelId}) {
   const [hotel, setHotel] = useState({
     hotelName: '',
-    sale: 0.5,
-    priceSale: 500000,
     image: null,
     address: '',
     phone: '',
     star: [],
   });
-  let itemSale = null;
   const [prices, setPrices] = useState([]);
 
   const getHotelById = async hotelId => {
@@ -30,8 +27,6 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
         }
         setHotel({
           hotelName: res.data.data.hotel_name,
-          sale: 0.5,
-          priceSale: 500000,
           image: res.data.data.hotel_img,
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
@@ -53,9 +48,9 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
       if (!res.data.error) {
         res.data.data.length !== 0
           ? res.data.data.map(e => {
-            temp.push(e.room_price);
-            setPrices([...temp]);
-          })
+              temp.push(e.room_price);
+              setPrices([...temp]);
+            })
           : setPrices([0]);
       } else {
         console.log(res.data.error);
@@ -64,23 +59,15 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
       console.log(err);
     }
   };
+  // console.log(hotelId, 'HOTEL ID');
+  // console.log(prices, 'ARR PRICE');
 
-  // get data from firebase
+  // get data from server
   useEffect(() => {
     getHotelById(hotelId);
     getAllRoomsByIdHotel(hotelId);
   }, []);
 
-  if (sale != '' && sale != null) {
-    itemSale = (
-      <Text
-        style={{ fontSize: 13, fontWeight: 'bold', color: ORANGE }}
-        key={priceSale}>
-        {' '}
-        {VND} {getMinPrice(prices) - getMinPrice(prices) * sale}
-      </Text>
-    );
-  }
   return (
     <ItemContainer
       activeOpacity={0.9}
@@ -96,7 +83,7 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
         <Image
           style={styles.hotelImage}
           source={{
-            uri: hotel.image
+            uri: hotel.image,
           }}
         />
         <ItemContent>
@@ -105,9 +92,7 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
           {/* Star */}
           <ViewRow>
             {hotel.star.map((e, i) => {
-              return (
-                <Icon key={i} name={e} size={15} color={GOLD_COLOR} />
-              );
+              return <Icon key={i} name={e} size={15} color={GOLD_COLOR} />;
             })}
           </ViewRow>
           {/* Address */}
@@ -116,25 +101,18 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
               name="map-marker"
               size={12}
               color={DARK_GRAY}
-              style={{ marginTop: 8 }}
+              style={{marginTop: 8}}
             />
             <Text style={styles.addressText}>{hotel.address}</Text>
           </ViewRow>
-
-          {/* Hotel price */}
-          <Text style={styles.priceText}>
-            {itemSale != null ? `${VND} ${getMinPrice(prices)}` : ``}
-          </Text>
-          {/* Hotel price sale */}
-          <ViewRow>
-            {itemSale != null ? (
-              itemSale
-            ) : (
-              <Text style={{ fontSize: 13, fontWeight: 'bold', color: ORANGE }}>
-                {' '}
-                {VND} {getMinPrice(prices)}
-              </Text>
-            )}
+    
+          {/* Hotel price  */}
+          <ViewRow style={{marginTop: 70}}>
+            <Text style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}>
+              {' '}
+              {VND} {getMinPrice(prices)}
+            </Text>
+            {/* )} */}
             <Text style={styles.contentText}>{UNIT}</Text>
           </ViewRow>
           <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
@@ -147,10 +125,13 @@ const Hotel = function ({ navigation, hotelId, sale, priceSale }) {
 //lấy giá min giữa các room của hotel
 function getMinPrice(prices) {
   let min = 0;
-  if (prices.length >= 1) {
+  if (prices.length === 1) {
+    min = prices[0];
+  }
+  if (prices.length > 1) {
     min = prices[0];
     prices.forEach(e => {
-      if (min >= e) {
+      if (+e <= +min) {
         min = e;
       }
     });

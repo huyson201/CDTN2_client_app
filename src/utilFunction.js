@@ -41,7 +41,7 @@ export const convertDateToStringForForRoom = (dateReceived, datePay) => {
 export const convertStrPersonRooms = (data) => {
   if (!data) return;
 
-  return `${data.rooms} Phòng, ${data.adults} Người Lớn, ${data.children} Trẻ em`;
+  return `${data.rooms} Phòng, ${data.adults} Người Lớn`;
 };
 
 export const formatCurrency = (n, currency) => {
