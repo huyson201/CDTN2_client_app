@@ -14,7 +14,7 @@ import {convertDateToVNDate} from '../../utilFunction';
 
 const Room = function ({roomId, hotelId, hotelName, navigation}) {
   const [state, setState] = useState();
-  const [ordered,setOrdered]=useState()
+  const [ordered, setOrdered] = useState();
   const [roomData, setRoomData] = useState({
     roomName: '',
     price: 0,
@@ -29,12 +29,21 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
   let numberNight = date.numDate;
   const searchData = useSelector(state => state.search);
   let {rooms} = searchData.personsAndRooms;
+  // date state
+  const date = useSelector(state => state.search.date);
+  // number night
+  let receivedDate = `${date.receivedDate.replace(/\//g, '-')}T12:00:00`;
+  let payDate = `${date.payDate.replace(/\//g, '-')}T12:00:00`;
 
   const getOrdered = async roomId => {
     try {
-      const res = await hotelApi.getOrderedByRoomId(roomId);
+      const res = await hotelApi.getOrderedByRoomId(
+        roomId,
+        receivedDate,
+        payDate,
+      );
       if (res.data.ordered) {
-        setOrdered(res.data.ordered)
+        setOrdered(res.data.ordered);
       }
     } catch (error) {
       console.log(error);
@@ -49,7 +58,7 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
           price: res.data.data.room_price,
           people: res.data.data.room_num_people,
           status: res.data.data.room_quantity
-            ? +res.data.data.room_quantity - (+ordered)
+            ? +res.data.data.room_quantity - +ordered
             : 0,
           images: res.data.data.room_imgs
             ? res.data.data.room_imgs.split(',')
