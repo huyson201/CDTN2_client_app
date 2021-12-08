@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 
-const Utilities = function () {
+const Utilities = (props) => {
     return (
         <View>
             <View style={styles.hisHeader}>
@@ -15,7 +15,16 @@ const Utilities = function () {
             </View>
             <ScrollView horizontal={true}>
                 <ViewRow>
-                    <ViewCol>
+                    {props.services !== null &&
+                        props.services.map((e, i) => {
+                            console.log(e);
+                            return (<ViewCol key={i}>
+                                <Icon name={e.service.service_icon} size={30} color={BLUE1} />
+                                <Text style={styles.contentText}>{e.service.service_name}</Text>
+                            </ViewCol>)
+                        })
+                    }
+                    {/* <ViewCol>
                         <Icon name="silverware-fork-knife" size={30} color={BLUE1} />
                         <Text style={styles.contentText}>Nhà hàng</Text>
                     </ViewCol>
@@ -38,17 +47,13 @@ const Utilities = function () {
                     <ViewCol>
                         <Icon2 name="wifi" size={30} color={BLUE1} />
                         <Text style={styles.contentText}>Wifi</Text>
-                    </ViewCol>
+                    </ViewCol> */}
                 </ViewRow>
             </ScrollView>
-            <View style={styles.borderBottom}>
-                <TouchableOpacity>
-                    <Text style={{ fontSize: 12, color: BLUE2, fontWeight: 'bold' }}>XEM TẤT CẢ TIỆN NGHI</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
+
 const ViewRow = styled.View`
   flex-direction: row;
   align-items: center;
@@ -60,7 +65,6 @@ const ViewCol = styled.View`
   align-items: center;
   padding: 15px 10px;
 `;
-
 const styles = StyleSheet.create({
     hisHeader: {
         paddingLeft: 20,

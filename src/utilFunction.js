@@ -2,6 +2,7 @@ export const getTomorrow = (currentDate, num = 1) => {
   let currentDay = new Date(currentDate);
   let nextDay = new Date(currentDay);
   nextDay.setDate(currentDay.getDate() + num);
+
   return getDateFormatString(nextDay);
 };
 
@@ -15,9 +16,12 @@ export const convertDateToVNDate = (date) => {
 };
 
 export const getDateFormatString = (date) => {
-  let strDate = `${date.getFullYear()}/${
-    date.getMonth() + 1
-  }/${date.getDate()}`;
+  let day = date.getDate()
+  if (date.getDate() < 10) {
+    day = `0${date.getDate()}`
+  }
+  let strDate = `${date.getFullYear()}/${date.getMonth() + 1
+    }/${day}`;
   return strDate;
 };
 
@@ -37,7 +41,7 @@ export const convertDateToStringForForRoom = (dateReceived, datePay) => {
 export const convertStrPersonRooms = (data) => {
   if (!data) return;
 
-  return `${data.rooms} Phòng, ${data.adults} Người Lớn, ${data.children} Trẻ em`;
+  return `${data.rooms} Phòng, ${data.adults} Người Lớn`;
 };
 
 export const formatCurrency = (n, currency) => {
@@ -50,6 +54,8 @@ export const formatCurrency = (n, currency) => {
 
 // xoa dau tieng viet
 export function xoaDau(str) {
+  str = str.trim();
+  str = str.toLowerCase();
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
   str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
   str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");

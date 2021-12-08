@@ -1,170 +1,272 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
-import { FlatList, Modal, View, Text, StyleSheet, TouchableWithoutFeedback, ToastAndroid } from "react-native";
-import { Button, SearchBar } from "react-native-elements";
-import { BLUE1, DARK_GRAY, LIGHT_GRAY } from "../../values/color";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import { searchPlace } from "../../api-util/AutoComplete";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { setAddress } from "../../../action_creators/search";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
+import {
+  Modal,
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {Button} from 'react-native-elements';
+import {useDispatch} from 'react-redux';
+import {setAddress} from '../../../action_creators/search';
+import {Picker} from '@react-native-picker/picker';
+import addressApi from '../../../api/addressApi';
+import {BLUE1} from '../../values/color';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
+const generatePickerItem = (data = []) => {
+  if (!Array.isArray(data) || data.length <= 0) return;
 
-let promiseSearch;
-let places = []
-
-// create a list item
-const Item = ({ item, onPress }) => {
-    let structText = item.structured_formatting;
+  return data.map((el, index) => {
     return (
-        <TouchableWithoutFeedback onPress={() => onPress(item)}>
-            <ItemPlace style={styles.border}>
-                <Circle>
-                    <Icon name="map-marker-alt" size={20} color={DARK_GRAY} />
-                </Circle>
-                <View style={styles.addressContainer}>
-                    <MainText>{structText.main_text}</MainText>
-                    <SecondText>{structText.secondary_text}</SecondText>
-                </View>
-            </ItemPlace>
-        </TouchableWithoutFeedback>
-    )
-}
-
-
+      <Picker.Item
+        label={el.name}
+        value={index}
+        style={styles.pickerItemStyle}
+        key={el.code}
+      />
+    );
+  });
+};
 
 const SearchLocalModal = forwardRef((props, ref) => {
-    const [searchKey, setSearchKey] = useState("")
-    const [loading, setLoading] = useState(false)
-    const [show, setShow] = useState(false)
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [communes, setCommunes] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState();
+  const [selectedDistrict, setSelectedDistrict] = useState();
+  const [selectedCommune, setSelectedCommune] = useState();
+  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
-    const address = useSelector(state => state.search.address)
-    const dispatch = useDispatch()
-
-    // update key search when pressing keyboard
-    const updateSearch = (key) => {
-        setLoading(true)
-        setSearchKey(key)
-
-        if (key !== "") {
-            promiseSearch = searchPlace(key);
-        } else {
-            places = []
-            setLoading(false)
-        }
+  // get provinces
+  useEffect(() => {
+    async function getData() {
+      let res = await addressApi.getProvince();
+      let results = [...res.data.results];
+      console.log(res);
+      // console.log('result' + results)
+      setProvinces([...results]);
     }
 
+    if (show) {
+      getData();
+    }
+  }, [show]);
 
-    // add list address after searched
-    if (promiseSearch) {
-        promiseSearch.then(data => {
-            if (data === places) return
-            places = data
-            setLoading(false)
-            return
-        })
-
+  // load districts
+  useEffect(() => {
+    async function getData() {
+      if (+selectedProvince === -1) return;
+      if (provinces[selectedProvince]) {
+        let res = await addressApi.getDistrict(
+          provinces[selectedProvince].code,
+        );
+        let results = [...res.data.results];
+        setDistricts([...results]);
+      }
     }
 
-    // get data when pressed list item
-    const handleSelectAddress = (item) => {
-        let newAddress = item.description
-        let action = setAddress(newAddress)
-        dispatch(action)
+    if (+selectedProvince !== -1) {
+      getData();
+    }
+  }, [selectedProvince]);
 
-        setShow(false);
+  // load communes
+  useEffect(() => {
+    async function getData() {
+      if (+selectedDistrict === -1) return;
+      if (districts[selectedDistrict]) {
+        let res = await addressApi.getCommune(districts[selectedDistrict].code);
+        let results = [...res.data.results];
+        //   console.log(selectedDistrict);
+        //   console.log(districts[selectedDistrict].code);
+        //   console.log(results);
+        setCommunes([...results]);
+      }
     }
 
-    // process open modal
-    const close = () => {
-        setShow(false)
+    if (+selectedDistrict !== -1) {
+      getData();
+    }
+  }, [selectedDistrict]);
+
+  // generate picker item of provinces
+  let provincesPickerItem = useMemo(() => {
+    return generatePickerItem(provinces);
+  }, [provinces]);
+
+  let districtsPickerItem = useMemo(() => {
+    return generatePickerItem(districts);
+  }, [districts]);
+
+  let communesPickerItem = useMemo(() => {
+    return generatePickerItem(communes);
+  }, [communes]);
+
+  // process open modal
+  const close = () => {
+    setShow(false);
+    if (+selectedCommune !== -1) {
+      const currentCommune = communes[selectedCommune];
+      let newAddress = `${currentCommune.name}, ${currentCommune.district}, ${currentCommune.province}`;
+      let action = setAddress(newAddress);
+      dispatch(action);
+      return;
     }
 
-    useImperativeHandle(ref, () => ({
-        show() {
-            setShow(true)
-        }
-    }))
+    if (+selectedDistrict !== -1) {
+      const currentDistrict = districts[selectedDistrict];
+      let newAddress = `${currentDistrict.name}, ${currentDistrict.province}`;
+      let action = setAddress(newAddress);
+      dispatch(action);
 
-    return (
+      return;
+    }
 
-        <Modal
-            animationType="slide"
-            onRequestClose={close}
-            visible={show}
-        >
-            <SearchBar
-                value={searchKey}
-                onChangeText={updateSearch}
-                placeholder="Nhập vị trí tìm kiếm khách sạn..."
-                onClear={(key) => setSearchKey(key)}
-                showLoading={loading}
-                containerStyle={styles.searchContainer}
-                inputContainerStyle={{ backgroundColor: "#fff" }}
-                cancelIcon={<Icon name='arrow-right' />}
+    if (+selectedProvince !== -1) {
+      const currentProvince = provinces[selectedProvince];
+      let newAddress = `${currentProvince.name}`;
+      let action = setAddress(newAddress);
+      dispatch(action);
 
-            />
-            <View style={styles.listBox}>
-                <FlatList
-                    data={places}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <Item item={item} key={index} onPress={handleSelectAddress} />
-                        )
-                    }}
-                    extraData={(item) => item.place_id}
-                    onPress={handleSelectAddress}
+      return;
+    }
+  };
 
-                />
-            </View>
-            <Button title="Hoàn thành" buttonStyle={styles.btn} onPress={close} />
-        </Modal>
-    )
-})
+  useImperativeHandle(ref, () => ({
+    show() {
+      setShow(true);
+    },
+  }));
+
+  return (
+    <Modal animationType="slide" onRequestClose={close} visible={show}>
+      <View style={styles.toolBar}>
+        <TouchableWithoutFeedback style={{width: 60, height: 60}}>
+          <Icon
+            name="arrow-left"
+            color="#fff"
+            size={20}
+            onPress={() => setShow(false)}
+          />
+        </TouchableWithoutFeedback>
+        <Text style={styles.toolbarText}>Chọn vị trí</Text>
+      </View>
+      <View style={styles.addressContainer}>
+        <View style={styles.fieldStyle}>
+          <Text>
+            Chọn Tỉnh / Thành Phố <Text style={styles.styleRequire}>*</Text>
+          </Text>
+          <View style={styles.pickerStyle}>
+            <Picker
+              selectedValue={selectedProvince}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedProvince(itemValue);
+                setSelectedDistrict(-1);
+                setSelectedCommune(-1);
+              }}>
+              <Picker.Item
+                label="Chọn Tỉnh / Thành Phố"
+                value={-1}
+                style={styles.pickerItemStyle}
+              />
+              {provincesPickerItem}
+            </Picker>
+          </View>
+        </View>
+        <View style={styles.fieldStyle}>
+          <Text>Chọn Quận / Huyện</Text>
+          <View style={styles.pickerStyle}>
+            <Picker
+              selectedValue={selectedDistrict}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedDistrict(itemValue);
+                setSelectedCommune(-1);
+              }}>
+              <Picker.Item
+                label="Chọn Quận / Huyện"
+                value={-1}
+                style={styles.pickerItemStyle}
+              />
+              {+selectedProvince !== -1 && districtsPickerItem}
+            </Picker>
+          </View>
+        </View>
+        <View style={styles.fieldStyle}>
+          <Text>Chọn Phường / Xã</Text>
+
+          <View style={styles.pickerStyle}>
+            <Picker
+              selectedValue={selectedCommune}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedCommune(itemValue)
+              }>
+              <Picker.Item
+                label="Chọn Phường / Xã"
+                value={-1}
+                style={styles.pickerItemStyle}
+              />
+              {+selectedDistrict !== -1 && communesPickerItem}
+            </Picker>
+          </View>
+        </View>
+      </View>
+      <Button title="Hoàn thành" buttonStyle={styles.btn} onPress={close} />
+    </Modal>
+  );
+});
 
 export default SearchLocalModal;
-const Circle = styled.View`
-    width: 40px;
-    height: 40px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 99px;
-    background-color: ${LIGHT_GRAY}
-`
-const ItemPlace = styled.View`
-    padding: 12px 15px;
-    flex-direction: row;
-    align-items: center;
-`
-const MainText = styled.Text`
-    font-size: 16px;
-    color: black;
-    font-weight: bold;
-`
-const SecondText = styled.Text`
-    font-size: 14px;
-    color: ${DARK_GRAY};
-`
+
 const styles = StyleSheet.create({
-    addressContainer: {
-        maxWidth: "90%",
-        marginLeft: 12,
-        flex: 1
-    },
-    border: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#ccc",
-        borderStyle: "solid"
-    },
-    searchContainer: {
-        backgroundColor: BLUE1,
-        padding: 15,
-        borderColor: BLUE1,
-    },
-    listBox: {
-        flex: 1
-    },
-    btn: {
-        paddingTop: 12,
-        paddingBottom: 12
-    }
-})
+  addressContainer: {
+    maxWidth: '90%',
+    width: '100%',
+    marginLeft: 12,
+    flex: 1,
+    paddingTop: 40,
+    alignItems: 'stretch',
+  },
+  styleRequire: {
+    color: 'red',
+  },
+  fieldStyle: {
+    marginBottom: 12,
+  },
+  btn: {
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  pickerStyle: {
+    borderWidth: 1,
+    borderRadius: 15,
+  },
+  pickerItemStyle: {
+    borderWidth: 1,
+    borderBottomColor: '#ccc',
+    borderStyle: 'solid',
+  },
+  toolBar: {
+    flexDirection: 'row',
+    backgroundColor: BLUE1,
+    alignItems: 'center',
+    maxHeight: 60,
+    height: 60,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+
+  toolbarText: {
+    color: '#fff',
+    fontSize: 20,
+    marginLeft: 8,
+    fontWeight: 'bold',
+  },
+});

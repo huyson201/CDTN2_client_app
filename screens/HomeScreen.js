@@ -93,8 +93,7 @@ const HomeScreen = function ({navigation}) {
       <View style={homeStyles.header}>
         <Title style={homeStyles.headerText}>Booking Hotel</Title>
         <Title>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+         Cảm ơn bạn đã sử dụng Booking Hotel. Chúc bạn có một trải nghiệm tuyệt vời !
         </Title>
       </View>
       {/* search box */}

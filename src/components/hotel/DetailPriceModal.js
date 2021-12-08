@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useImperativeHandle } from "react";
+import React, {forwardRef, useState, useImperativeHandle} from 'react';
 import {
   TouchableOpacity,
   Modal,
@@ -6,14 +6,16 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-} from "react-native";
-import styled from "styled-components";
-import { Button } from "react-native-elements";
-import { BLUE1, DARK_GRAY, ORANGE_LIGHT } from "../../values/color";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import { convertDateToVNDate, formatCurrency } from "../../utilFunction";
-import { useSelector } from "react-redux";
+} from 'react-native';
+import styled from 'styled-components';
+import {Button} from 'react-native-elements';
+import {BLUE1, DARK_GRAY, ORANGE_LIGHT} from '../../values/color';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {convertDateToVNDate, formatCurrency} from '../../utilFunction';
+import {useSelector} from 'react-redux';
 const DetailPriceModal = forwardRef((props, ref) => {
+  const searchData = useSelector(state => state.search);
+  let {rooms} = searchData.personsAndRooms;
   const [show, setShow] = useState(false);
   const close = () => {
     setShow(false);
@@ -25,16 +27,17 @@ const DetailPriceModal = forwardRef((props, ref) => {
   }));
 
   // date state
-  const date = useSelector((state) => state.search.date);
+  const date = useSelector(state => state.search.date);
   let dateForRoom = date.dateString;
   let numberNight = date.numDate;
 
   const handlePressBooking = () => {
-    props.navigation.navigate("Invoice", {
+    props.navigation.navigate('Invoice', {
       id: props.id,
-      data: props.data,
+      hotelId: props.hotelId,
       hotelName: props.hotelName,
-      taxes: props.taxes,
+      room_quantity: props.data.status,
+      taxes: +props.data.surcharge,
       sum: props.sum,
     });
   };
@@ -43,8 +46,7 @@ const DetailPriceModal = forwardRef((props, ref) => {
       animationType="fade"
       transparent={true}
       visible={show}
-      onRequestClose={close}
-    >
+      onRequestClose={close}>
       <TouchableWithoutFeedback onPress={close}>
         <TransparentView>
           <Title>Chi tiết giá </Title>
@@ -55,57 +57,49 @@ const DetailPriceModal = forwardRef((props, ref) => {
           <Text>Ngày</Text>
           <DetailText>{dateForRoom}</DetailText>
         </ViewRow>
-        <ViewRow style={{ marginBottom: 20 }}>
+        <ViewRow style={{marginBottom: 20}}>
           <Text>Số phòng</Text>
-          <DetailText>{1} phòng</DetailText>
+          <DetailText>{rooms} phòng</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Giá mỗi đêm</Text>
-          <DetailText style={{ color: ORANGE_LIGHT }}>
+          <DetailText style={{color: ORANGE_LIGHT}}>
             VND {props.data.price}
           </DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Tổng giá tiền cho {numberNight} đêm</Text>
-          <DetailText>VND {props.data.price * numberNight}</DetailText>
+          <DetailText>VND {props.data.price * numberNight * rooms}</DetailText>
         </ViewRow>
         <ViewRow>
           <Text>Thuế và phí</Text>
-          <Text style={{ paddingBottom: 5 }}>VND {props.taxes}</Text>
+          <Text style={{paddingBottom: 5}}>VND {props.data.surcharge}</Text>
         </ViewRow>
       </Content>
       <TouchableOpacity
-        style={{ backgroundColor: "white" }}
+        style={{backgroundColor: 'white'}}
         activeOpacity={1}
-        onPress={close}
-      >
+        onPress={close}>
         <View style={styles.priceInfor}>
-          <ViewRow style={{ justifyContent: "flex-start" }}>
+          <ViewRow style={{justifyContent: 'flex-start'}}>
             <Icon
-              style={{ paddingBottom: 3 }}
+              style={{paddingBottom: 3}}
               color={BLUE1}
-              name="chevron-up"
-            ></Icon>
-            <Text style={{ fontSize: 12, paddingBottom: 2, marginLeft: 3 }}>
-              {`Tổng giá tiền cho ${dateForRoom} - ${numberNight} đêm - 1 phòng`}
+              name="chevron-up"></Icon>
+            <Text style={{fontSize: 12, paddingBottom: 2, marginLeft: 3}}>
+              {`Tổng giá tiền cho ${dateForRoom} - ${numberNight} đêm - ${rooms} phòng`}
             </Text>
           </ViewRow>
           <ViewRow>
             <View>
-              {props.data.sale != null && props.data.sale != "" ? (
-                <Text style={styles.priceSale}>
-                  {formatCurrency(props.sumPre, "VND")}
-                </Text>
-              ) : (
-                <Text></Text>
-              )}
               <Text style={styles.price}>
-                {formatCurrency(props.sum, "VND")}
+                {/* {console.log(props.sum)} */}
+                {formatCurrency(props.sum, 'VND')}
               </Text>
             </View>
             <Button
               buttonStyle={styles.button}
-              title={"Chọn"}
+              title={'Chọn'}
               onPress={handlePressBooking}
             />
           </ViewRow>
@@ -145,16 +139,16 @@ const styles = StyleSheet.create({
   priceInfor: {
     paddingHorizontal: 20,
     borderTopWidth: 2,
-    borderColor: "rgba(158, 150, 150, .5)",
+    borderColor: 'rgba(158, 150, 150, .5)',
     paddingVertical: 5,
   },
   priceSale: {
     color: DARK_GRAY,
     fontSize: 12,
-    textDecorationLine: "line-through",
+    textDecorationLine: 'line-through',
   },
   price: {
-    fontWeight: "500",
+    fontWeight: '500',
     fontSize: 17,
   },
 

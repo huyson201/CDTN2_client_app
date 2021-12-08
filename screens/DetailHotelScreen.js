@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import styled from 'styled-components';
 import {DEVICE_WIDTH} from '../src/values/size';
@@ -26,8 +28,12 @@ import Comment from '../src/components/hotel/Comment';
 import Utilities from '../src/components/hotel/Utilities';
 import {SliderBox} from 'react-native-image-slider-box';
 import hotelApi from '../api/hotelApi';
+import ratingApi from '../api/rateApi';
+import {useSelector} from 'react-redux';
+import RatingItem from '../src/components/rate/RatingItem';
 
 const DetailHotelScreen = ({navigation, route}) => {
+  const {user_uuid} = useSelector(state => state.user.currentUser);
   const [dataHotel, setDataHotel] = useState({
     name: '',
     address: '',
@@ -35,14 +41,16 @@ const DetailHotelScreen = ({navigation, route}) => {
     desc: '',
     star: [],
     phone: '',
-    sale: '',
     images: [],
   });
+
+  const [userRate, setUserRate] = useState();
+  const [services, setServices] = useState(null);
 
   const getHotelById = async hotelId => {
     try {
       const res = await hotelApi.getHotelById(hotelId);
-      if (!res.data.error) {
+      if (res.data.data) {
         let number = [];
         number.length = res.data.data.hotel_star;
         for (let i = 0; i < number.length; i++) {
@@ -51,36 +59,107 @@ const DetailHotelScreen = ({navigation, route}) => {
         setDataHotel({
           name: res.data.data.hotel_name,
           price: route.params.price,
-          sale: 0.5,
-          // images: res.data.data.hotel_slide,
-          images: [
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-            'https://firebasestorage.googleapis.com/v0/b/booking-hotel-app-fbd6a.appspot.com/o/hotels%2Fdetail_hotel_1.jpg?alt=media&token=5abe59ac-e680-4392-8091-ddb0932ea46b',
-          ],
+          images: res.data.data.hotel_slide
+            ? res.data.data.hotel_slide.split(',')
+            : [],
           address: res.data.data.hotel_address,
           phone: res.data.data.hotel_phone,
           desc: res.data.data.hotel_desc,
           star: number,
         });
-      } else {
-        console.log(res.data.error);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getServiceById = async hotelId => {
+    try {
+      const res = await hotelApi.getServiceById(hotelId);
+      if (res.data.data) {
+        setServices(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRatingOfUser = async () => {
+    if (user_uuid) {
+      try {
+        const res = await ratingApi.getByUserAndHotel(
+          user_uuid,
+          route.params.hotelId,
+        );
+        if (res.data.data) {
+          setUserRate(res.data.data.rows[0]);
+          // console.log(res.data.data)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   useEffect(() => {
     getHotelById(route.params.hotelId);
+    getServiceById(route.params.hotelId);
   }, []);
 
+  useEffect(() => {
+    // getRatingOfUser()
+    const unsubscribe = navigation.addListener('focus', getRatingOfUser);
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleRatingClick = () => {
+    navigation.navigate('RatingScreen', {
+      hotelId: route.params.hotelId,
+      hotelName: dataHotel.name,
+    });
+  };
+  const handleUpdateRatingClick = () => {
+    navigation.navigate('RatingScreen', {
+      hotelId: route.params.hotelId,
+      hotelName: dataHotel.name,
+      rate: userRate,
+    });
+  };
+
+  const userRatingView = useMemo(() => {
+    if (!userRate || typeof userRate !== 'object')
+      return (
+        <View style={{paddingTop: 10}}>
+          <Text style={styles.ratingTitle}>Xếp hạng khách sạn này</Text>
+          <Text style={styles.ratingHint}>
+            Cho nguời khác biết suy nghĩ của bạn
+          </Text>
+          <TouchableOpacity onPress={handleRatingClick}>
+            <Text style={styles.ratingLink}>Viết bài viết đánh giá</Text>
+          </TouchableOpacity>
+        </View>
+      );
+
+    return (
+      <View>
+        <Text style={styles.ratingTitle}>Đánh giá của bạn</Text>
+        <RatingItem rateValue={userRate} />
+        <TouchableOpacity onPress={handleUpdateRatingClick}>
+          <Text style={styles.ratingLink}>Chỉnh sửa bài đánh giá của bạn</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }, [userRate]);
   return (
     <View>
       <ScrollView style={{marginBottom: 80}}>
         <View>
           <SliderBox
-            images={dataHotel.images}
+            images={
+              dataHotel.images !== null && dataHotel.images
+                ? dataHotel.images
+                : null
+            }
             paginationBoxVerticalPadding={5}
             dotStyle={{width: 7, height: 7, marginHorizontal: -5}}
             imageLoadingColor={'#fff'}
@@ -151,10 +230,19 @@ const DetailHotelScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </ViewRow1>
         </View>
+        {/* rating */}
+        <View style={{paddingHorizontal: 20, paddingTop: 10}}>
+          {userRatingView}
+        </View>
+
         {/* Comment */}
-        <Comment />
+        <Comment
+          navigation={navigation}
+          hotelName={dataHotel.name}
+          hotelId={route.params.hotelId}
+        />
         {/* Tiện nghi chung */}
-        <Utilities />
+        <Utilities services={services} />
         {/* Giờ nhận phòng/trả phòng */}
         <View style={styles.borderBottom}>
           <Text style={styles.headText}>Giờ nhận phòng/trả phòng</Text>
@@ -180,7 +268,9 @@ const DetailHotelScreen = ({navigation, route}) => {
           <View style={{alignItems: 'center', marginTop: 20, marginBottom: 20}}>
             <TouchableOpacity
               onPress={() => {
-                alert('xem tat ca');
+                Alert.alert('Mô tả', dataHotel.desc, [
+                  {text: 'OK', onPress: () => {}},
+                ]);
               }}>
               <Text style={{fontSize: 13, color: BLUE2, fontWeight: 'bold'}}>
                 XEM CHI TIẾT
@@ -194,10 +284,7 @@ const DetailHotelScreen = ({navigation, route}) => {
         <View style={{paddingHorizontal: 20, paddingTop: 10}}>
           <Text style={styles.contentText}>Giá/phòng/đêm từ</Text>
           <Text style={{fontSize: 15, fontWeight: 'bold', color: ORANGE}}>
-            {VND}{' '}
-            {dataHotel.sale != null && dataHotel.sale != ''
-              ? dataHotel.price - dataHotel.price * dataHotel.sale
-              : dataHotel.price}
+            {VND} {dataHotel.price}
           </Text>
           <Text style={{fontSize: 11, fontWeight: 'bold', color: DARK_GRAY}}>
             Giá cuối cùng
@@ -208,11 +295,10 @@ const DetailHotelScreen = ({navigation, route}) => {
             style={styles.button}
             onPress={() => {
               navigation.navigate('RoomListScreen', {
-                id: 'h1',
+                id: route.params.hotelId,
                 hotelId: route.params.hotelId,
                 hotelName: dataHotel.name,
                 hotelAddress: dataHotel.address,
-                sale: dataHotel.sale,
               });
             }}>
             <Text style={{color: '#fff', fontWeight: 'bold'}}>Chọn Phòng</Text>
@@ -238,6 +324,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     marginTop: 8,
+  },
+  ratingTitle: {
+    fontSize: 18,
+  },
+  ratingHint: {
+    fontSize: 13,
+    color: 'rgba(0,0,0,.6)',
+  },
+  ratingLink: {
+    color: BLUE1,
+    fontWeight: 'bold',
+    marginTop: 12,
   },
   borderBox: {
     borderWidth: 1,

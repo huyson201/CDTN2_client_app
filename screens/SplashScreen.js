@@ -1,7 +1,5 @@
 import React, {useEffect} from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
-import styled from 'styled-components';
 import {BLUE1} from '../src/values/color';
 import {LOGO_TEXT} from '../src/values/constants';
 const logo = require('../src/assets/logo.png');
