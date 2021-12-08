@@ -29,8 +29,7 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
   let numberNight = date.numDate;
   const searchData = useSelector(state => state.search);
   let {rooms} = searchData.personsAndRooms;
-  // date state
-  const date = useSelector(state => state.search.date);
+  
   // number night
   let receivedDate = `${date.receivedDate.replace(/\//g, '-')}T12:00:00`;
   let payDate = `${date.payDate.replace(/\//g, '-')}T12:00:00`;
