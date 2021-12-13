@@ -104,6 +104,19 @@ const DetailHotelScreen = ({navigation, route}) => {
   useEffect(() => {
     getHotelById(route.params.hotelId);
     getServiceById(route.params.hotelId);
+    return () => {
+      setDataHotel({
+        name: '',
+        address: '',
+        price: 0,
+        desc: '',
+        star: [],
+        phone: '',
+        images: [],
+      });
+
+      setServices(null);
+    };
   }, []);
 
   useEffect(() => {

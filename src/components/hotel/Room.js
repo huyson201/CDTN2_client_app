@@ -22,6 +22,8 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
   let numberNight = date.numDate;
   const searchData = useSelector(state => state.search);
   let {rooms} = searchData.personsAndRooms;
+  let maxPrice = searchData.filter.maxPrice;
+  let minPrice = searchData.filter.minPrice;
 
   // number night
   let receivedDate = `${date.receivedDate.replace(/\//g, '-')}T14:00:00`;
@@ -46,8 +48,10 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
 
   const getRoomById = async roomId => {
     const res = await hotelApi.getRoomById(roomId);
-    res.data.data
-      ? setRoomData({
+    res.data.data &&
+    +res.data.data.room_price >= minPrice &&
+    +res.data.data.room_price <= maxPrice
+      && setRoomData({
           roomName: res.data.data.room_name,
           price: res.data.data.room_price,
           people: res.data.data.room_num_people,
@@ -59,7 +63,7 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
             : [],
           surcharge: +res.data.data.room_surcharge,
         })
-      : setRoomData([{message: 'Khong co du lieu phong'}]);
+     
   };
 
   const handleBooking = () => {
@@ -108,7 +112,7 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
           {state && roomData.images !== null ? (
             <>
               <SliderBox
-                images={roomData.images && roomData.images}
+                images={roomData.images ? roomData.images : []}
                 style={styles.image}
                 parentWidth={state.width}
                 paginationBoxVerticalPadding={5}
@@ -127,7 +131,7 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
                     </Icon1>{' '}
                     {
                       // sale != null && sale != '' ? roomData.price - roomData.price * sale :
-                      // roomData.price && roomData.price
+                      roomData.price
                     }
                     <Feather
                       style={{paddingTop: 10}}
