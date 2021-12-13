@@ -15,23 +15,16 @@ import {convertDateToVNDate} from '../../utilFunction';
 const Room = function ({roomId, hotelId, hotelName, navigation}) {
   const [state, setState] = useState();
   const [ordered, setOrdered] = useState();
-  const [roomData, setRoomData] = useState({
-    roomName: '',
-    price: 0,
-    people: 0,
-    status: 0,
-    images: [],
-    surcharge: 0,
-  });
+  const [roomData, setRoomData] = useState();
 
   // date state
   const date = useSelector(state => state.search.date);
   let numberNight = date.numDate;
   const searchData = useSelector(state => state.search);
   let {rooms} = searchData.personsAndRooms;
-  
+
   // number night
-  let receivedDate = `${date.receivedDate.replace(/\//g, '-')}T12:00:00`;
+  let receivedDate = `${date.receivedDate.replace(/\//g, '-')}T14:00:00`;
   let payDate = `${date.payDate.replace(/\//g, '-')}T12:00:00`;
 
   const getOrdered = async roomId => {
@@ -43,6 +36,8 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
       );
       if (res.data.ordered) {
         setOrdered(res.data.ordered);
+      } else {
+        setOrdered(0);
       }
     } catch (error) {
       console.log(error);
@@ -56,9 +51,9 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
           roomName: res.data.data.room_name,
           price: res.data.data.room_price,
           people: res.data.data.room_num_people,
-          status: res.data.data.room_quantity
-            ? +res.data.data.room_quantity - +ordered
-            : 0,
+          status:
+            res.data.data.room_quantity &&
+            res.data.data.room_quantity - ordered,
           images: res.data.data.room_imgs
             ? res.data.data.room_imgs.split(',')
             : [],
@@ -67,14 +62,13 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
       : setRoomData([{message: 'Khong co du lieu phong'}]);
   };
 
-  let sum = sumPrice(
-    +roomData.price,
-    +roomData.surcharge,
-    +numberNight,
-    +rooms,
-  );
-
   const handleBooking = () => {
+    let sum = sumPrice(
+      +roomData.price,
+      +roomData.surcharge,
+      +numberNight,
+      +rooms,
+    );
     navigation.navigate('Invoice', {
       id: roomId,
       hotelId: hotelId,
@@ -91,101 +85,117 @@ const Room = function ({roomId, hotelId, hotelName, navigation}) {
     });
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (roomId) {
-      getRoomById(roomId);
-      getOrdered(roomId);
+      await getOrdered(roomId);
     }
+    return () => {
+      setOrdered();
+    };
   }, [roomId]);
 
+  useEffect(() => {
+    getRoomById(roomId);
+    return () => {
+      setRoomData();
+    };
+  }, [ordered]);
+
   return (
-    <View style={[styles.view, styles.textOption]} onLayout={layoutWidth}>
-      {state && roomData.images !== null ? (
-        <>
-          <SliderBox
-            images={roomData.images}
-            style={styles.image}
-            parentWidth={state.width}
-            paginationBoxVerticalPadding={5}
-            dotStyle={{width: 7, height: 7, marginHorizontal: -5}}
-            imageLoadingColor={'#fff'}
-          />
+    <>
+      {roomData && (
+        <View style={[styles.view, styles.textOption]} onLayout={layoutWidth}>
+          {state && roomData.images !== null ? (
+            <>
+              <SliderBox
+                images={roomData.images && roomData.images}
+                style={styles.image}
+                parentWidth={state.width}
+                paginationBoxVerticalPadding={5}
+                dotStyle={{width: 7, height: 7, marginHorizontal: -5}}
+                imageLoadingColor={'#fff'}
+              />
 
-          <Text style={styles.textName} numberOfLines={1}>
-            {roomData.roomName}
-          </Text>
-          <ViewRow>
-            <View>
-              <Text style={styles.textContent}>
-                <Icon1 name="money" size={14} color="#05375a">
-                  {' '}
-                </Icon1>{' '}
-                {
-                  // sale != null && sale != '' ? roomData.price - roomData.price * sale :
-                  roomData.price
-                }
-                <Feather style={{paddingTop: 10}} name="dollar-sign" size={14}>
-                  {' '}
-                </Feather>
-                /đêm
+              <Text style={styles.textName} numberOfLines={1}>
+                {roomData.roomName}
               </Text>
-              <Text style={styles.textContent}>
-                <Ionicon name="people" size={15} color="#05375a">
-                  {' '}
-                </Ionicon>
-                {roomData.people} người lớn
-              </Text>
+              <ViewRow>
+                <View>
+                  <Text style={styles.textContent}>
+                    <Icon1 name="money" size={14} color="#05375a">
+                      {' '}
+                    </Icon1>{' '}
+                    {
+                      // sale != null && sale != '' ? roomData.price - roomData.price * sale :
+                      // roomData.price && roomData.price
+                    }
+                    <Feather
+                      style={{paddingTop: 10}}
+                      name="dollar-sign"
+                      size={14}>
+                      {' '}
+                    </Feather>
+                    /đêm
+                  </Text>
+                  <Text style={styles.textContent}>
+                    <Ionicon name="people" size={15} color="#05375a">
+                      {' '}
+                    </Ionicon>
+                    {roomData.people && roomData.people} người lớn
+                  </Text>
 
-              {roomData.status >= 1 ? (
-                <Text style={styles.textContent}>
-                  <Icon name="check" size={14} color="#05375a">
-                    {' '}
-                  </Icon>
-                  Còn {roomData.status} phòng
-                </Text>
-              ) : (
-                <Text style={styles.textContent}>
-                  {' '}
-                  <Octicons name="x" size={16} color="#05375a">
-                    {' '}
-                  </Octicons>{' '}
-                  Hết phòng
-                </Text>
-              )}
-            </View>
-            <View>
-              <TouchableOpacity activeOpacity={0.8}>
-                <Button
-                  title={'Chọn'}
-                  color={ORANGE_LIGHT}
-                  onPress={handleBooking}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('DetailRoomScreen', {
-                    id: roomId,
-                    hotelId: hotelId,
-                    hotelName: hotelName,
-                    status: roomData.status,
-                  });
-                }}>
-                <Text style={styles.textDetail}>
-                  Xem chi tiết{' '}
-                  <Icon1
-                    name="angle-double-right"
-                    size={15}
-                    color={BLUE2}
-                    style={styles.iconDetail}></Icon1>
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </ViewRow>
-        </>
-      ) : (
-        <Text></Text>
+                  {roomData.status && roomData.status >= 1 ? (
+                    <Text style={styles.textContent}>
+                      <Icon name="check" size={14} color="#05375a">
+                        {' '}
+                      </Icon>
+                      Còn {roomData.status} phòng
+                    </Text>
+                  ) : (
+                    <Text style={styles.textContent}>
+                      {' '}
+                      <Octicons name="x" size={16} color="#05375a">
+                        {' '}
+                      </Octicons>{' '}
+                      Hết phòng
+                    </Text>
+                  )}
+                </View>
+                <View>
+                  <TouchableOpacity activeOpacity={0.8}>
+                    <Button
+                      title={'Chọn'}
+                      color={ORANGE_LIGHT}
+                      onPress={handleBooking}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('DetailRoomScreen', {
+                        id: roomId,
+                        hotelId: hotelId,
+                        hotelName: hotelName,
+                        status: roomData.status,
+                      });
+                    }}>
+                    <Text style={styles.textDetail}>
+                      Xem chi tiết{' '}
+                      <Icon1
+                        name="angle-double-right"
+                        size={15}
+                        color={BLUE2}
+                        style={styles.iconDetail}></Icon1>
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ViewRow>
+            </>
+          ) : (
+            <Text></Text>
+          )}
+        </View>
       )}
-    </View>
+    </>
   );
 };
 

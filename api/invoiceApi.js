@@ -29,7 +29,7 @@ const invoiceApi = {
     const url = `/invoices/${id}`;
     return axiosClient.get(url);
   },
-  getInvoiceByUser: (userId,token) => {
+  getInvoiceByUser: (userId, token) => {
     const url = `/users/${userId}/invoices`;
     return axiosClient.get(url, {
       headers: {
@@ -40,6 +40,10 @@ const invoiceApi = {
   getInvoiceByHotel: hotelId => {
     const url = `/hotels/${hotelId}/invoices`;
     return axiosClient.get(url);
+  },
+  update: (id, status) => {
+    const url = `/invoices/${id}`;
+    return axiosClient.patch(url, {status: status});
   },
 };
 export default invoiceApi;

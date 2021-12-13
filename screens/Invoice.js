@@ -3,15 +3,16 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableNativeFeedback,
   View,
 } from 'react-native';
 import styled from 'styled-components';
 import {BLUE1, DARK_GRAY, LIGHT_GRAY, ORANGE} from '../src/values/color';
 import {
+  CANCELED,
   CONFIRM_BTN,
   CONTACT_INFO,
+  DELETE_INVOICE,
   DETAIL_PRICE,
   SMALL_TEXT_TITLE,
   SUM_PRICE_SRT,
@@ -31,8 +32,6 @@ import {setCurrentUser, setToken} from '../action_creators/user';
 
 const Invoice = ({route, navigation}) => {
   const toast = useToast();
-  const searchData = useSelector(state => state.search);
-  let {rooms} = searchData.personsAndRooms;
   const [data, setData] = useState({
     roomName: '',
     beds: 0,
@@ -40,9 +39,10 @@ const Invoice = ({route, navigation}) => {
   });
   const [showDetailPrice, setShowDetailPrice] = useState(false);
   let detailPrice = null;
-  let sumPriceRoom = route.params.sum - route.params.taxes;
-  const {currentUser, token} = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const searchData = useSelector(state => state.search);
+  let {rooms} = searchData.personsAndRooms;
+  const {currentUser, token} = useSelector(state => state.user);
   // date state
   const date = useSelector(state => state.search.date);
   // number night
@@ -88,13 +88,12 @@ const Invoice = ({route, navigation}) => {
     try {
       if (route.params.id) {
         const res = await hotelApi.getRoomById(route.params.id);
-        !res.data.error
-          ? setData({
-              roomName: res.data.data.room_name,
-              beds: res.data.data.room_beds,
-              people: res.data.data.room_num_people,
-            })
-          : setData([{message: 'Khong co du lieu phong'}]);
+        res.data.data &&
+          setData({
+            roomName: res.data.data.room_name,
+            beds: res.data.data.room_beds,
+            people: res.data.data.room_num_people,
+          });
       } else {
         console.log('Khong co id phong');
       }
@@ -104,10 +103,15 @@ const Invoice = ({route, navigation}) => {
   };
 
   if (showDetailPrice) {
+    let sumPriceRoom = route.params.item
+      ? route.params.item.price - route.params.taxes
+      : route.params.sum - route.params.taxes;
     detailPrice = (
       <DetailPrice>
         <RowView style={{...styles.space, paddingTop: 15, paddingBottom: 15}}>
-          <Text>(x{rooms}) {data.roomName}</Text>
+          <Text>
+            (x{rooms}) {data.roomName}
+          </Text>
           <Text>{formatCurrency(sumPriceRoom, 'VND')}</Text>
         </RowView>
         <RowView style={{...styles.space, paddingTop: 15, paddingBottom: 15}}>
@@ -143,7 +147,7 @@ const Invoice = ({route, navigation}) => {
             token: token,
             price: route.params.sum,
             hotelId: route.params.hotelId,
-            rDate: `${date.receivedDate.replace(/\//g, '-')}T12:00:00`,
+            rDate: `${date.receivedDate.replace(/\//g, '-')}T14:00:00`,
             pDate: `${date.payDate.replace(/\//g, '-')}T12:00:00`,
             roomId: route.params.id,
             roomQty: rooms,
@@ -176,6 +180,32 @@ const Invoice = ({route, navigation}) => {
       console.log(error);
     }
   };
+
+  const handleDeleteInvoice = async () => {
+    try {
+      const res = await invoiceApi.update(route.params.item.invoice_id, 5);
+      if (res.data.data) {
+        navigation.navigate('My Ordered Room');
+        toast.show('Hủy đơn thành công', {
+          type: 'success',
+          placement: 'top',
+          duration: 3000,
+          offset: 50,
+          animationType: 'slide-in',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.show('Hủy đơn không thành công', {
+        type: 'danger',
+        placement: 'top',
+        duration: 3000,
+        offset: 50,
+        animationType: 'slide-in',
+      });
+    }
+  };
+
   return (
     <ScrollView style={{backgroundColor: 'rgba(0,0,0,.05)'}}>
       <MainBackground>
@@ -203,7 +233,10 @@ const Invoice = ({route, navigation}) => {
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   style={styles.receivedDate}>
-                  {receivedDate} (14:00)
+                  {route.params.item
+                    ? route.params.item.r_date.split('T')[0]
+                    : receivedDate}{' '}
+                  (14:00)
                 </Text>
               </RowView>
               <RowView style={styles.mTop}>
@@ -217,7 +250,10 @@ const Invoice = ({route, navigation}) => {
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   style={styles.receivedDate}>
-                  {payDate} (12:00)
+                  {route.params.item
+                    ? route.params.item.p_date.split('T')[0]
+                    : payDate}{' '}
+                  (12:00)
                 </Text>
               </RowView>
             </View>
@@ -227,8 +263,6 @@ const Invoice = ({route, navigation}) => {
               </Text>
               <Text style={styles.roomInfo}>1 giường (x{data.beds})</Text>
               <Text style={styles.roomInfo}>
-                {/* {route.params.data.people +
-                  route.params.data.children}{" "} */}
                 {data.people}
                 khách/phòng
               </Text>
@@ -277,26 +311,60 @@ const Invoice = ({route, navigation}) => {
               <Text style={styles.sumPriceString}>{SUM_PRICE_SRT}</Text>
             </RowView>
             <Text style={styles.priceStyle}>
-              {formatCurrency(route.params.sum, 'VND')}
+              {route.params.item
+                ? formatCurrency(+route.params.item.price, 'VND')
+                : formatCurrency(route.params.sum, 'VND')}
             </Text>
           </RowView>
         </TouchableNativeFeedback>
         {detailPrice}
       </View>
-
-      <View style={styles.paddingDefault}>
-        <Button
-          onPress={handlePressConfirm}
-          title={CONFIRM_BTN}
-          buttonStyle={{
-            backgroundColor: ORANGE,
-            paddingTop: 15,
-            paddingBottom: 15,
-            marginTop: 12,
-            marginBottom: 12,
-          }}
-        />
-      </View>
+      {route.params.item &&
+        +route.params.item.status !== 4 &&
+        +route.params.item.status !== 5 && (
+          <View style={styles.paddingDefault}>
+            <Button
+              onPress={handleDeleteInvoice}
+              title={DELETE_INVOICE}
+              buttonStyle={{
+                backgroundColor: ORANGE,
+                paddingTop: 15,
+                paddingBottom: 15,
+                marginTop: 12,
+                marginBottom: 12,
+              }}
+            />
+          </View>
+        )}
+      {!route.params.item && (
+        <View style={styles.paddingDefault}>
+          <Button
+            onPress={handlePressConfirm}
+            title={CONFIRM_BTN}
+            buttonStyle={{
+              backgroundColor: ORANGE,
+              paddingTop: 15,
+              paddingBottom: 15,
+              marginTop: 12,
+              marginBottom: 12,
+            }}
+          />
+        </View>
+      )}
+      {route.params.item && +route.params.item.status === 5 && (
+        <View style={styles.paddingDefault}>
+          <Button
+            title={CANCELED}
+            buttonStyle={{
+              backgroundColor: ORANGE,
+              paddingTop: 15,
+              paddingBottom: 15,
+              marginTop: 12,
+              marginBottom: 12,
+            }}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 };

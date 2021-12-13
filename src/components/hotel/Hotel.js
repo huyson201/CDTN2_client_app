@@ -7,13 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import hotelApi from '../../../api/hotelApi';
 
 const Hotel = function ({navigation, hotelId}) {
-  const [hotel, setHotel] = useState({
-    hotelName: '',
-    image: null,
-    address: '',
-    phone: '',
-    star: [],
-  });
+  const [hotel, setHotel] = useState();
   const [prices, setPrices] = useState([]);
 
   const getHotelById = async hotelId => {
@@ -59,66 +53,72 @@ const Hotel = function ({navigation, hotelId}) {
       console.log(err);
     }
   };
-  // console.log(hotelId, 'HOTEL ID');
-  // console.log(prices, 'ARR PRICE');
-
+  
   // get data from server
   useEffect(() => {
     getHotelById(hotelId);
     getAllRoomsByIdHotel(hotelId);
+    return () => {
+      setHotel();
+      setPrices([]);
+    };
   }, []);
 
   return (
-    <ItemContainer
-      activeOpacity={0.9}
-      onPress={() => {
-        navigation.navigate('DetailHotelScreen', {
-          id: 1,
-          hotelId: hotelId,
-          price: getMinPrice(prices),
-        });
-      }}>
-      <ViewRow>
-        {/* Hotel image */}
-        <Image
-          style={styles.hotelImage}
-          source={{
-            uri: hotel.image,
-          }}
-        />
-        <ItemContent>
-          {/* Hotel name */}
-          <Text style={styles.headText}>{hotel.hotelName}</Text>
-          {/* Star */}
+    <>
+      {hotel && (
+        <ItemContainer
+          activeOpacity={0.9}
+          onPress={() => {
+            navigation.navigate('DetailHotelScreen', {
+              id: 1,
+              hotelId: hotelId,
+              price: getMinPrice(prices),
+            });
+          }}>
           <ViewRow>
-            {hotel.star.map((e, i) => {
-              return <Icon key={i} name={e} size={15} color={GOLD_COLOR} />;
-            })}
-          </ViewRow>
-          {/* Address */}
-          <ViewRow>
-            <Icon
-              name="map-marker"
-              size={12}
-              color={DARK_GRAY}
-              style={{marginTop: 8}}
+            {/* Hotel image */}
+            <Image
+              style={styles.hotelImage}
+              source={{
+                uri: hotel.image,
+              }}
             />
-            <Text style={styles.addressText}>{hotel.address}</Text>
+            <ItemContent>
+              {/* Hotel name */}
+              <Text style={styles.headText}>{hotel.hotelName}</Text>
+              {/* Star */}
+              <ViewRow>
+                {hotel.star.map((e, i) => {
+                  return <Icon key={i} name={e} size={15} color={GOLD_COLOR} />;
+                })}
+              </ViewRow>
+              {/* Address */}
+              <ViewRow>
+                <Icon
+                  name="map-marker"
+                  size={12}
+                  color={DARK_GRAY}
+                  style={{marginTop: 8}}
+                />
+                <Text style={styles.addressText}>{hotel.address}</Text>
+              </ViewRow>
+
+              {/* Hotel price  */}
+              <ViewRow style={{marginTop: 70}}>
+                <Text style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}>
+                  {' '}
+                  {VND} {getMinPrice(prices)}
+                </Text>
+                {/* )} */}
+                <Text style={styles.contentText}>{UNIT}</Text>
+              </ViewRow>
+              <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
+            </ItemContent>
           </ViewRow>
-    
-          {/* Hotel price  */}
-          <ViewRow style={{marginTop: 70}}>
-            <Text style={{fontSize: 13, fontWeight: 'bold', color: ORANGE}}>
-              {' '}
-              {VND} {getMinPrice(prices)}
-            </Text>
-            {/* )} */}
-            <Text style={styles.contentText}>{UNIT}</Text>
-          </ViewRow>
-          <Text style={styles.contentText}>{HOTEL_TEXT}</Text>
-        </ItemContent>
-      </ViewRow>
-    </ItemContainer>
+        </ItemContainer>
+      )}
+    </>
   );
 };
 

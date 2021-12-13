@@ -38,9 +38,6 @@ const EditProfileScreen = function ({ navigation }) {
       console.log('from data', formData)
     }
 
-    // console.log(currentUser.user_uuid);
-    // console.log("token", token);
-    // console.log("form", formData);
     try {
       const res = await userApi.update(token, currentUser.user_uuid, formData)
       if (res.data.data) {
