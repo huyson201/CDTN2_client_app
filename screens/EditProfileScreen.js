@@ -17,8 +17,9 @@ import userApi from '../api/userApi';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { setCurrentUser, setCheckPickerImage, setFile } from '../action_creators/user';
 import DialogEditImage from './../src/components/user/DialogEditImage';
-
+import {useToast} from 'react-native-toast-notifications';
 const EditProfileScreen = function ({ navigation }) {
+  const toast = useToast();
   const { currentUser, token, checkPickerImage, file } = useSelector(state => state.user)
   const [user_name, setUserName] = useState(currentUser.user_name)
   const [user_phone, setUserPhone] = useState(currentUser.user_phone)
@@ -37,13 +38,20 @@ const EditProfileScreen = function ({ navigation }) {
       console.log('from data', formData)
     }
 
-    console.log(currentUser.user_uuid);
-    console.log("token", token);
-    console.log("form", formData);
+    // console.log(currentUser.user_uuid);
+    // console.log("token", token);
+    // console.log("form", formData);
     try {
       const res = await userApi.update(token, currentUser.user_uuid, formData)
       if (res.data.data) {
-        ToastAndroid.show("Cập nhật thành công", ToastAndroid.SHORT)
+        toast.show("Cập nhật thành công", {
+          type: 'success',
+          placement: 'top',
+          duration: 2000,
+          offset: 0,
+          animationType: 'slide-in',
+        });
+        // ToastAndroid.show("Cập nhật thành công", ToastAndroid.SHORT)
         dispatch(setCurrentUser(res.data.data))
         dispatch(setFile(null));
         // console.log(res.data.data, "data update");

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
@@ -12,15 +12,17 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Button } from 'react-native-elements';
-import { BLUE1 } from '../src/values/color';
+import {Button} from 'react-native-elements';
+import {BLUE1} from '../src/values/color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../src/values/size';
-import { LOGIN_SUCCESSFULLY } from '../src/values/constants';
+import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../src/values/size';
+import {LOGIN_SUCCESSFULLY} from '../src/values/constants';
 import userApi from '../api/userApi';
-import { useDispatch } from 'react-redux';
-import { setCurrentUser, setRememberMe, setToken } from '../action_creators/user';
-const LoginScreen = ({ navigation, route }) => {
+import {useDispatch} from 'react-redux';
+import {setCurrentUser, setRememberMe, setToken} from '../action_creators/user';
+import {useToast} from 'react-native-toast-notifications';
+const LoginScreen = ({navigation, route}) => {
+  const toast = useToast();
   const dispatch = useDispatch();
   const emailInput = useRef();
   const passInput = useRef();
@@ -33,6 +35,7 @@ const LoginScreen = ({ navigation, route }) => {
   const [isLoading, setisLoading] = useState(false);
   const _isMouted = useRef(true);
   const emailUser = route.params;
+  const [errors, setErrors] = useState({email: '', password: ''});
   const handlePressSignUp = () => {
     navigation.navigate('SignUpScreen');
   };
@@ -50,19 +53,46 @@ const LoginScreen = ({ navigation, route }) => {
   const handleLogin = async () => {
     setisLoading(true);
     try {
-      const res = await userApi.login(emailUser ? Object.values(emailUser) : email, password);
-      console.log(res.data);
+      const res = await userApi.login(
+        emailUser ? Object.values(emailUser) : email,
+        password,
+      );
       if (!res.data.msg) {
+        toast.show(LOGIN_SUCCESSFULLY, {
+          type: 'success',
+          placement: 'top',
+          duration: 1000,
+          offset: 0,
+          animationType: 'slide-in',
+        });
         dispatch(setCurrentUser(res.data.data.user));
         dispatch(setRememberMe(true));
-        dispatch(setToken(res.data.data.token))
+        dispatch(setToken(res.data.data.token));
         await AsyncStorage.setItem('token', res.data.data.token);
         await AsyncStorage.setItem('refresh_token', res.data.data.refreshToken);
         if (_isMouted.current) {
           setisLoading(false);
+          setErrors({email: '', password: ''});
         }
-        ToastAndroid.show(LOGIN_SUCCESSFULLY, ToastAndroid.SHORT);
       } else {
+        if (res.data.code === 0) {
+          setPassword('');
+          if (email === '') {
+            setErrors({
+              email: 'Vui lòng nhập email',
+              password: 'Vui lòng nhập password',
+            });
+          }
+          if (email !== '') {
+            setErrors({email: res.data.msg, password: ''});
+          }
+        } else {
+          if (password !== '') {
+            setErrors({...errors, password: res.data.msg});
+          } else {
+            setErrors({...errors, password: 'Vui lòng nhập password'});
+          }
+        }
         setisLoading(false);
       }
     } catch (error) {
@@ -91,20 +121,19 @@ const LoginScreen = ({ navigation, route }) => {
                 backgroundColor="#05375a"
                 color="#05375a"></Icon>
               <TextInput
+                onFocus={() => {
+                  setErrors({...errors, email: ''});
+                }}
                 ref={emailInput}
                 placeholder="Your Email"
                 autoCapitalize="none"
                 defaultValue={emailUser ? `${Object.values(emailUser)}` : email}
                 onChangeText={val => setEmail(val)}
                 style={loginStyles.textInput}></TextInput>
-              {/* {data.checkTextInputChange ? (
-              <Icon
-                style={loginStyles.icon}
-                name="check"
-                size={18}
-                color="#05375a"></Icon>
-            ) : null} */}
             </View>
+            {errors.email !== '' && (
+              <Text style={{color: 'red'}}>{errors.email}</Text>
+            )}
             <Text style={loginStyles.text_footer}>Password</Text>
             <View style={loginStyles.action}>
               <Icon
@@ -113,6 +142,9 @@ const LoginScreen = ({ navigation, route }) => {
                 size={18}
                 color="#05375a"></Icon>
               <TextInput
+                onFocus={() => {
+                  setErrors({...errors, password: ''});
+                }}
                 ref={passInput}
                 placeholder="Your Password"
                 secureTextEntry={data.secureTextEntry ? true : false}
@@ -136,6 +168,9 @@ const LoginScreen = ({ navigation, route }) => {
                 )}
               </TouchableOpacity>
             </View>
+            {errors.password !== '' && (
+              <Text style={{color: 'red'}}>{errors.password}</Text>
+            )}
             <Button
               title={'LOGIN'}
               buttonStyle={loginStyles.buttonStyle}
@@ -145,7 +180,7 @@ const LoginScreen = ({ navigation, route }) => {
           <View style={loginStyles.footer}>
             <Text>Don't have an Account ? </Text>
             <TouchableOpacity onPress={handlePressSignUp}>
-              <Text style={{ color: BLUE1 }}>Sign Up</Text>
+              <Text style={{color: BLUE1}}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>
