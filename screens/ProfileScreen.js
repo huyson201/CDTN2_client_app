@@ -25,6 +25,7 @@ const EditProfileScreen = function ({navigation}) {
   const user = useSelector(state => state.user.currentUser);
   // console.log(user);
   const handlePressEditProfile = () => {
+    dispatch(setFile());
     navigation.navigate('EditProfileScreen');
   };
   const handleToListRooms = () => {

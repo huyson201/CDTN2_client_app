@@ -44,6 +44,10 @@ const OrderedRoomItem = props => {
     };
     getNameHotel();
     getSurcharge();
+    return () => {
+      setName();
+      setSurcharge();
+    };
   }, []);
 
   return (

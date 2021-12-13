@@ -60,10 +60,6 @@ const RatingScreen = ({ route, navigation }) => {
         setLoading(false)
     }
 
-
-
-
-
     const handleClickBack = () => {
         navigation.goBack()
     }
