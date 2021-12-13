@@ -1,30 +1,50 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import styled from 'styled-components';
-import { BLUE1, BLUE2, DARK_GRAY, LIGHT_GRAY, GOLD_COLOR } from '../../values/color';
-import { UTIL_STRING } from '../../values/constants';
+import {
+  BLUE1,
+  BLUE2,
+  DARK_GRAY,
+  LIGHT_GRAY,
+  GOLD_COLOR,
+} from '../../values/color';
+import {UTIL_STRING} from '../../values/constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 
-const Utilities = (props) => {
-    return (
-        <View>
-            <View style={styles.hisHeader}>
-                <Text style={styles.headText}>{UTIL_STRING}</Text>
-            </View>
-            <ScrollView horizontal={true}>
-                <ViewRow>
-                    {props.services !== null &&
-                        props.services.map((e, i) => {
-                            console.log(e);
-                            return (<ViewCol key={i}>
-                                <Icon name={e.service.service_icon} size={30} color={BLUE1} />
-                                <Text style={styles.contentText}>{e.service.service_name}</Text>
-                            </ViewCol>)
-                        })
-                    }
-                    {/* <ViewCol>
+const Utilities = props => {
+  return (
+    <View>
+      <View style={styles.hisHeader}>
+        <Text style={styles.headText}>{UTIL_STRING}</Text>
+      </View>
+      <ScrollView horizontal={true}>
+        <ViewRow>
+          {props.services !== null &&
+            props.services.map((e, i) => {
+              console.log(e);
+              return (
+                <ViewCol key={i}>
+                  <Icon
+                    name={e && e.service && e.service.service_icon}
+                    size={30}
+                    color={BLUE1}
+                  />
+                  <Text style={styles.contentText}>
+                    {e && e.service && e.service.service_name}
+                  </Text>
+                </ViewCol>
+              );
+            })}
+          {/* <ViewCol>
                         <Icon name="silverware-fork-knife" size={30} color={BLUE1} />
                         <Text style={styles.contentText}>Nhà hàng</Text>
                     </ViewCol>
@@ -48,10 +68,10 @@ const Utilities = (props) => {
                         <Icon2 name="wifi" size={30} color={BLUE1} />
                         <Text style={styles.contentText}>Wifi</Text>
                     </ViewCol> */}
-                </ViewRow>
-            </ScrollView>
-        </View>
-    );
+        </ViewRow>
+      </ScrollView>
+    </View>
+  );
 };
 
 const ViewRow = styled.View`
@@ -66,30 +86,30 @@ const ViewCol = styled.View`
   padding: 15px 10px;
 `;
 const styles = StyleSheet.create({
-    hisHeader: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        flexDirection: 'row',
-    },
-    headText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginTop: 20,
-    },
-    contentText: {
-        fontSize: 13,
-        color: DARK_GRAY,
-        width: '100%',
-    },
-    borderBottom: {
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderColor: DARK_GRAY,
-        marginTop: 5,
-        marginLeft: 20,
-        marginRight: 20,
-        paddingBottom: 20,
-    }
+  hisHeader: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    flexDirection: 'row',
+  },
+  headText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  contentText: {
+    fontSize: 13,
+    color: DARK_GRAY,
+    width: '100%',
+  },
+  borderBottom: {
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: DARK_GRAY,
+    marginTop: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    paddingBottom: 20,
+  },
 });
 
 export default Utilities;

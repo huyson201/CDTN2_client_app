@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import styled from 'styled-components';
 import {
@@ -34,7 +35,6 @@ import {convertDateToVNDate, convertStrPersonRooms} from '../src/utilFunction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = function ({navigation}) {
-
   const roomModalRef = React.createRef();
   const calendarRef = useRef();
   const nightPickerRef = useRef();
@@ -73,9 +73,10 @@ const HomeScreen = function ({navigation}) {
   const handlePressAddress = () => {
     addressRef.current.show();
   };
-  
+
   const handlePressMap = () => {
-    navigation.navigate('GoogleMap');
+    console.log('press navigation');
+    // navigation.navigate('GoogleMap');
   };
 
   const HandlePressSearch = () => {
@@ -86,13 +87,13 @@ const HomeScreen = function ({navigation}) {
     navigation.navigate('ListHotels');
   };
 
- 
   return (
     <ScrollView>
       <View style={homeStyles.header}>
         <Title style={homeStyles.headerText}>Booking Hotel</Title>
         <Title>
-         Cảm ơn bạn đã sử dụng Booking Hotel. Chúc bạn có một trải nghiệm tuyệt vời !
+          Cảm ơn bạn đã sử dụng Booking Hotel. Chúc bạn có một trải nghiệm tuyệt
+          vời !
         </Title>
       </View>
       {/* search box */}

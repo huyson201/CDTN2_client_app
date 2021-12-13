@@ -24,6 +24,7 @@ const HotelList = function ({navigation}) {
 
     let query = `filter?address=${searchAddress}&from=${fromDate}T14:00:00&to=${toDate}T12:00:00&room=${rooms}&adult=${adults}`;
     console.log(query);
+    console.log(arrStar);
     if (arrStar.length > 0) query += `&star=${arrStar}`;
     if (maxPrice && minPrice) query += `&min=${minPrice}&max=${maxPrice}`;
 

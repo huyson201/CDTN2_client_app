@@ -15,7 +15,7 @@ import {Button} from 'react-native-elements';
 import {TextInput, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {setCurrentUser, setRememberMe, setToken} from '../action_creators/user';
+import {setCurrentUser, setFile, setRememberMe, setToken} from '../action_creators/user';
 import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
 import userApi from '../api/userApi';
 import {useToast} from 'react-native-toast-notifications';
