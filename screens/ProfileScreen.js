@@ -18,8 +18,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setCurrentUser, setRememberMe, setToken} from '../action_creators/user';
 import {SIGNOUT_SUCCESSFULLY} from '../src/values/constants';
 import userApi from '../api/userApi';
-
+import {useToast} from 'react-native-toast-notifications';
 const EditProfileScreen = function ({navigation}) {
+  const toast = useToast();
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.currentUser);
   // console.log(user);
@@ -32,6 +33,13 @@ const EditProfileScreen = function ({navigation}) {
 
   const handleLogout = async () => {
     try {
+      toast.show(SIGNOUT_SUCCESSFULLY, {
+        type: 'success',
+        placement: 'top',
+        duration: 1000,
+        offset: 0,
+        animationType: 'slide-in',
+      });
       const token = await AsyncStorage.getItem('token');
       await userApi.logout(token);
       await AsyncStorage.removeItem('token');
@@ -39,7 +47,7 @@ const EditProfileScreen = function ({navigation}) {
       dispatch(setCurrentUser(null));
       dispatch(setRememberMe(false));
       dispatch(setToken(null));
-      ToastAndroid.show(SIGNOUT_SUCCESSFULLY, ToastAndroid.SHORT);
+    
     } catch (e) {
       console.log(e);
     }

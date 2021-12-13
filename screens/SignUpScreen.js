@@ -17,27 +17,32 @@ import {DEVICE_HEIGHT, DEVICE_WIDTH} from '../src/values/size';
 import {Button} from 'react-native-elements';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {EMAIL_OR_PHONE_EXISTED, PHONE_INVALID, SIGNUP_SUCCESSFULLY} from '../src/values/constants';
+import {
+  EMAIL_OR_PHONE_EXISTED,
+  PHONE_INVALID,
+  SIGNUP_SUCCESSFULLY,
+} from '../src/values/constants';
 import userApi from '../api/userApi';
-
+import {useToast} from 'react-native-toast-notifications';
 const validationSchema = Yup.object({
   fullname: Yup.string()
     .trim()
-    .min(3, 'Invalid name!')
-    .required('Name is required!'),
-  email: Yup.string().email('Invalid email!').required('Email is required!'),
+    .min(4, 'Tên phải có ít nhất 4 kí tự')
+    .required('Yêu cầu nhập tên'),
+  email: Yup.string().trim().email('Email không hợp lệ').required('Vui lòng nhập email'),
   password: Yup.string()
     .trim()
-    .min(6, 'Password is too short!')
-    .required('Password is required!'),
+    .min(6, 'Mật khẩu tối thiểu 6 kí tự')
+    .required('Vui lòng nhập mật khẩu'),
   confirm_password: Yup.string().equals(
     [Yup.ref('password'), null],
-    'Password does not match!',
+    'Xác nhận mật khẩu không đúng',
   ),
-  phone: Yup.string().min(10, 'Invalid phone!').required('phone is required!'),
+  phone: Yup.string().trim().length(10, 'Số điện thoại không hợp lệ').required('Vui lòng nhập số điện thoại'),
 });
 
 const SignUpScreen = ({navigation}) => {
+  const toast = useToast();
   const [data, setData] = useState({
     secureTextEntry: true,
     confirm_secureTextEntry: true,
@@ -74,15 +79,30 @@ const SignUpScreen = ({navigation}) => {
         values.phone,
       );
       if (res.data.message == 'success') {
+        toast.show(SIGNUP_SUCCESSFULLY, {
+          type: 'success',
+          placement: 'top',
+          duration: 1000,
+          offset: 0,
+          animationType: 'slide-in',
+        });
         formikActions.resetForm();
         setLoading(false);
-        ToastAndroid.show(SIGNUP_SUCCESSFULLY, ToastAndroid.SHORT);
         navigation.navigate('LoginScreen', {
           emailUser: values.email,
         });
       } else {
+        let error = {}
+        for (let i = 0; i < res.data.errors.length; i++) {
+          const e = res.data.errors[i];
+          if (e.code === 0) {
+            error.email = e.msg
+          } else {
+            error.phone = e.msg
+          }
+        }
+        formikActions.setErrors(error);
         setLoading(false);
-        ToastAndroid.show(EMAIL_OR_PHONE_EXISTED, ToastAndroid.SHORT);
       }
     } catch (error) {
       setLoading(false);
