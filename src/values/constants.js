@@ -44,6 +44,7 @@ export const CONTACT_INFO = "Thông tin liên hệ";
 export const DETAIL_PRICE = "Chi tiết giá";
 export const SUM_PRICE_SRT = "Tổng giá tiền";
 export const CONFIRM_BTN = "Xác Nhận";
+export const DELETE_INVOICE = "Hủy đơn";
 
 /**================================================================================================
  **                                         MESSAGE

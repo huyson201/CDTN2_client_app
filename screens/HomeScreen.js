@@ -34,6 +34,7 @@ import {convertDateToVNDate, convertStrPersonRooms} from '../src/utilFunction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = function ({navigation}) {
+
   const roomModalRef = React.createRef();
   const calendarRef = useRef();
   const nightPickerRef = useRef();
@@ -60,20 +61,21 @@ const HomeScreen = function ({navigation}) {
   const handlePressRoomPicker = function () {
     roomModalRef.current.show();
   };
-
   const handlePressDate = () => {
     calendarRef.current.show();
   };
-
   const handlePressNightPicker = () => {
     nightPickerRef.current.show();
   };
-
   const handlePressFilterRef = () => {
     filterRef.current.show();
   };
   const handlePressAddress = () => {
     addressRef.current.show();
+  };
+  
+  const handlePressMap = () => {
+    navigation.navigate('GoogleMap');
   };
 
   const HandlePressSearch = () => {
@@ -84,10 +86,7 @@ const HomeScreen = function ({navigation}) {
     navigation.navigate('ListHotels');
   };
 
-  const handlePressMap = () => {
-    navigation.navigate('GoogleMap');
-  };
-
+ 
   return (
     <ScrollView>
       <View style={homeStyles.header}>

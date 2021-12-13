@@ -81,7 +81,7 @@ const ClientAndRoomModal = forwardRef((props, ref) => {
                         <QuantityControl data={data.adults} type="adults" onPress={getQuantity} />
                     </ViewRow>
                 </View>
-                <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
+                {/* <View style={{ ...styles.row, ...styles.rowPadding, ...styles.separator }} >
                     <View>
                         <ViewRow>
                             <Icon name="child" size={20} color={BLUE1} />
@@ -93,7 +93,7 @@ const ClientAndRoomModal = forwardRef((props, ref) => {
                     <ViewRow>
                         <QuantityControl data={data.children} type="children" onPress={getQuantity} />
                     </ViewRow>
-                </View>
+                </View> */}
             </Container>
 
             <View style={styles.btnBox}>

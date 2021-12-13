@@ -8,7 +8,7 @@ let now = new Date();
 let nowDate = getDateFormatString(now)
 let tomorrow = getTomorrow(nowDate);
 let initialState = {
-  address: "ninh hai, ninh thuan",
+  address: "Tỉnh Cà Mau",
   date: {
     numDate: 1,
     receivedDate: nowDate,
@@ -26,6 +26,7 @@ let initialState = {
     rankStars: []
   }
 }
+
 const searchReducer = function (state = initialState, action) {
   switch (action.type) {
     case "SET_ADDRESS":
