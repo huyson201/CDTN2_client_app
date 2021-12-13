@@ -13,6 +13,9 @@ const ListRoomsOrderedScreen = function ({navigation}) {
 
   useEffect(() => {
     getData();
+    return () => {
+      setDataSouce([]);
+    };
   }, [isFocused]);
 
   const getData = async () => {

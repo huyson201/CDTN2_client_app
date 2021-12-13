@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,39 +9,46 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { BLUE1, BLUE2 } from '../src/values/color';
-import { Button } from 'react-native-elements';
-import { TextInput, Image } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import {BLUE1, BLUE2} from '../src/values/color';
+import {Button} from 'react-native-elements';
+import {TextInput, Image} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import userApi from '../api/userApi';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { setCurrentUser, setCheckPickerImage, setFile } from '../action_creators/user';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {
+  setCurrentUser,
+  setCheckPickerImage,
+  setFile,
+} from '../action_creators/user';
 import DialogEditImage from './../src/components/user/DialogEditImage';
 import {useToast} from 'react-native-toast-notifications';
-const EditProfileScreen = function ({ navigation }) {
+const EditProfileScreen = function ({navigation}) {
   const toast = useToast();
-  const { currentUser, token, checkPickerImage, file } = useSelector(state => state.user)
-  const [user_name, setUserName] = useState(currentUser.user_name)
-  const [user_phone, setUserPhone] = useState(currentUser.user_phone)
-  const dispatch = useDispatch()
+  const {currentUser, token, checkPickerImage, file} = useSelector(
+    state => state.user,
+  );
+  const [user_name, setUserName] = useState(currentUser.user_name);
+  const [user_phone, setUserPhone] = useState(currentUser.user_phone);
+  const dispatch = useDispatch();
   const handlePressUserProfile = () => {
+    // dispatch(setFile());
     navigation.goBack();
   };
 
   const handlePressEditUserProfile = async () => {
     let formData = new FormData();
-    formData.append("user_name", user_name)
-    formData.append("user_phone", user_phone)
+    formData.append('user_name', user_name);
+    formData.append('user_phone', user_phone);
 
     if (file) {
-      formData.append("avatar", file)
-      console.log('from data', formData)
+      formData.append('avatar', file);
+      console.log('from data', formData);
     }
 
     try {
-      const res = await userApi.update(token, currentUser.user_uuid, formData)
+      const res = await userApi.update(token, currentUser.user_uuid, formData);
       if (res.data.data) {
-        toast.show("Cập nhật thành công", {
+        toast.show('Cập nhật thành công', {
           type: 'success',
           placement: 'top',
           duration: 2000,
@@ -49,30 +56,38 @@ const EditProfileScreen = function ({ navigation }) {
           animationType: 'slide-in',
         });
         // ToastAndroid.show("Cập nhật thành công", ToastAndroid.SHORT)
-        dispatch(setCurrentUser(res.data.data))
+        dispatch(setCurrentUser(res.data.data));
         dispatch(setFile(null));
         // console.log(res.data.data, "data update");
       }
     } catch (error) {
-      console.log(error, "error update");
+      console.log(error, 'error update');
     }
-  }
+  };
   const uploadImage = () => {
-    dispatch(setCheckPickerImage(true))
-  }
+    dispatch(setCheckPickerImage(true));
+  };
 
   const renderFileData = () => {
     if (file) {
-      return <Image style={EditProfileStyles.userImg} source={{ uri: file.uri }}
-      />
+      return (
+        <Image style={EditProfileStyles.userImg} source={{uri: file.uri}} />
+      );
     } else {
-      return <Image
-        style={EditProfileStyles.userImg}
-        source={
-          currentUser.user_img !== null ? { uri: currentUser.user_img } : { uri: `https://ui-avatars.com/api/?name=${currentUser.user_name}&size=256` }}
-      />
+      return (
+        <Image
+          style={EditProfileStyles.userImg}
+          source={
+            currentUser.user_img !== null
+              ? {uri: currentUser.user_img}
+              : {
+                  uri: `https://ui-avatars.com/api/?name=${currentUser.user_name}&size=256`,
+                }
+          }
+        />
+      );
     }
-  }
+  };
 
   return (
     <>
@@ -83,7 +98,17 @@ const EditProfileScreen = function ({ navigation }) {
           <TouchableOpacity activeOpacity={0.9} onPress={uploadImage}>
             <View style={EditProfileStyles.headerUserCicle}>
               {renderFileData()}
-              <Icon name="camera" style={{ fontSize: 25, position: 'absolute', right: -12, bottom: -12, color: { BLUE2 }, zIndex: 999 }} />
+              <Icon
+                name="camera"
+                style={{
+                  fontSize: 25,
+                  position: 'absolute',
+                  right: -12,
+                  bottom: -12,
+                  color: {BLUE2},
+                  zIndex: 999,
+                }}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -98,10 +123,10 @@ const EditProfileScreen = function ({ navigation }) {
               backgroundColor="#05375a"
               color="#05375a"></Icon>
             <TextInput
-              defaultValue={currentUser ? currentUser.user_name : ""}
+              defaultValue={currentUser ? currentUser.user_name : ''}
               autoCapitalize="none"
               style={EditProfileStyles.textInput}
-              onChangeText={(val) => val ? setUserName(val) : ""}></TextInput>
+              onChangeText={val => (val ? setUserName(val) : '')}></TextInput>
           </View>
           <Text style={EditProfileStyles.textTitle}>Phone</Text>
           <View style={EditProfileStyles.action}>
@@ -112,14 +137,16 @@ const EditProfileScreen = function ({ navigation }) {
               backgroundColor="#05375a"
               color="#05375a"></Icon>
             <TextInput
-              defaultValue={currentUser ? currentUser.user_phone : ""}
+              defaultValue={currentUser ? currentUser.user_phone : ''}
               autoCapitalize="none"
               style={EditProfileStyles.textInput}
-              onChangeText={(val) => val ? setUserPhone(val) : ""}
-            ></TextInput>
+              onChangeText={val => (val ? setUserPhone(val) : '')}></TextInput>
           </View>
           <View style={EditProfileStyles.btn}>
-            <Button onPress={handlePressEditUserProfile} title="UPDATE" buttonStyle={EditProfileStyles.okBtn}></Button>
+            <Button
+              onPress={handlePressEditUserProfile}
+              title="UPDATE"
+              buttonStyle={EditProfileStyles.okBtn}></Button>
             <Button
               title="Cancel"
               onPress={handlePressUserProfile}
@@ -137,7 +164,7 @@ const Container = styled.View`
 `;
 
 const EditProfileStyles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
+  container: {flex: 1, backgroundColor: '#FFF'},
   header: {
     backgroundColor: BLUE1,
     paddingTop: 10,
