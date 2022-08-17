@@ -95,6 +95,7 @@ const SignUpScreen = ({navigation}) => {
         let error = {}
         for (let i = 0; i < res.data.errors.length; i++) {
           const e = res.data.errors[i];
+          console.log(res.data);
           if (e.code === 0) {
             error.email = e.msg
           } else {
@@ -107,7 +108,7 @@ const SignUpScreen = ({navigation}) => {
     } catch (error) {
       setLoading(false);
       ToastAndroid.show(PHONE_INVALID, ToastAndroid.SHORT);
-      console.log(error);
+      // console.log(error);
     }
   };
 

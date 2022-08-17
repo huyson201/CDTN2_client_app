@@ -59,14 +59,15 @@ const OrderedRoomItem = props => {
           MHĐ: {props.item.invoice_id}
         </Text>
         <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
-          Khách sạn: <Text style={{fontWeight:'600'}}>{name}</Text>
+          Khách sạn: <Text style={{fontWeight: '600'}}>{name}</Text>
         </Text>
         <Text style={ListRoomsOrderedStyle.itemFont} numberOfLines={1}>
-          Phòng số:  <Text style={{fontWeight:'600'}}>{props.item.room_id}</Text>
+          Phòng số:{' '}
+          <Text style={{fontWeight: '600'}}>{props.item.room_id}</Text>
         </Text>
         <Text style={[ListRoomsOrderedStyle.itemFont]} numberOfLines={2}>
           Ngày Đặt Phòng:{' '}
-          <Text style={{fontWeight:'600'}}>
+          <Text style={{fontWeight: '600'}}>
             {' '}
             {`${props.item.r_date.split('T')[0]} ~ ${
               props.item.p_date.split('T')[0]
@@ -74,13 +75,18 @@ const OrderedRoomItem = props => {
           </Text>
         </Text>
         <Text style={[ListRoomsOrderedStyle.itemFont]} numberOfLines={1}>
-          Chi phí:<Text style={{color: 'green',fontWeight:'600'}}> {props.item.price}Đ</Text>
+          Chi phí:
+          <Text style={{color: 'green', fontWeight: '600'}}>
+            {' '}
+            {props.item.price}Đ
+          </Text>
         </Text>
         <Text style={[ListRoomsOrderedStyle.itemFont]} numberOfLines={1}>
           Trạng thái đơn:{' '}
           <Text style={{color: ORANGE}}>
-            {' '}
-            {Object.values(STATUS_INVOICE[props.item.status])}
+            {STATUS_INVOICE[props.item.status]
+              ? Object.values(STATUS_INVOICE[props.item.status])
+              : ''}
           </Text>
         </Text>
       </View>
@@ -137,7 +143,7 @@ const ListRoomsOrderedStyle = StyleSheet.create({
     color: '#fff',
   },
   itemFont: {
-    fontWeight:'bold',
+    fontWeight: 'bold',
     paddingVertical: 3,
     paddingHorizontal: 5,
     fontSize: 20,

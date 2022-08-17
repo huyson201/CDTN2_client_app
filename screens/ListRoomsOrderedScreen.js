@@ -30,7 +30,7 @@ const ListRoomsOrderedScreen = function ({navigation}) {
     }
   };
 
-  return (
+  return dataSource != [] && dataSource != null ? (
     <View>
       <FlatList
         style={{marginTop: 5}}
@@ -42,6 +42,8 @@ const ListRoomsOrderedScreen = function ({navigation}) {
         }}
       />
     </View>
+  ) : (
+    ''
   );
 };
 

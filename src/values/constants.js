@@ -88,5 +88,5 @@ export const STATUS_INVOICE = {
     2: DEPOSITED,
     3: RECEIVED,
     4: DONE,
-    5: CANCELED,
+    5: CANCELED
   };
